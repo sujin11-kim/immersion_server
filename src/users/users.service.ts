@@ -17,7 +17,7 @@ export class UsersService {
     private dataSource: DataSource
   ) {}
 
-  async create(ID: number, name: string, phone: number) {
+  async create(ID: number, name: string, phone: string) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
 
@@ -39,12 +39,5 @@ export class UsersService {
     finally {
       await queryRunner.release();
     }
-  }
-
-  async findById(id: string) {
-    return this.usersRepository.findOne({
-      where: { id },
-      select: ['id']
-    });
   }
 }
