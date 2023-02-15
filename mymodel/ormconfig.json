@@ -1,0 +1,13 @@
+[
+  {
+    "name": "default",
+    "type": "mysql",
+    "host": "immersion.cjnozrqfl9r8.ap-northeast-2.rds.amazonaws.com",
+    "port": 3306,
+    "username": "admin",
+    "password": "Immersion123!",
+    "database": "",
+    "synchronize": false,
+    "entities": ["entities/*.js"]
+  }
+]
