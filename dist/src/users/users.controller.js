@@ -63,7 +63,7 @@ __decorate([
 ], UsersController.prototype, "login", null);
 UsersController = __decorate([
     (0, swagger_1.ApiTags)('USERS'),
-    (0, common_1.Controller)('user'),
+    (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService,
         auth_service_1.AuthService])
 ], UsersController);
