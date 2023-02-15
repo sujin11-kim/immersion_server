@@ -31,6 +31,7 @@ let UsersService = class UsersService {
             const result = await queryRunner.manager.getRepository(users_entity_1.default).save({
                 id,
                 nickname,
+                phone,
                 password: hashedPassword,
             });
             return true;

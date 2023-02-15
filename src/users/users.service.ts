@@ -8,27 +8,27 @@ import
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import bcrypt from 'bcrypt';
-import Users from './entities/users.entity';
+import {User} from '../../mymodel/entities/User';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(Users) private usersRepository: Repository<Users>,
+    @InjectRepository(User) private usersRepository: Repository<User>,
     private dataSource: DataSource
   ) {}
 
-  async create(id: string, nickname: string, phone: number, password: string) {
+  async create(ID: number, name: string, phone: number) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    // const hashedPassword = await bcrypt.hash(password, 12);
 
     try {
-      const result = await queryRunner.manager.getRepository(Users).save({
-        id,
-        nickname,
-        phone,
-        password: hashedPassword,
+      const result = await queryRunner.manager.getRepository(User).save({
+        ID,
+        name,
+        phone
+        // password: hashedPassword,
       });
       return true;
     } 
