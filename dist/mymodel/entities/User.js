@@ -9,31 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.User = void 0;
 const typeorm_1 = require("typeorm");
-let Users = class Users {
+let User = class User {
 };
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    (0, typeorm_1.Column)("int", { name: "ID", nullable: true }),
     __metadata("design:type", Number)
-], Users.prototype, "index", void 0);
+], User.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.Column)("varchar", { name: "name", nullable: true, length: 10 }),
     __metadata("design:type", String)
-], Users.prototype, "id", void 0);
+], User.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.Column)("varchar", { name: "phone", nullable: true, length: 30 }),
     __metadata("design:type", String)
-], Users.prototype, "email", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Users.prototype, "name", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Users.prototype, "password", void 0);
-Users = __decorate([
-    (0, typeorm_1.Entity)()
-], Users);
-exports.default = Users;
-//# sourceMappingURL=users.entity.js.map
+], User.prototype, "phone", void 0);
+User = __decorate([
+    (0, typeorm_1.Entity)("User", { schema: "immersion_DB" })
+], User);
+exports.User = User;
+//# sourceMappingURL=User.js.map

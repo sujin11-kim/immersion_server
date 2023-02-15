@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("../users/users.service");
-const bcrypt_1 = require("bcrypt");
 const jwt_1 = require("@nestjs/jwt");
 let AuthService = class AuthService {
     constructor(usersService, jwtService) {
@@ -20,10 +19,6 @@ let AuthService = class AuthService {
         this.jwtService = jwtService;
     }
     async validateUser(id, password) {
-        const wantLoginuser = await this.usersService.findById(id);
-        if (!wantLoginuser || (wantLoginuser && !(0, bcrypt_1.compare)(password, wantLoginuser.password)))
-            return null;
-        return await this.usersService.findById(wantLoginuser.id);
     }
     async login(user) {
         const payload = { username: user.username, sub: user.id };
