@@ -6,5 +6,4 @@ export declare class UsersController {
     private authService;
     constructor(usersService: UsersService, authService: AuthService);
     create(data: CreateUserDto): Promise<string>;
-    login(session: any, req: any, response: any): Promise<any>;
 }

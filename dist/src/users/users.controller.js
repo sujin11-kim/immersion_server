@@ -17,7 +17,6 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const users_service_1 = require("./users.service");
-const passport_1 = require("@nestjs/passport");
 const auth_service_1 = require("../auth/auth.service");
 let UsersController = class UsersController {
     constructor(usersService, authService) {
@@ -25,22 +24,13 @@ let UsersController = class UsersController {
         this.authService = authService;
     }
     async create(data) {
-        const checkExistUser = this.usersService.findById(data.id);
-        if (!checkExistUser) {
-            throw new common_1.NotFoundException();
-        }
-        const result = await this.usersService.create(data.id, data.nickname, data.phone, data.password);
+        const result = await this.usersService.create(data.ID, data.name, data.phone);
         if (result) {
             return 'success';
         }
         else {
             throw new common_1.ForbiddenException();
         }
-    }
-    async login(session, req, response) {
-        const access_token = await (await this.authService.login(req.user)).access_token;
-        await response.cookie('Authorization', access_token);
-        return req.user;
     }
 };
 __decorate([
@@ -51,16 +41,6 @@ __decorate([
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "create", null);
-__decorate([
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('local')),
-    (0, common_1.Post)('login'),
-    __param(0, (0, common_1.Session)()),
-    __param(1, (0, common_1.Request)()),
-    __param(2, (0, common_1.Res)({ passthrough: true })),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, Object]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "login", null);
 UsersController = __decorate([
     (0, swagger_1.ApiTags)('USERS'),
     (0, common_1.Controller)('users'),
