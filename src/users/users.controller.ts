@@ -28,15 +28,15 @@ export class UsersController {
   @ApiOperation({ summary: '회원가입' })
   @Post('register')
   async create(@Body() data: CreateUserDto) {
-    const checkExistUser = this.usersService.findById(data.id);
-    if (!checkExistUser) {
-      throw new NotFoundException();
-    }
+    // const checkExistUser = this.usersService.findById(data.ID);
+    // if (!checkExistUser) {
+    //   throw new NotFoundException();
+    // }
     const result = await this.usersService.create(
-      data.id,
-      data.nickname,
+      data.ID,
+      data.name,
       data.phone,
-      data.password
+      // data.password
     );
     if (result) {
       return 'success';
@@ -45,11 +45,11 @@ export class UsersController {
     }
   }
 
-  @UseGuards(AuthGuard('local'))
-	@Post('login')
-	async login(@Session() session, @Request() req, @Res({ passthrough: true}) response) {
-		const access_token = await (await this.authService.login(req.user)).access_token;
-		await response.cookie('Authorization', access_token);
-		return req.user;
-	}
+  // @UseGuards(AuthGuard('local'))
+	// @Post('login')
+	// async login(@Session() session, @Request() req, @Res({ passthrough: true}) response) {
+	// 	const access_token = await (await this.authService.login(req.user)).access_token;
+	// 	await response.cookie('Authorization', access_token);
+	// 	return req.user;
+	// }
 }

@@ -16,23 +16,20 @@ exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const bcrypt_1 = require("bcrypt");
-const users_entity_1 = require("./entities/users.entity");
+const User_1 = require("../../mymodel/entities/User");
 let UsersService = class UsersService {
     constructor(usersRepository, dataSource) {
         this.usersRepository = usersRepository;
         this.dataSource = dataSource;
     }
-    async create(id, nickname, phone, password) {
+    async create(ID, name, phone) {
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
-        const hashedPassword = await bcrypt_1.default.hash(password, 12);
         try {
-            const result = await queryRunner.manager.getRepository(users_entity_1.default).save({
-                id,
-                nickname,
-                phone,
-                password: hashedPassword,
+            const result = await queryRunner.manager.getRepository(User_1.User).save({
+                ID,
+                name,
+                phone
             });
             return true;
         }
@@ -44,16 +41,10 @@ let UsersService = class UsersService {
             await queryRunner.release();
         }
     }
-    async findById(id) {
-        return this.usersRepository.findOne({
-            where: { id },
-            select: ['id']
-        });
-    }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(users_entity_1.default)),
+    __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.DataSource])
 ], UsersService);
