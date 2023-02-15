@@ -18,7 +18,7 @@ import { AuthService } from '../auth/auth.service';
 
 
 @ApiTags('USERS')
-@Controller('user')
+@Controller('users')
 export class UsersController {
   constructor(
     private usersService: UsersService,

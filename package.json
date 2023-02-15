@@ -32,6 +32,8 @@
     "@types/bcrypt": "^5.0.0",
     "@types/passport-local": "^1.0.35",
     "bcrypt": "^5.1.0",
+    "dotenv": "^16.0.3",
+    "oracle": "^0.4.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
