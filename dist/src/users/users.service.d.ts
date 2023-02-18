@@ -1,8 +1,8 @@
 import { DataSource, Repository } from 'typeorm';
 import { User } from '../../mymodel/entities/User';
 export declare class UsersService {
-    private usersRepository;
+    private userRepository;
     private dataSource;
-    constructor(usersRepository: Repository<User>, dataSource: DataSource);
-    create(ID: number, name: string, phone: string): Promise<boolean>;
+    constructor(userRepository: Repository<User>, dataSource: DataSource);
+    create(id: string, nickname: string, phone: string, favorite: string, enrolldate: Date, regflag: string, password: string, type: string): Promise<boolean>;
 }
