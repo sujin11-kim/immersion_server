@@ -1,7 +1,6 @@
 import { DataSource } from 'typeorm';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import { User } from './mymodel/entities/User';
-
 
 dotenv.config();
 
@@ -11,14 +10,22 @@ const dataSource = new DataSource({
   port: 3306,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
+  database: 'sleact',
   entities: [
     User
   ],
   migrations: [__dirname + '/src/migrations/*.ts'],
   charset: 'utf8mb4',
   synchronize: false,
-  logging: true,
+  logging: true
 });
+
+dataSource.initialize()
+    .then(() => {
+        console.log("Data Source has been initialized!")
+    })
+    .catch((err) => {
+        console.error("Error during Data Source initialization", err)
+    })
 
 export default dataSource;
