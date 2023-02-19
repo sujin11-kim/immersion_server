@@ -18,18 +18,23 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const User_1 = require("../../mymodel/entities/User");
 let UsersService = class UsersService {
-    constructor(usersRepository, dataSource) {
-        this.usersRepository = usersRepository;
+    constructor(userRepository, dataSource) {
+        this.userRepository = userRepository;
         this.dataSource = dataSource;
     }
-    async create(ID, name, phone) {
+    async create(id, nickname, phone, favorite, enrolldate, regflag, password, type) {
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
         try {
             const result = await queryRunner.manager.getRepository(User_1.User).save({
-                ID,
-                name,
-                phone
+                id,
+                nickname,
+                phone,
+                favorite,
+                enrolldate,
+                regflag,
+                password,
+                type
             });
             return true;
         }

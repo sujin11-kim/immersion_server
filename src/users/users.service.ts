@@ -8,16 +8,16 @@ import
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import bcrypt from 'bcrypt';
-import {User} from '../../mymodel/entities/User';
+import { User } from '../../mymodel/entities/User';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private usersRepository: Repository<User>,
-    private dataSource: DataSource
+    @InjectRepository(User) private userRepository: Repository<User>,
+    private dataSource: DataSource,
   ) {}
 
-  async create(ID: number, name: string, phone: string) {
+  async create(id: string, nickname: string, phone: string, favorite: string, enrolldate: Date, regflag: string, password: string, type: string) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
 
@@ -25,10 +25,14 @@ export class UsersService {
 
     try {
       const result = await queryRunner.manager.getRepository(User).save({
-        ID,
-        name,
-        phone
-        // password: hashedPassword,
+        id,
+        nickname,
+        phone,
+        favorite,
+        enrolldate,
+        regflag,
+        password,
+        type
       });
       return true;
     } 
