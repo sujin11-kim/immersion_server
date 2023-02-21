@@ -17,14 +17,12 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const users_service_1 = require("./users.service");
-const auth_service_1 = require("../auth/auth.service");
 let UsersController = class UsersController {
-    constructor(usersService, authService) {
+    constructor(usersService) {
         this.usersService = usersService;
-        this.authService = authService;
     }
     async create(data) {
-        const result = await this.usersService.create(data.ID, data.name, data.phone);
+        const result = await this.usersService.create(data.id, data.nickname, data.phone, data.favorite, data.enrolldate, data.regflag, data.password, data.type);
         if (result) {
             return 'success';
         }
@@ -44,8 +42,7 @@ __decorate([
 UsersController = __decorate([
     (0, swagger_1.ApiTags)('USERS'),
     (0, common_1.Controller)('users'),
-    __metadata("design:paramtypes", [users_service_1.UsersService,
-        auth_service_1.AuthService])
+    __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);
 exports.UsersController = UsersController;
 //# sourceMappingURL=users.controller.js.map
