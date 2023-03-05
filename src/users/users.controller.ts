@@ -13,6 +13,7 @@ import {
 import { ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
+import * as bcrypt from 'bcrypt';
 
 @ApiTags('USERS')
 @Controller('users')
@@ -28,6 +29,8 @@ export class UsersController {
     // if (!checkExistUser) {
     //   throw new NotFoundException();
     // }
+    const hashedpassword = await bcrypt.hash(data.password, 12);
+
     const result = await this.usersService.create(
       data.id,
       data.nickname,
@@ -35,7 +38,7 @@ export class UsersController {
       data.favorite,
       data.enrolldate,
       data.regflag,
-      data.password,
+      hashedpassword,
       data.type
     );
     if (result) {

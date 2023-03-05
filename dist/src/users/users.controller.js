@@ -17,12 +17,14 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const users_service_1 = require("./users.service");
+const bcrypt = require("bcrypt");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
     async create(data) {
-        const result = await this.usersService.create(data.id, data.nickname, data.phone, data.favorite, data.enrolldate, data.regflag, data.password, data.type);
+        const hashedpassword = await bcrypt.hash(data.password, 12);
+        const result = await this.usersService.create(data.id, data.nickname, data.phone, data.favorite, data.enrolldate, data.regflag, hashedpassword, data.type);
         if (result) {
             return 'success';
         }

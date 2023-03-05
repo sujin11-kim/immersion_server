@@ -21,6 +21,7 @@ export class UsersService {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
 
+    await queryRunner.startTransaction()
     // const hashedPassword = await bcrypt.hash(password, 12);
 
     try {
@@ -34,10 +35,14 @@ export class UsersService {
         password,
         type
       });
+
+      await queryRunner.commitTransaction()
+
       return true;
     } 
     catch (error) {
       console.error(error);
+      await queryRunner.rollbackTransaction()
       throw error;
     } 
     finally {

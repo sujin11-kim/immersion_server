@@ -25,6 +25,7 @@ let UsersService = class UsersService {
     async create(id, nickname, phone, favorite, enrolldate, regflag, password, type) {
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
+        await queryRunner.startTransaction();
         try {
             const result = await queryRunner.manager.getRepository(User_1.User).save({
                 id,
@@ -36,10 +37,12 @@ let UsersService = class UsersService {
                 password,
                 type
             });
+            await queryRunner.commitTransaction();
             return true;
         }
         catch (error) {
             console.error(error);
+            await queryRunner.rollbackTransaction();
             throw error;
         }
         finally {
