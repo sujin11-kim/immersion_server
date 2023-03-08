@@ -1,5 +1,5 @@
-import { DataSource, Repository } from 'typeorm';
-import { User } from '../../mymodel/entities/User';
+import { DataSource, Repository } from "typeorm";
+import { User } from "../../mymodel/entities/user.entity";
 export declare class UsersService {
     private userRepository;
     private dataSource;

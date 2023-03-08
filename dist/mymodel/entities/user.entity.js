@@ -49,4 +49,4 @@ User = __decorate([
     (0, typeorm_1.Entity)("user", { schema: "immersion_DB" })
 ], User);
 exports.User = User;
-//# sourceMappingURL=User.js.map
+//# sourceMappingURL=user.entity.js.map

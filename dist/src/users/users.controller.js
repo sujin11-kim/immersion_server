@@ -17,14 +17,16 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const users_service_1 = require("./users.service");
+const bcrypt = require("bcrypt");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
     async create(data) {
-        const result = await this.usersService.create(data.id, data.nickname, data.phone, data.favorite, data.enrolldate, data.regflag, data.password, data.type);
+        const hashedpassword = await bcrypt.hash(data.password, 12);
+        const result = await this.usersService.create(data.id, data.nickname, data.phone, data.favorite, data.enrolldate, data.regflag, hashedpassword, data.type);
         if (result) {
-            return 'success';
+            return "success";
         }
         else {
             throw new common_1.ForbiddenException();
@@ -32,16 +34,16 @@ let UsersController = class UsersController {
     }
 };
 __decorate([
-    (0, swagger_1.ApiOperation)({ summary: '회원가입' }),
-    (0, common_1.Post)('register'),
+    (0, swagger_1.ApiOperation)({ summary: "회원가입" }),
+    (0, common_1.Post)("register"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "create", null);
 UsersController = __decorate([
-    (0, swagger_1.ApiTags)('USERS'),
-    (0, common_1.Controller)('users'),
+    (0, swagger_1.ApiTags)("USERS"),
+    (0, common_1.Controller)("users"),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);
 exports.UsersController = UsersController;
