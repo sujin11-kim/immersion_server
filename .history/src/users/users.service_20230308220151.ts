@@ -33,19 +33,27 @@ export class UsersService {
 
     try {
       const user = new User();
-      //const hashedpassword = await bcrypt.hash(user.password, 12);
       (user.id = id),
         (user.nickname = nickname),
         (user.phone = phone),
         (user.favorite = favorite),
         (user.enrolldate = enrolldate),
         (user.regflag = regflag),
-        //(user.password = hashedpassword),
         (user.password = password),
         (user.type = type);
-      await queryRunner.manager.save(user);
 
+      // const result = await queryRunner.manager.getRepository(User).save({
+      //   id,
+      //   nickname,
+      //   phone,
+      //   favorite,
+      //   enrolldate,
+      //   regflag,
+      //   password,
+      //   type,
+      // });
       await queryRunner.commitTransaction();
+      // return true;
     } catch (error) {
       console.error(error);
       await queryRunner.rollbackTransaction();

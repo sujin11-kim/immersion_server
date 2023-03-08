@@ -27,18 +27,17 @@ let UsersService = class UsersService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const result = await queryRunner.manager.getRepository(user_entity_1.User).save({
-                id,
-                nickname,
-                phone,
-                favorite,
-                enrolldate,
-                regflag,
-                password,
-                type,
-            });
+            const user = new user_entity_1.User();
+            (user.id = id),
+                (user.nickname = nickname),
+                (user.phone = phone),
+                (user.favorite = favorite),
+                (user.enrolldate = enrolldate),
+                (user.regflag = regflag),
+                (user.password = password),
+                (user.type = type);
+            await queryRunner.manager.save(user);
             await queryRunner.commitTransaction();
-            return true;
         }
         catch (error) {
             console.error(error);

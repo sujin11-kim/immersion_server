@@ -17,20 +17,13 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const users_service_1 = require("./users.service");
-const bcrypt = require("bcrypt");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
-    async create(data) {
-        const hashedpassword = await bcrypt.hash(data.password, 12);
-        const result = await this.usersService.create(data.id, data.nickname, data.phone, data.favorite, data.enrolldate, data.regflag, hashedpassword, data.type);
-        if (result) {
-            return "success";
-        }
-        else {
-            throw new common_1.ForbiddenException();
-        }
+    async create(dto) {
+        const { id, nickname, phone, favorite, enrolldate, regflag, password, type, } = dto;
+        await this.usersService.create(id, nickname, phone, favorite, enrolldate, regflag, password, type);
     }
 };
 __decorate([

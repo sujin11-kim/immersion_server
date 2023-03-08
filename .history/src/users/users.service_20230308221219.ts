@@ -33,15 +33,14 @@ export class UsersService {
 
     try {
       const user = new User();
-      //const hashedpassword = await bcrypt.hash(user.password, 12);
+      const hashedpassword = await bcrypt.hash(user.password, 12);
       (user.id = id),
         (user.nickname = nickname),
         (user.phone = phone),
         (user.favorite = favorite),
         (user.enrolldate = enrolldate),
         (user.regflag = regflag),
-        //(user.password = hashedpassword),
-        (user.password = password),
+        (user.password = hashedpassword),
         (user.type = type);
       await queryRunner.manager.save(user);
 
