@@ -17,6 +17,7 @@ import { UsersService } from "./users.service";
 import * as bcrypt from "bcrypt";
 import { AuthService } from "src/auth/auth.service";
 import { LoginRequestDto } from "src/auth/dto/login.request.dto";
+import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
 
 @ApiTags("USERS")
 @Controller("users")
@@ -51,8 +52,16 @@ export class UsersController {
     );
   }
 
+  @ApiOperation({ summary: "로그인" })
   @Post("/login")
   login(@Body() data: LoginRequestDto) {
     return this.authService.jwtLogIn(data);
+  }
+
+  @ApiOperation({ summary: "인증확인:현재유저 가져오기" })
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  getCurrentUser() {
+    return "curret user";
   }
 }
