@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
-import bcrypt from "bcrypt";
+import * as bcrypt from "bcrypt";
 import { User } from "../../mymodel/entities/user.entity";
 
 @Injectable()
@@ -29,7 +29,7 @@ export class UsersService {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    // const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     try {
       const user = new User();
@@ -40,8 +40,8 @@ export class UsersService {
         (user.favorite = favorite),
         (user.enrolldate = enrolldate),
         (user.regflag = regflag),
-        //(user.password = hashedpassword),
-        (user.password = password),
+        (user.password = hashedPassword),
+        //(user.password = password),
         (user.type = type);
       await queryRunner.manager.save(user);
 

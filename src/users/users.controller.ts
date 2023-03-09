@@ -15,11 +15,16 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { UserLoginDto } from "./dto/user-login.dto";
 import { UsersService } from "./users.service";
 import * as bcrypt from "bcrypt";
+import { AuthService } from "src/auth/auth.service";
+import { LoginRequestDto } from "src/auth/dto/login.request.dto";
 
 @ApiTags("USERS")
 @Controller("users")
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private readonly authService: AuthService
+  ) {}
 
   @ApiOperation({ summary: "회원가입" })
   @Post("register")
@@ -47,9 +52,7 @@ export class UsersController {
   }
 
   @Post("/login")
-  async login(@Body() dto: UserLoginDto): Promise<string> {
-    const { id, password } = dto;
-
-    return await this.usersService.login(id, password);
+  login(@Body() data: LoginRequestDto) {
+    return this.authService.jwtLogIn(data);
   }
 }

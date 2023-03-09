@@ -16,6 +16,7 @@ exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
+const bcrypt = require("bcrypt");
 const user_entity_1 = require("../../mymodel/entities/user.entity");
 let UsersService = class UsersService {
     constructor(userRepository, dataSource) {
@@ -26,6 +27,7 @@ let UsersService = class UsersService {
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
+        const hashedPassword = await bcrypt.hash(password, 12);
         try {
             const user = new user_entity_1.User();
             (user.id = id),
@@ -34,7 +36,7 @@ let UsersService = class UsersService {
                 (user.favorite = favorite),
                 (user.enrolldate = enrolldate),
                 (user.regflag = regflag),
-                (user.password = password),
+                (user.password = hashedPassword),
                 (user.type = type);
             await queryRunner.manager.save(user);
             await queryRunner.commitTransaction();

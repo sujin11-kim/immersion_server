@@ -1,39 +1,30 @@
-import * as jwt from 'jsonwebtoken';
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-
-interface User {
-    id: string;
-    name: string;
-    email:string
-}
-
-
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
+import { Injectable } from "@nestjs/common";
+import { User } from "mymodel/entities/user.entity";
+import { Repository } from "typeorm";
+import { LoginRequestDto } from "./dto/login.request.dto";
 @Injectable()
 export class AuthService {
-    constructor(
-        @Inject()
-    )
+  constructor(
+    private readonly userRepository: Repository<User>,
+    private jwtService: JwtService
+  ) {}
 
+  async jwtLogIn(data: LoginRequestDto) {
+    const { id, password } = data;
 
-login(user: User) {
-    const payload = { ...user };
+    const user = await this.userRepository.findOneBy({ id });
 
-    return jwt.sign(payload, this.config.jwtSecret, {
-      expiresIn: '1d',
-      audience: 'example.com',
-      issuer: 'example.com',
-    });
+    //* password가 일치한지
+    const isPasswordValidated: boolean = await bcrypt.compare(
+      password,
+      user.password
+    );
+
+    const payload = { id: id, sub: user.id };
+    return {
+      token: this.jwtService.sign(payload),
+    };
   }
-
-
-
-
-
-
-
-
-
-
-
-
 }
