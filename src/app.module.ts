@@ -7,6 +7,7 @@ import { UsersController } from "./users/users.controller";
 import { UsersService } from "./users/users.service";
 import { UsersModule } from "./users/users.module";
 import { User } from "mymodel/entities/user.entity";
+import { AuthModule } from './auth/auth.module';
 
 import Joi from "joi";
 
@@ -38,6 +39,7 @@ import Joi from "joi";
       logging: true,
     }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController, UsersController],
   providers: [AppService, UsersService],
