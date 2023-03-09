@@ -16,7 +16,8 @@ exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const User_1 = require("../../mymodel/entities/User");
+const bcrypt = require("bcrypt");
+const user_entity_1 = require("../../mymodel/entities/user.entity");
 let UsersService = class UsersService {
     constructor(userRepository, dataSource) {
         this.userRepository = userRepository;
@@ -25,31 +26,37 @@ let UsersService = class UsersService {
     async create(id, nickname, phone, favorite, enrolldate, regflag, password, type) {
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
+        await queryRunner.startTransaction();
+        const hashedPassword = await bcrypt.hash(password, 12);
         try {
-            const result = await queryRunner.manager.getRepository(User_1.User).save({
-                id,
-                nickname,
-                phone,
-                favorite,
-                enrolldate,
-                regflag,
-                password,
-                type
-            });
-            return true;
+            const user = new user_entity_1.User();
+            (user.id = id),
+                (user.nickname = nickname),
+                (user.phone = phone),
+                (user.favorite = favorite),
+                (user.enrolldate = enrolldate),
+                (user.regflag = regflag),
+                (user.password = hashedPassword),
+                (user.type = type);
+            await queryRunner.manager.save(user);
+            await queryRunner.commitTransaction();
         }
         catch (error) {
             console.error(error);
+            await queryRunner.rollbackTransaction();
             throw error;
         }
         finally {
             await queryRunner.release();
         }
     }
+    async login(_id, _password) {
+        throw new Error("Method not implemented");
+    }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
+    __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.DataSource])
 ], UsersService);

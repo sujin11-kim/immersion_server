@@ -9,39 +9,50 @@ import {
   Res,
   Session,
   ForbiddenException,
-} from '@nestjs/common';
-import { ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UsersService } from './users.service';
+} from "@nestjs/common";
+import { ApiCookieAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UserLoginDto } from "./dto/user-login.dto";
+import { UsersService } from "./users.service";
+import * as bcrypt from "bcrypt";
+import { AuthService } from "src/auth/auth.service";
+import { LoginRequestDto } from "src/auth/dto/login.request.dto";
 
-@ApiTags('USERS')
-@Controller('users')
+@ApiTags("USERS")
+@Controller("users")
 export class UsersController {
   constructor(
     private usersService: UsersService,
-    ) {}
+    private readonly authService: AuthService
+  ) {}
 
-  @ApiOperation({ summary: '회원가입' })
-  @Post('register')
-  async create(@Body() data: CreateUserDto) {
-    // const checkExistUser = this.usersService.findById(data.ID);
-    // if (!checkExistUser) {
-    //   throw new NotFoundException();
-    // }
-    const result = await this.usersService.create(
-      data.id,
-      data.nickname,
-      data.phone,
-      data.favorite,
-      data.enrolldate,
-      data.regflag,
-      data.password,
-      data.type
+  @ApiOperation({ summary: "회원가입" })
+  @Post("register")
+  async create(@Body() dto: CreateUserDto): Promise<void> {
+    const {
+      id,
+      nickname,
+      phone,
+      favorite,
+      enrolldate,
+      regflag,
+      password,
+      type,
+    } = dto;
+    await this.usersService.create(
+      id,
+      nickname,
+      phone,
+      favorite,
+      enrolldate,
+      regflag,
+      password,
+      type
     );
-    if (result) {
-      return 'success';
-    } else {
-      throw new ForbiddenException();
-    }
+  }
+
+  @Post("/login")
+  login(@Body() data: LoginRequestDto) {
+    return this.authService.jwtLogIn(data);
   }
 }
