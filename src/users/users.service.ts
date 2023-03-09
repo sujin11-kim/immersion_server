@@ -55,7 +55,8 @@ export class UsersService {
     }
   }
 
-  // async login(id: string, password: string): Promsie<string> {
-  //   throw new Error("Method not implemented");
-  // }
+  async login(_id: string, _password: string): Promise<string> {
+    //TODO JWT발급
+    throw new Error("Method not implemented");
+  }
 }

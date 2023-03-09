@@ -32,6 +32,7 @@ AppModule = __decorate([
                 username: process.env.DB_USERNAME,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_DATABASE,
+                entities: [user_entity_1.User],
                 autoLoadEntities: true,
                 keepConnectionAlive: true,
                 migrations: [__dirname + "/migrations/*.ts"],

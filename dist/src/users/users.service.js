@@ -48,6 +48,9 @@ let UsersService = class UsersService {
             await queryRunner.release();
         }
     }
+    async login(_id, _password) {
+        throw new Error("Method not implemented");
+    }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),

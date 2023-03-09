@@ -29,6 +29,7 @@ import Joi from "joi";
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
+      entities: [User],
       autoLoadEntities: true,
       keepConnectionAlive: true,
       migrations: [__dirname + "/migrations/*.ts"],

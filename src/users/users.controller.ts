@@ -46,10 +46,10 @@ export class UsersController {
     );
   }
 
-  // @Post("/login")
-  // async login(@Body() dto: UserLoginDto): Promise<string> {
-  //   const { id, password } = dto;
+  @Post("/login")
+  async login(@Body() dto: UserLoginDto): Promise<string> {
+    const { id, password } = dto;
 
-  //   return await this.usersService.login(id, password);
-  // }
+    return await this.usersService.login(id, password);
+  }
 }
