@@ -27,6 +27,7 @@ let UsersService = class UsersService {
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
+
         const hashedPassword = await bcrypt.hash(password, 12);
         try {
             const user = new user_entity_1.User();
@@ -40,6 +41,7 @@ let UsersService = class UsersService {
                 (user.type = type);
             await queryRunner.manager.save(user);
             await queryRunner.commitTransaction();
+
         }
         catch (error) {
             console.error(error);
