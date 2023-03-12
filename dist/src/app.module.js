@@ -16,8 +16,6 @@ const users_controller_1 = require("./users/users.controller");
 const users_service_1 = require("./users/users.service");
 const users_module_1 = require("./users/users.module");
 const user_entity_1 = require("../mymodel/entities/user.entity");
-const auth_module_1 = require("./auth/auth.module");
-const auth_service_1 = require("./auth/auth.service");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -43,10 +41,9 @@ AppModule = __decorate([
                 logging: true,
             }),
             users_module_1.UsersModule,
-            auth_module_1.AuthModule,
         ],
         controllers: [app_controller_1.AppController, users_controller_1.UsersController],
-        providers: [app_service_1.AppService, users_service_1.UsersService, auth_service_1.AuthService],
+        providers: [app_service_1.AppService, users_service_1.UsersService],
     })
 ], AppModule);
 exports.AppModule = AppModule;
