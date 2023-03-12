@@ -50,6 +50,7 @@ let UsersService = class UsersService {
             await queryRunner.release();
         }
     }
+
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),

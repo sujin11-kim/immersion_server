@@ -28,6 +28,7 @@ export class UsersService {
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
+
     await queryRunner.startTransaction();
     const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -49,6 +50,7 @@ export class UsersService {
     } catch (error) {
       console.error(error);
       await queryRunner.rollbackTransaction();
+
       throw error;
     } finally {
       await queryRunner.release();
@@ -59,4 +61,5 @@ export class UsersService {
   //   //TODO JWT발급
   //   throw new Error("Method not implemented");
   // }
+
 }
