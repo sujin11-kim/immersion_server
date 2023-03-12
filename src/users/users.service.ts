@@ -57,14 +57,9 @@ export class UsersService {
     }
   }
 
-  async login(_id: string, _password: string): Promise<string> {
-    //TODO JWT발급
-    throw new Error("Method not implemented");
-  }
+  // async login(_id: string, _password: string): Promise<string> {
+  //   //TODO JWT발급
+  //   throw new Error("Method not implemented");
+  // }
 
-  async findById(id: string) {
-    const isIdExist = await this.userRepository.findOne({ where: { id: id } });
-
-    return isIdExist;
-  }
 }

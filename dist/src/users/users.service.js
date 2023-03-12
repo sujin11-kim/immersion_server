@@ -50,13 +50,7 @@ let UsersService = class UsersService {
             await queryRunner.release();
         }
     }
-    async login(_id, _password) {
-        throw new Error("Method not implemented");
-    }
-    async findById(id) {
-        const isIdExist = await this.userRepository.findOne({ where: { id: id } });
-        return isIdExist;
-    }
+
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
