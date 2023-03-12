@@ -18,7 +18,6 @@ import * as bcrypt from "bcrypt";
 import { AuthService } from "src/auth/auth.service";
 import { LoginRequestDto } from "src/auth/dto/login.request.dto";
 
-
 @ApiTags("USERS")
 @Controller("users")
 export class UsersController {
@@ -49,7 +48,6 @@ export class UsersController {
       regflag,
       password,
       type
-
     );
   }
 
