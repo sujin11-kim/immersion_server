@@ -8,12 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const jwt_1 = require("@nestjs/jwt");
 const bcrypt = require("bcrypt");
 const common_1 = require("@nestjs/common");
+const user_entity_1 = require("../../mymodel/entities/user.entity");
 const typeorm_1 = require("typeorm");
+const typeorm_2 = require("@nestjs/typeorm");
 let AuthService = class AuthService {
     constructor(userRepository, jwtService) {
         this.userRepository = userRepository;
@@ -23,7 +28,7 @@ let AuthService = class AuthService {
         const { id, password } = data;
         const user = await this.userRepository.findOneBy({ id });
         const isPasswordValidated = await bcrypt.compare(password, user.password);
-        const payload = { id: id, sub: user.id };
+        const payload = { id: id };
         return {
             token: this.jwtService.sign(payload),
         };
@@ -31,6 +36,7 @@ let AuthService = class AuthService {
 };
 AuthService = __decorate([
     (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_2.InjectRepository)(user_entity_1.User)),
     __metadata("design:paramtypes", [typeorm_1.Repository,
         jwt_1.JwtService])
 ], AuthService);

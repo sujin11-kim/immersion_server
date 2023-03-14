@@ -6,6 +6,7 @@ import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 import { UsersModule } from "src/users/users.module";
 import { JwtStrategy } from "./jwt/jwt.strategy";
+import { UsersService } from "src/users/users.service";
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),

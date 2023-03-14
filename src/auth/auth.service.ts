@@ -4,10 +4,12 @@ import { Injectable } from "@nestjs/common";
 import { User } from "mymodel/entities/user.entity";
 import { Repository } from "typeorm";
 import { LoginRequestDto } from "./dto/login.request.dto";
+import { InjectRepository } from "@nestjs/typeorm";
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     private jwtService: JwtService
   ) {}
 
@@ -22,7 +24,7 @@ export class AuthService {
       user.password
     );
 
-    const payload = { id: id, sub: user.id };
+    const payload = { id: id };
     return {
       token: this.jwtService.sign(payload),
     };
