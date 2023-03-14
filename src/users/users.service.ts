@@ -32,6 +32,10 @@ export class UsersService {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     try {
+      const userid = await this.userRepository.findOne({ where: { id } });
+      if (userid) {
+        throw new ForbiddenException("이미 존재하는 사용자입니다");
+      }
       const user = new User();
       //const hashedpassword = await bcrypt.hash(user.password, 12);
       (user.id = id),
@@ -43,11 +47,6 @@ export class UsersService {
         (user.password = hashedPassword),
         //(user.password = password),
         (user.type = type);
-
-      const userid = await this.userRepository.findOne({ where: { id } });
-      if (userid) {
-        throw new ForbiddenException("이미 존재하는 사용자입니다");
-      }
 
       await queryRunner.manager.save(user);
 
@@ -61,8 +60,8 @@ export class UsersService {
     }
   }
 
-  // async login(_id: string, _password: string): Promise<string> {
-  //   //TODO JWT발급
-  //   throw new Error("Method not implemented");
-  // }
+  async login(_id: string, _password: string): Promise<string> {
+    //TODO JWT발급
+    throw new Error("Method not implemented");
+  }
 }
