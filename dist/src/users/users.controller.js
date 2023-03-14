@@ -20,6 +20,7 @@ const users_service_1 = require("./users.service");
 const auth_service_1 = require("../auth/auth.service");
 const login_request_dto_1 = require("../auth/dto/login.request.dto");
 const jwt_guard_1 = require("../auth/jwt/jwt.guard");
+const user_decorator_1 = require("../common/decorators/user.decorator");
 let UsersController = class UsersController {
     constructor(usersService, authService) {
         this.usersService = usersService;
@@ -32,8 +33,8 @@ let UsersController = class UsersController {
     login(data) {
         return this.authService.jwtLogIn(data);
     }
-    getCurrentUser(req) {
-        return req.user;
+    getCurrentUser(user) {
+        return user;
     }
 };
 __decorate([
@@ -56,7 +57,7 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: "인증확인:현재유저 가져오기" }),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Get)(),
-    __param(0, (0, common_1.Req)()),
+    __param(0, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
