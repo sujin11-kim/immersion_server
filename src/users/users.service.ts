@@ -43,6 +43,12 @@ export class UsersService {
         (user.password = hashedPassword),
         //(user.password = password),
         (user.type = type);
+
+      const userid = await this.userRepository.findOne({ where: { id } });
+      if (userid) {
+        throw new ForbiddenException("이미 존재하는 사용자입니다");
+      }
+
       await queryRunner.manager.save(user);
 
       await queryRunner.commitTransaction();
