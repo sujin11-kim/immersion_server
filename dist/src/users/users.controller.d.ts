@@ -10,5 +10,5 @@ export declare class UsersController {
     login(data: LoginRequestDto): Promise<{
         token: string;
     }>;
-    getCurrentUser(): string;
+    getCurrentUser(req: any): any;
 }

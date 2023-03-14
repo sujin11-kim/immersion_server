@@ -32,8 +32,8 @@ let UsersController = class UsersController {
     login(data) {
         return this.authService.jwtLogIn(data);
     }
-    getCurrentUser() {
-        return "curret user";
+    getCurrentUser(req) {
+        return req.user;
     }
 };
 __decorate([
@@ -56,8 +56,9 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: "인증확인:현재유저 가져오기" }),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "getCurrentUser", null);
 UsersController = __decorate([

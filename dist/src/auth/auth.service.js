@@ -28,7 +28,7 @@ let AuthService = class AuthService {
         const { id, password } = data;
         const user = await this.userRepository.findOneBy({ id });
         const isPasswordValidated = await bcrypt.compare(password, user.password);
-        const payload = { id: id };
+        const payload = { id };
         return {
             token: this.jwtService.sign(payload),
         };

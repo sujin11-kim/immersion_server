@@ -28,6 +28,16 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         });
         this.userRepository = userRepository;
     }
+    async validate(payload) {
+        const { id } = payload;
+        const user = await this.userRepository.findOneBy({ id });
+        if (user) {
+            return user;
+        }
+        else {
+            throw new common_1.UnauthorizedException("jset_strategy접근 오류");
+        }
+    }
 };
 JwtStrategy = __decorate([
     (0, common_1.Injectable)(),

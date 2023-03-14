@@ -19,7 +19,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  //     async validate(payload: Payload) {
-  //        const user=await this.userRepository.
-  //    }
+  async validate(payload) {
+    const { id } = payload;
+    const user: User = await this.userRepository.findOneBy({ id });
+
+    if (user) {
+      return user; // request.user
+    } else {
+      throw new UnauthorizedException("jset_strategy접근 오류");
+    }
+  }
 }

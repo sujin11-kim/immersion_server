@@ -9,6 +9,7 @@ import {
   Res,
   Session,
   ForbiddenException,
+  Req,
 } from "@nestjs/common";
 import { ApiCookieAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -61,7 +62,7 @@ export class UsersController {
   @ApiOperation({ summary: "인증확인:현재유저 가져오기" })
   @UseGuards(JwtAuthGuard)
   @Get()
-  getCurrentUser() {
-    return "curret user";
+  getCurrentUser(@Req() req) {
+    return req.user;
   }
 }
