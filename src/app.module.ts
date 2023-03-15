@@ -10,6 +10,7 @@ import { User } from "mymodel/entities/user.entity";
 import { AuthModule } from "./auth/auth.module";
 
 import Joi from "joi";
+import { AuthService } from "./auth/auth.service";
 
 @Module({
   imports: [
@@ -41,7 +42,7 @@ import Joi from "joi";
     UsersModule,
     AuthModule,
   ],
-  controllers: [AppController, UsersController],
-  providers: [AppService, UsersService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
