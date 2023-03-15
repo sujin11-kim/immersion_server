@@ -22,8 +22,20 @@ let UsersController = class UsersController {
         this.usersService = usersService;
     }
     async create(dto) {
-        const { id, nickname, phone, favorite, enrolldate, regflag, password, type, } = dto;
-        await this.usersService.create(id, nickname, phone, favorite, enrolldate, regflag, password, type);
+        const checkExistUser = await this.usersService.findById(dto.id);
+        if (checkExistUser != null) {
+            throw new common_1.NotFoundException();
+        }
+        else {
+            const { id, nickname, phone, favorite, enrolldate, regflag, password, type, } = dto;
+            const result = await this.usersService.create(id, nickname, phone, favorite, enrolldate, regflag, password, type);
+            if (result != null) {
+                return "success";
+            }
+            else {
+                throw new common_1.ForbiddenException();
+            }
+        }
     }
 };
 __decorate([

@@ -50,7 +50,10 @@ let UsersService = class UsersService {
             await queryRunner.release();
         }
     }
-
+    async findById(id) {
+        const isIdExist = await this.userRepository.findOne({ where: { id: id } });
+        return isIdExist;
+    }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),

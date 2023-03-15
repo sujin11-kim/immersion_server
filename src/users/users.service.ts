@@ -62,4 +62,9 @@ export class UsersService {
   //   throw new Error("Method not implemented");
   // }
 
+  async findById(id: string) {
+    const isIdExist = await this.userRepository.findOne({ where: { id: id } });
+
+    return isIdExist;
+  }
 }

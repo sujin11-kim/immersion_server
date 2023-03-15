@@ -28,27 +28,38 @@ export class UsersController {
 
   @ApiOperation({ summary: "회원가입" })
   @Post("register")
-  async create(@Body() dto: CreateUserDto): Promise<void> {
-    const {
-      id,
-      nickname,
-      phone,
-      favorite,
-      enrolldate,
-      regflag,
-      password,
-      type,
-    } = dto;
-    await this.usersService.create(
-      id,
-      nickname,
-      phone,
-      favorite,
-      enrolldate,
-      regflag,
-      password,
-      type
-    );
+  async create(@Body() dto: CreateUserDto) {
+    const checkExistUser = await this.usersService.findById(dto.id);
+
+    if (checkExistUser !== null) {
+      throw new NotFoundException();
+    } else {
+      const {
+        id,
+        nickname,
+        phone,
+        favorite,
+        enrolldate,
+        regflag,
+        password,
+        type,
+      } = dto;
+      const result = await this.usersService.create(
+        id,
+        nickname,
+        phone,
+        favorite,
+        enrolldate,
+        regflag,
+        password,
+        type
+      );
+      if (result) {
+        return "success";
+      } else {
+        throw new ForbiddenException();
+      }
+    }
   }
 
   // @ApiOperation({ summary: "로그인" })
