@@ -1,6 +1,6 @@
 import { Column, Entity } from "typeorm";
 
-@Entity("user", { schema: "immersion_DB" }) //user=USER
+@Entity("User", { schema: "immersion_DB" }) //user=USER
 export class User {
   @Column("varchar", { primary: true, name: "id", length: 10 })
   id: number;
