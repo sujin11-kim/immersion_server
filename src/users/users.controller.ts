@@ -35,8 +35,26 @@ export class UsersController {
   @Post("register")
   @HttpCode(200)
   async create(@Body() dto: CreateUserDto): Promise<string> {
-    const { id, nickname, phone, enrolldate, password } = dto;
-    await this.usersService.create(id, nickname, phone, enrolldate, password);
+    const {
+      id,
+      nickname,
+      phone,
+      favorite,
+      enrolldate,
+      regflag,
+      password,
+      type,
+    } = dto;
+    await this.usersService.create(
+      id,
+      nickname,
+      phone,
+      favorite,
+      enrolldate,
+      regflag,
+      password,
+      type
+    );
     return "signup";
   }
 

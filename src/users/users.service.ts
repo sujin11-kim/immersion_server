@@ -20,8 +20,11 @@ export class UsersService {
     id: number,
     nickname: string,
     phone: string,
+    favorite: string,
     enrolldate: Date,
-    password: string
+    regflag: string,
+    password: string,
+    type: string
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -45,9 +48,13 @@ export class UsersService {
       (user.id = id),
         (user.nickname = nickname),
         (user.phone = phone),
+        (user.favorite = favorite),
         (user.enrolldate = enrolldate),
+        (user.regflag = regflag),
         (user.password = hashedPassword),
-        await queryRunner.manager.save(user);
+        (user.type = type);
+
+      await queryRunner.manager.save(user);
 
       await queryRunner.commitTransaction();
     } catch (error) {

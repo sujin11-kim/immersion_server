@@ -1,6 +1,6 @@
 import { Column, Entity } from "typeorm";
 
-@Entity("User", { schema: "immersion_DB" }) //user=USER
+@Entity("user", { schema: "immersion_DB" }) //user=USER
 export class User {
   @Column("varchar", { primary: true, name: "id", length: 10 })
   id: number;
@@ -14,6 +14,12 @@ export class User {
   @Column("datetime", { name: "enrolldate", nullable: true })
   enrolldate: Date | null;
 
+  @Column("char", { name: "regflag", nullable: true, length: 1 })
+  regflag: string | null;
+
   @Column("varchar", { name: "password", nullable: true, length: 300 })
   password: string | null;
+
+  @Column("varchar", { name: "type", nullable: true, length: 300 })
+  type: string | null;
 }
