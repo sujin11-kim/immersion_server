@@ -24,7 +24,7 @@ AuthModule = AuthModule_1 = __decorate([
             typeorm_1.TypeOrmModule.forFeature([user_entity_1.User]),
             passport_1.PassportModule.register({ defaultStrategy: "jwt", session: false }),
             jwt_1.JwtModule.register({
-                secret: process.env.JWT_SECRET,
+                secret: "secretKey",
                 signOptions: { expiresIn: "1y" },
             }),
             (0, common_1.forwardRef)(() => users_module_1.UsersModule),

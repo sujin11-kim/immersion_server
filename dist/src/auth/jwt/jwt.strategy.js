@@ -8,12 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JwtStrategy = void 0;
 const passport_jwt_1 = require("passport-jwt");
 const passport_1 = require("@nestjs/passport");
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("typeorm");
+const user_entity_1 = require("../../../mymodel/entities/user.entity");
+const typeorm_2 = require("@nestjs/typeorm");
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
     constructor(userRepository) {
         super({
@@ -23,9 +28,20 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         });
         this.userRepository = userRepository;
     }
+    async validate(payload) {
+        const { id } = payload;
+        const user = await this.userRepository.findOneBy({ id });
+        if (user) {
+            return user;
+        }
+        else {
+            throw new common_1.UnauthorizedException("jset_strategy접근 오류");
+        }
+    }
 };
 JwtStrategy = __decorate([
     (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_2.InjectRepository)(user_entity_1.User)),
     __metadata("design:paramtypes", [typeorm_1.Repository])
 ], JwtStrategy);
 exports.JwtStrategy = JwtStrategy;

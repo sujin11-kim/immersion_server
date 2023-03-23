@@ -19,6 +19,8 @@ const create_user_dto_1 = require("./dto/create-user.dto");
 const users_service_1 = require("./users.service");
 const auth_service_1 = require("../auth/auth.service");
 const login_request_dto_1 = require("../auth/dto/login.request.dto");
+const jwt_guard_1 = require("../auth/jwt/jwt.guard");
+const user_decorator_1 = require("../common/decorators/user.decorator");
 let UsersController = class UsersController {
     constructor(usersService, authService) {
         this.usersService = usersService;
@@ -31,6 +33,9 @@ let UsersController = class UsersController {
     login(data) {
         return this.authService.jwtLogIn(data);
     }
+    getCurrentUser(user) {
+        return user;
+    }
 };
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "회원가입" }),
@@ -41,12 +46,22 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "create", null);
 __decorate([
-    (0, common_1.Post)("/login"),
+    (0, swagger_1.ApiOperation)({ summary: "로그인" }),
+    (0, common_1.Post)("login"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [login_request_dto_1.LoginRequestDto]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "login", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: "인증확인:현재유저 가져오기" }),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
+    (0, common_1.Get)(),
+    __param(0, (0, user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "getCurrentUser", null);
 UsersController = __decorate([
     (0, swagger_1.ApiTags)("USERS"),
     (0, common_1.Controller)("users"),

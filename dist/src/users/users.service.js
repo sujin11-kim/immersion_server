@@ -29,6 +29,10 @@ let UsersService = class UsersService {
         await queryRunner.startTransaction();
         const hashedPassword = await bcrypt.hash(password, 12);
         try {
+            const userid = await this.userRepository.findOne({ where: { id } });
+            if (userid) {
+                throw new common_1.ForbiddenException("이미 존재하는 사용자입니다");
+            }
             const user = new user_entity_1.User();
             (user.id = id),
                 (user.nickname = nickname),
@@ -53,6 +57,7 @@ let UsersService = class UsersService {
     async login(_id, _password) {
         throw new Error("Method not implemented");
     }
+
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
