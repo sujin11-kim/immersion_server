@@ -14,8 +14,8 @@ const typeorm_1 = require("typeorm");
 let User = class User {
 };
 __decorate([
-    (0, typeorm_1.Column)("varchar", { primary: true, name: "id", length: 15 }),
-    __metadata("design:type", String)
+    (0, typeorm_1.Column)("varchar", { primary: true, name: "id", length: 10 }),
+    __metadata("design:type", Number)
 ], User.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)("varchar", { name: "nickname", nullable: true, length: 20 }),
@@ -26,25 +26,13 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "phone", void 0);
 __decorate([
-    (0, typeorm_1.Column)("varchar", { name: "favorite", nullable: true, length: 50 }),
-    __metadata("design:type", String)
-], User.prototype, "favorite", void 0);
-__decorate([
     (0, typeorm_1.Column)("datetime", { name: "enrolldate", nullable: true }),
     __metadata("design:type", Date)
 ], User.prototype, "enrolldate", void 0);
 __decorate([
-    (0, typeorm_1.Column)("char", { name: "regflag", nullable: true, length: 1 }),
-    __metadata("design:type", String)
-], User.prototype, "regflag", void 0);
-__decorate([
     (0, typeorm_1.Column)("varchar", { name: "password", nullable: true, length: 300 }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
-__decorate([
-    (0, typeorm_1.Column)("varchar", { name: "type", nullable: true, length: 300 }),
-    __metadata("design:type", String)
-], User.prototype, "type", void 0);
 User = __decorate([
     (0, typeorm_1.Entity)("user", { schema: "immersion_DB" })
 ], User);

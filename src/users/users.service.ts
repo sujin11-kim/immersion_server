@@ -17,14 +17,11 @@ export class UsersService {
   ) {}
 
   async create(
-    id: string,
+    id: number,
     nickname: string,
     phone: string,
-    favorite: string,
     enrolldate: Date,
-    regflag: string,
-    password: string,
-    type: string
+    password: string
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -35,21 +32,22 @@ export class UsersService {
     try {
       const userid = await this.userRepository.findOne({ where: { id } });
       if (userid) {
-        throw new ForbiddenException("이미 존재하는 사용자입니다");
+        throw new ForbiddenException("이미 존재하는 id 입니다");
       }
+
+      const phoneNum = await this.userRepository.findOne({ where: { phone } });
+      if (phoneNum) {
+        throw new ForbiddenException("이미 존재하는 번호 입니다");
+      }
+
       const user = new User();
-      //const hashedpassword = await bcrypt.hash(user.password, 12);
+
       (user.id = id),
         (user.nickname = nickname),
         (user.phone = phone),
-        (user.favorite = favorite),
         (user.enrolldate = enrolldate),
-        (user.regflag = regflag),
         (user.password = hashedPassword),
-        //(user.password = password),
-        (user.type = type);
-
-      await queryRunner.manager.save(user);
+        await queryRunner.manager.save(user);
 
       await queryRunner.commitTransaction();
     } catch (error) {

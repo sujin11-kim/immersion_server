@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, ParseIntPipe, ValidationPipe } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
 import { AppController } from "./app.controller";
@@ -8,6 +8,7 @@ import { UsersService } from "./users/users.service";
 import { UsersModule } from "./users/users.module";
 import { User } from "mymodel/entities/user.entity";
 import { AuthModule } from "./auth/auth.module";
+import { APP_PIPE } from "@nestjs/core";
 
 import Joi from "joi";
 import { AuthService } from "./auth/auth.service";
@@ -43,6 +44,12 @@ import { AuthService } from "./auth/auth.service";
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
+  ],
 })
 export class AppModule {}

@@ -10,6 +10,8 @@ import {
   Session,
   ForbiddenException,
   Req,
+  HttpStatus,
+  HttpCode,
 } from "@nestjs/common";
 import { ApiCookieAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -31,38 +33,11 @@ export class UsersController {
 
   @ApiOperation({ summary: "회원가입" })
   @Post("register")
-  async create(@Body() dto: CreateUserDto) {
-    const checkExistUser = await this.usersService.findById(dto.id);
-
-    if (checkExistUser !== null) {
-      throw new NotFoundException();
-    } else {
-      const {
-        id,
-        nickname,
-        phone,
-        favorite,
-        enrolldate,
-        regflag,
-        password,
-        type,
-      } = dto;
-      const result = await this.usersService.create(
-        id,
-        nickname,
-        phone,
-        favorite,
-        enrolldate,
-        regflag,
-        password,
-        type
-      );
-      if (result) {
-        return "success";
-      } else {
-        throw new ForbiddenException();
-      }
-    }
+  @HttpCode(200)
+  async create(@Body() dto: CreateUserDto): Promise<string> {
+    const { id, nickname, phone, enrolldate, password } = dto;
+    await this.usersService.create(id, nickname, phone, enrolldate, password);
+    return "signup";
   }
 
   @ApiOperation({ summary: "로그인" })

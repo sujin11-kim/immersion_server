@@ -27,20 +27,9 @@ let UsersController = class UsersController {
         this.authService = authService;
     }
     async create(dto) {
-        const checkExistUser = await this.usersService.findById(dto.id);
-        if (checkExistUser != null) {
-            throw new common_1.NotFoundException();
-        }
-        else {
-            const { id, nickname, phone, favorite, enrolldate, regflag, password, type, } = dto;
-            const result = await this.usersService.create(id, nickname, phone, favorite, enrolldate, regflag, password, type);
-            if (result != null) {
-                return "success";
-            }
-            else {
-                throw new common_1.ForbiddenException();
-            }
-        }
+        const { id, nickname, phone, enrolldate, password } = dto;
+        await this.usersService.create(id, nickname, phone, enrolldate, password);
+        return "signup";
     }
     login(data) {
         return this.authService.jwtLogIn(data);
@@ -52,6 +41,7 @@ let UsersController = class UsersController {
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "회원가입" }),
     (0, common_1.Post)("register"),
+    (0, common_1.HttpCode)(200),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
