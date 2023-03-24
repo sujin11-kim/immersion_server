@@ -30,9 +30,6 @@ let UsersService = class UsersService {
         const hashedPassword = await bcrypt.hash(password, 12);
         try {
             const userid = await this.userRepository.findOne({ where: { id } });
-            if (userid) {
-                throw new common_1.ForbiddenException("이미 존재하는 사용자입니다");
-            }
             const user = new User_1.User();
             (user.id = id),
                 (user.nickName = nickname),
@@ -45,10 +42,18 @@ let UsersService = class UsersService {
         catch (error) {
             const userid = await this.userRepository.findOne({ where: { id } });
             if (userid) {
-                throw new common_1.ForbiddenException("이미 존재하는 사용자입니다");
+                const curr = new Date();
+                const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+                const KR_TIME_DIFF = 18 * 60 * 60 * 1000;
+                const kr_curr = new Date(utc + KR_TIME_DIFF);
+                throw new common_1.HttpException({
+                    isSuccess: true,
+                    code: 2000,
+                    kr_curr,
+                    message: "이미 존재하는 id 입니다.",
+                }, 403);
             }
             console.error(error);
-            throw new common_1.HttpException("no create user", 401);
             await queryRunner.rollbackTransaction();
         }
         finally {
