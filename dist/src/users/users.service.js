@@ -43,9 +43,13 @@ let UsersService = class UsersService {
             await queryRunner.commitTransaction();
         }
         catch (error) {
+            const userid = await this.userRepository.findOne({ where: { id } });
+            if (userid) {
+                throw new common_1.ForbiddenException("이미 존재하는 사용자입니다");
+            }
             console.error(error);
+            throw new common_1.HttpException("no create user", 401);
             await queryRunner.rollbackTransaction();
-            throw error;
         }
         finally {
             await queryRunner.release();
