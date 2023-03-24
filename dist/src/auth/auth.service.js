@@ -29,9 +29,14 @@ let AuthService = class AuthService {
         const user = await this.userRepository.findOneBy({ id });
         const isPasswordValidated = await bcrypt.compare(password, user.password);
         const payload = { id };
-        return {
-            token: this.jwtService.sign(payload),
-        };
+        if (user && (await bcrypt.compare(password, user.password))) {
+            return {
+                token: this.jwtService.sign(payload),
+            };
+        }
+        else {
+            throw new common_1.UnauthorizedException("login failed");
+        }
     }
 };
 AuthService = __decorate([
