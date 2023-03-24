@@ -1,7 +1,7 @@
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { forwardRef, Module } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { User } from "mymodel/entities/user.entity";
+import { User } from "mymodel/entities/User";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 import { UsersModule } from "src/users/users.module";

@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import * as bcrypt from "bcrypt";
-import { User } from "../../mymodel/entities/user.entity";
+import { User } from "../../mymodel/entities/User";
 
 @Injectable()
 export class UsersService {
@@ -17,14 +17,11 @@ export class UsersService {
   ) {}
 
   async create(
-    id: string,
+    id: number,
     nickname: string,
     phone: string,
-    favorite: string,
-    enrolldate: Date,
-    regflag: string,
-    password: string,
-    type: string
+    enrollDate: Date,
+    password: string
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -38,18 +35,12 @@ export class UsersService {
         throw new ForbiddenException("이미 존재하는 사용자입니다");
       }
       const user = new User();
-      //const hashedpassword = await bcrypt.hash(user.password, 12);
       (user.id = id),
-        (user.nickname = nickname),
+        (user.nickName = nickname),
         (user.phone = phone),
-        (user.favorite = favorite),
-        (user.enrolldate = enrolldate),
-        (user.regflag = regflag),
+        (user.enrollDate = enrollDate),
         (user.password = hashedPassword),
-        //(user.password = password),
-        (user.type = type);
-
-      await queryRunner.manager.save(user);
+        await queryRunner.manager.save(user);
 
       await queryRunner.commitTransaction();
     } catch (error) {

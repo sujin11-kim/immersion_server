@@ -27,8 +27,8 @@ let UsersController = class UsersController {
         this.authService = authService;
     }
     async create(dto) {
-        const { id, nickname, phone, favorite, enrolldate, regflag, password, type, } = dto;
-        await this.usersService.create(id, nickname, phone, favorite, enrolldate, regflag, password, type);
+        const { id, nickName, phone, enrollDate, password } = dto;
+        await this.usersService.create(id, nickName, phone, enrollDate, password);
     }
     login(data) {
         return this.authService.jwtLogIn(data);

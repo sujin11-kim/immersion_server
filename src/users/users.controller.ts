@@ -32,26 +32,8 @@ export class UsersController {
   @ApiOperation({ summary: "회원가입" })
   @Post("register")
   async create(@Body() dto: CreateUserDto): Promise<void> {
-    const {
-      id,
-      nickname,
-      phone,
-      favorite,
-      enrolldate,
-      regflag,
-      password,
-      type,
-    } = dto;
-    await this.usersService.create(
-      id,
-      nickname,
-      phone,
-      favorite,
-      enrolldate,
-      regflag,
-      password,
-      type
-    );
+    const { id, nickName, phone, enrollDate, password } = dto;
+    await this.usersService.create(id, nickName, phone, enrollDate, password);
   }
 
   @ApiOperation({ summary: "로그인" })
