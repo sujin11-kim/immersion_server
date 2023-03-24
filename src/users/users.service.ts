@@ -31,9 +31,6 @@ export class UsersService {
 
     try {
       const userid = await this.userRepository.findOne({ where: { id } });
-      if (userid) {
-        throw new ForbiddenException("이미 존재하는 사용자입니다");
-      }
       const user = new User();
       (user.id = id),
         (user.nickName = nickname),
@@ -46,10 +43,22 @@ export class UsersService {
     } catch (error) {
       const userid = await this.userRepository.findOne({ where: { id } });
       if (userid) {
-        throw new ForbiddenException("이미 존재하는 사용자입니다");
+        const curr = new Date();
+        const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+        const KR_TIME_DIFF = 18 * 60 * 60 * 1000;
+        const kr_curr = new Date(utc + KR_TIME_DIFF);
+
+        throw new HttpException(
+          {
+            isSuccess: true,
+            code: 2000,
+            kr_curr,
+            message: "이미 존재하는 id 입니다.",
+          },
+          403
+        );
       }
       console.error(error);
-      throw new HttpException("no create user", 401);
       await queryRunner.rollbackTransaction();
     } finally {
       await queryRunner.release();
