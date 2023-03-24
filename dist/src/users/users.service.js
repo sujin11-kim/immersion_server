@@ -17,13 +17,13 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const bcrypt = require("bcrypt");
-const user_entity_1 = require("../../mymodel/entities/user.entity");
+const User_1 = require("../../mymodel/entities/User");
 let UsersService = class UsersService {
     constructor(userRepository, dataSource) {
         this.userRepository = userRepository;
         this.dataSource = dataSource;
     }
-    async create(id, nickname, phone, favorite, enrolldate, regflag, password, type) {
+    async create(id, nickname, phone, enrollDate, password) {
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
@@ -33,16 +33,13 @@ let UsersService = class UsersService {
             if (userid) {
                 throw new common_1.ForbiddenException("이미 존재하는 사용자입니다");
             }
-            const user = new user_entity_1.User();
+            const user = new User_1.User();
             (user.id = id),
-                (user.nickname = nickname),
+                (user.nickName = nickname),
                 (user.phone = phone),
-                (user.favorite = favorite),
-                (user.enrolldate = enrolldate),
-                (user.regflag = regflag),
+                (user.enrollDate = enrollDate),
                 (user.password = hashedPassword),
-                (user.type = type);
-            await queryRunner.manager.save(user);
+                await queryRunner.manager.save(user);
             await queryRunner.commitTransaction();
         }
         catch (error) {
@@ -57,11 +54,10 @@ let UsersService = class UsersService {
     async login(_id, _password) {
         throw new Error("Method not implemented");
     }
-
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
+    __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.DataSource])
 ], UsersService);

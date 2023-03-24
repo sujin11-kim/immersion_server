@@ -1,6 +1,6 @@
 import { Strategy } from "passport-jwt";
 import { Repository } from "typeorm";
-import { User } from "mymodel/entities/user.entity";
+import { User } from "mymodel/entities/User";
 declare const JwtStrategy_base: new (...args: any[]) => Strategy;
 export declare class JwtStrategy extends JwtStrategy_base {
     private userRepository;
