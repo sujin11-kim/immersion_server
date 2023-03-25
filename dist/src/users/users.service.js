@@ -51,7 +51,7 @@ let UsersService = class UsersService {
                     code: 2000,
                     kr_curr,
                     message: "이미 존재하는 id 입니다.",
-                }, 403);
+                }, 200);
             }
             console.error(error);
             await queryRunner.rollbackTransaction();

@@ -55,7 +55,7 @@ export class UsersService {
             kr_curr,
             message: "이미 존재하는 id 입니다.",
           },
-          403
+          200
         );
       }
       console.error(error);

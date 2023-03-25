@@ -25,17 +25,43 @@ let AuthService = class AuthService {
         this.jwtService = jwtService;
     }
     async jwtLogIn(data) {
+        const curr = new Date();
+        const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+        const KR_TIME_DIFF = 18 * 60 * 60 * 1000;
+        const kr_curr = new Date(utc + KR_TIME_DIFF);
         const { id, password } = data;
         const user = await this.userRepository.findOneBy({ id });
+        if (!user) {
+            throw new common_1.HttpException({
+                isSuccess: true,
+                code: 200,
+                data: {
+                    token: "",
+                },
+                kr_curr,
+            }, 200);
+        }
         const isPasswordValidated = await bcrypt.compare(password, user.password);
         const payload = { id };
         if (user && (await bcrypt.compare(password, user.password))) {
-            return {
-                token: this.jwtService.sign(payload),
-            };
+            throw new common_1.HttpException({
+                isSuccess: true,
+                code: 200,
+                data: {
+                    token: this.jwtService.sign(payload),
+                },
+                kr_curr,
+            }, 200);
         }
         else {
-            throw new common_1.UnauthorizedException("login failed");
+            throw new common_1.HttpException({
+                isSuccess: true,
+                code: 200,
+                data: {
+                    token: "",
+                },
+                kr_curr,
+            }, 200);
         }
     }
 };
