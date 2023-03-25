@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginRequestDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
-const user_entity_1 = require("../../../mymodel/entities/user.entity");
-class LoginRequestDto extends (0, swagger_1.PickType)(user_entity_1.User, [
+const User_1 = require("../../../mymodel/entities/User");
+class LoginRequestDto extends (0, swagger_1.PickType)(User_1.User, [
     "id",
     "password",
 ]) {

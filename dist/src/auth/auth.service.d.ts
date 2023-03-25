@@ -1,5 +1,5 @@
 import { JwtService } from "@nestjs/jwt";
-import { User } from "mymodel/entities/user.entity";
+import { User } from "mymodel/entities/User";
 import { Repository } from "typeorm";
 import { LoginRequestDto } from "./dto/login.request.dto";
 export declare class AuthService {

@@ -1,7 +1,7 @@
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import { Injectable } from "@nestjs/common";
-import { User } from "mymodel/entities/user.entity";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { User } from "mymodel/entities/User";
 import { Repository } from "typeorm";
 import { LoginRequestDto } from "./dto/login.request.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -25,8 +25,13 @@ export class AuthService {
     );
 
     const payload = { id };
-    return {
-      token: this.jwtService.sign(payload),
-    };
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return {
+        token: this.jwtService.sign(payload),
+      };
+    } else {
+      throw new UnauthorizedException("login failed");
+    }
   }
 }

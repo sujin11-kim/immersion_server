@@ -13,9 +13,8 @@ const config_1 = require("@nestjs/config");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const users_module_1 = require("./users/users.module");
-const user_entity_1 = require("../mymodel/entities/user.entity");
+const User_1 = require("../mymodel/entities/User");
 const auth_module_1 = require("./auth/auth.module");
-const core_1 = require("@nestjs/core");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -24,7 +23,7 @@ AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
             }),
-            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User]),
+            typeorm_1.TypeOrmModule.forFeature([User_1.User]),
             typeorm_1.TypeOrmModule.forRoot({
                 type: "mysql",
                 host: process.env.DB_HOST,
@@ -32,7 +31,7 @@ AppModule = __decorate([
                 username: process.env.DB_USERNAME,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_DATABASE,
-                entities: [user_entity_1.User],
+                entities: [User_1.User],
                 autoLoadEntities: true,
                 keepConnectionAlive: true,
                 migrations: [__dirname + "/migrations/*.ts"],
@@ -44,13 +43,7 @@ AppModule = __decorate([
             auth_module_1.AuthModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [
-            app_service_1.AppService,
-            {
-                provide: core_1.APP_PIPE,
-                useClass: common_1.ValidationPipe,
-            },
-        ],
+        providers: [app_service_1.AppService],
     })
 ], AppModule);
 exports.AppModule = AppModule;
