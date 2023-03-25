@@ -1,7 +1,7 @@
 export declare class CreateUserDto {
     readonly id: number;
-    readonly nickname: string;
+    readonly nickName: string;
     readonly phone: string;
-    readonly enrolldate: Date;
+    readonly enrollDate: Date;
     readonly password: string;
 }

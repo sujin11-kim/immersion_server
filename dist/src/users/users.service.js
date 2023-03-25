@@ -17,39 +17,44 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const bcrypt = require("bcrypt");
-const user_entity_1 = require("../../mymodel/entities/user.entity");
+const User_1 = require("../../mymodel/entities/User");
 let UsersService = class UsersService {
     constructor(userRepository, dataSource) {
         this.userRepository = userRepository;
         this.dataSource = dataSource;
     }
-    async create(id, nickname, phone, enrolldate, password) {
+    async create(id, nickname, phone, enrollDate, password) {
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
         const hashedPassword = await bcrypt.hash(password, 12);
         try {
             const userid = await this.userRepository.findOne({ where: { id } });
-            if (userid) {
-                throw new common_1.ForbiddenException("이미 존재하는 id 입니다");
-            }
-            const phoneNum = await this.userRepository.findOne({ where: { phone } });
-            if (phoneNum) {
-                throw new common_1.ForbiddenException("이미 존재하는 번호 입니다");
-            }
-            const user = new user_entity_1.User();
+            const user = new User_1.User();
             (user.id = id),
-                (user.nickname = nickname),
+                (user.nickName = nickname),
                 (user.phone = phone),
-                (user.enrolldate = enrolldate),
+                (user.enrollDate = enrollDate),
                 (user.password = hashedPassword),
                 await queryRunner.manager.save(user);
             await queryRunner.commitTransaction();
         }
         catch (error) {
+            const userid = await this.userRepository.findOne({ where: { id } });
+            if (userid) {
+                const curr = new Date();
+                const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+                const KR_TIME_DIFF = 18 * 60 * 60 * 1000;
+                const kr_curr = new Date(utc + KR_TIME_DIFF);
+                throw new common_1.HttpException({
+                    isSuccess: true,
+                    code: 2000,
+                    kr_curr,
+                    message: "이미 존재하는 id 입니다.",
+                }, 403);
+            }
             console.error(error);
             await queryRunner.rollbackTransaction();
-            throw error;
         }
         finally {
             await queryRunner.release();
@@ -61,7 +66,7 @@ let UsersService = class UsersService {
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
+    __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.DataSource])
 ], UsersService);

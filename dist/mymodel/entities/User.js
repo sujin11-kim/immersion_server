@@ -14,27 +14,33 @@ const typeorm_1 = require("typeorm");
 let User = class User {
 };
 __decorate([
-    (0, typeorm_1.Column)("varchar", { primary: true, name: "id", length: 10 }),
+    (0, typeorm_1.PrimaryGeneratedColumn)({ type: "int", name: "userIdx" }),
+    __metadata("design:type", Number)
+], User.prototype, "userIdx", void 0);
+__decorate([
+    (0, typeorm_1.Column)("int", { name: "id", unique: true }),
     __metadata("design:type", Number)
 ], User.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)("varchar", { name: "nickname", nullable: true, length: 20 }),
+    (0, typeorm_1.Column)("varchar", { name: "nickName", nullable: true, length: 20 }),
     __metadata("design:type", String)
-], User.prototype, "nickname", void 0);
+], User.prototype, "nickName", void 0);
 __decorate([
     (0, typeorm_1.Column)("char", { name: "phone", nullable: true, length: 11 }),
     __metadata("design:type", String)
 ], User.prototype, "phone", void 0);
 __decorate([
-    (0, typeorm_1.Column)("datetime", { name: "enrolldate", nullable: true }),
+    (0, typeorm_1.Column)("timestamp", { name: "enrollDate", nullable: true }),
     __metadata("design:type", Date)
-], User.prototype, "enrolldate", void 0);
+], User.prototype, "enrollDate", void 0);
 __decorate([
     (0, typeorm_1.Column)("varchar", { name: "password", nullable: true, length: 300 }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 User = __decorate([
+    (0, typeorm_1.Index)("User_id_uindex", ["id"], { unique: true }),
+    (0, typeorm_1.Index)("User_userIdx_uindex", ["userIdx"], { unique: true }),
     (0, typeorm_1.Entity)("User", { schema: "immersion_DB" })
 ], User);
 exports.User = User;
-//# sourceMappingURL=user.entity.js.map
+//# sourceMappingURL=User.js.map

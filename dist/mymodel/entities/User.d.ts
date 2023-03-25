@@ -1,7 +1,8 @@
 export declare class User {
+    userIdx: number;
     id: number;
-    nickname: string | null;
+    nickName: string | null;
     phone: string | null;
-    enrolldate: Date | null;
+    enrollDate: Date | null;
     password: string | null;
 }

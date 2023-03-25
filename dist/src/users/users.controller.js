@@ -21,15 +21,16 @@ const auth_service_1 = require("../auth/auth.service");
 const login_request_dto_1 = require("../auth/dto/login.request.dto");
 const jwt_guard_1 = require("../auth/jwt/jwt.guard");
 const user_decorator_1 = require("../common/decorators/user.decorator");
+const use_interceptors_decorator_1 = require("@nestjs/common/decorators/core/use-interceptors.decorator");
+const suucess_interceptor_1 = require("../common/intercepors/suucess.interceptor");
 let UsersController = class UsersController {
     constructor(usersService, authService) {
         this.usersService = usersService;
         this.authService = authService;
     }
     async create(dto) {
-        const { id, nickname, phone, enrolldate, password } = dto;
-        await this.usersService.create(id, nickname, phone, enrolldate, password);
-        return "signup";
+        const { id, nickName, phone, enrollDate, password } = dto;
+        await this.usersService.create(id, nickName, phone, enrollDate, password);
     }
     login(data) {
         return this.authService.jwtLogIn(data);
@@ -41,7 +42,6 @@ let UsersController = class UsersController {
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "회원가입" }),
     (0, common_1.Post)("register"),
-    (0, common_1.HttpCode)(200),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
@@ -67,6 +67,7 @@ __decorate([
 UsersController = __decorate([
     (0, swagger_1.ApiTags)("USERS"),
     (0, common_1.Controller)("users"),
+    (0, use_interceptors_decorator_1.UseInterceptors)(suucess_interceptor_1.SuccessInterceptor),
     __metadata("design:paramtypes", [users_service_1.UsersService,
         auth_service_1.AuthService])
 ], UsersController);
