@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Comment } from "./Comment";
 import { LikePost } from "./LikePost";
@@ -26,10 +28,10 @@ export class Post {
   @Column("varchar", { name: "content", nullable: true, length: 300 })
   content: string | null;
 
-  @Column("timestamp", { name: "createdAt", nullable: true })
-  createdAt: Date | null;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column("timestamp", { name: "updatedAt", nullable: true })
+  @UpdateDateColumn()
   updatedAt: Date | null;
 
   @Column("mediumblob", { name: "image", nullable: true })

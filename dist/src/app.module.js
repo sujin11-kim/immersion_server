@@ -13,8 +13,15 @@ const config_1 = require("@nestjs/config");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const users_module_1 = require("./users/users.module");
-const user_entity_1 = require("../mymodel/entities/user.entity");
+const User_1 = require("../mymodel/entities/User");
 const auth_module_1 = require("./auth/auth.module");
+const Message_1 = require("../mymodel/entities/Message");
+const Post_1 = require("../mymodel/entities/Post");
+const LikePost_1 = require("../mymodel/entities/LikePost");
+const Comment_1 = require("../mymodel/entities/Comment");
+const ChatUser_1 = require("../mymodel/entities/ChatUser");
+const ChatRoom_1 = require("../mymodel/entities/ChatRoom");
+const post_module_1 = require("./post/post.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -23,7 +30,7 @@ AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
             }),
-            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User]),
+            typeorm_1.TypeOrmModule.forFeature([User_1.User]),
             typeorm_1.TypeOrmModule.forRoot({
                 type: "mysql",
                 host: process.env.DB_HOST,
@@ -31,7 +38,7 @@ AppModule = __decorate([
                 username: process.env.DB_USERNAME,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_DATABASE,
-                entities: [user_entity_1.User],
+                entities: [User_1.User, Post_1.Post, Message_1.Message, LikePost_1.LikePost, Comment_1.Comment, ChatUser_1.ChatUser, ChatRoom_1.ChatRoom],
                 autoLoadEntities: true,
                 keepConnectionAlive: true,
                 migrations: [__dirname + "/migrations/*.ts"],
@@ -41,6 +48,7 @@ AppModule = __decorate([
             }),
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
+            post_module_1.PostModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

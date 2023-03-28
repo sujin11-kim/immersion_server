@@ -10,6 +10,7 @@ import {
   Session,
   ForbiddenException,
   Req,
+  HttpCode,
 } from "@nestjs/common";
 import { ApiCookieAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -20,9 +21,14 @@ import { AuthService } from "src/auth/auth.service";
 import { LoginRequestDto } from "src/auth/dto/login.request.dto";
 import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
 import { CurrentUser } from "src/common/decorators/user.decorator";
+import { UseInterceptors } from "@nestjs/common/decorators/core/use-interceptors.decorator";
+import { SuccessInterceptor } from "src/common/intercepors/suucess.interceptor";
+import { UseFilters } from "@nestjs/common/decorators/core/exception-filters.decorator";
+import { HttpExceptionFilter } from "src/common/exception/http-exception.filter";
 
 @ApiTags("USERS")
 @Controller("users")
+@UseInterceptors(SuccessInterceptor)
 export class UsersController {
   constructor(
     private usersService: UsersService,
@@ -31,27 +37,10 @@ export class UsersController {
 
   @ApiOperation({ summary: "회원가입" })
   @Post("register")
+  // @UseFilters(HttpExceptionFilter)
   async create(@Body() dto: CreateUserDto): Promise<void> {
-    const {
-      id,
-      nickname,
-      phone,
-      favorite,
-      enrolldate,
-      regflag,
-      password,
-      type,
-    } = dto;
-    await this.usersService.create(
-      id,
-      nickname,
-      phone,
-      favorite,
-      enrolldate,
-      regflag,
-      password,
-      type
-    );
+    const { id, nickName, phone, enrollDate, password } = dto;
+    await this.usersService.create(id, nickName, phone, enrollDate, password);
   }
 
   @ApiOperation({ summary: "로그인" })

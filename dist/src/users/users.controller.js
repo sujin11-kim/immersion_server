@@ -21,14 +21,16 @@ const auth_service_1 = require("../auth/auth.service");
 const login_request_dto_1 = require("../auth/dto/login.request.dto");
 const jwt_guard_1 = require("../auth/jwt/jwt.guard");
 const user_decorator_1 = require("../common/decorators/user.decorator");
+const use_interceptors_decorator_1 = require("@nestjs/common/decorators/core/use-interceptors.decorator");
+const suucess_interceptor_1 = require("../common/intercepors/suucess.interceptor");
 let UsersController = class UsersController {
     constructor(usersService, authService) {
         this.usersService = usersService;
         this.authService = authService;
     }
     async create(dto) {
-        const { id, nickname, phone, favorite, enrolldate, regflag, password, type, } = dto;
-        await this.usersService.create(id, nickname, phone, favorite, enrolldate, regflag, password, type);
+        const { id, nickName, phone, enrollDate, password } = dto;
+        await this.usersService.create(id, nickName, phone, enrollDate, password);
     }
     login(data) {
         return this.authService.jwtLogIn(data);
@@ -65,6 +67,7 @@ __decorate([
 UsersController = __decorate([
     (0, swagger_1.ApiTags)("USERS"),
     (0, common_1.Controller)("users"),
+    (0, use_interceptors_decorator_1.UseInterceptors)(suucess_interceptor_1.SuccessInterceptor),
     __metadata("design:paramtypes", [users_service_1.UsersService,
         auth_service_1.AuthService])
 ], UsersController);

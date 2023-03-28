@@ -11,42 +11,46 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
+const ChatUser_1 = require("./ChatUser");
+const LikePost_1 = require("./LikePost");
 let User = class User {
 };
 __decorate([
-    (0, typeorm_1.Column)("varchar", { primary: true, name: "id", length: 15 }),
-    __metadata("design:type", String)
+    (0, typeorm_1.PrimaryGeneratedColumn)({ type: "int", name: "userIdx" }),
+    __metadata("design:type", Number)
+], User.prototype, "userIdx", void 0);
+__decorate([
+    (0, typeorm_1.Column)("int", { name: "id", unique: true }),
+    __metadata("design:type", Number)
 ], User.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)("varchar", { name: "nickname", nullable: true, length: 20 }),
+    (0, typeorm_1.Column)("varchar", { name: "nickName", nullable: true, length: 20 }),
     __metadata("design:type", String)
-], User.prototype, "nickname", void 0);
+], User.prototype, "nickName", void 0);
 __decorate([
     (0, typeorm_1.Column)("char", { name: "phone", nullable: true, length: 11 }),
     __metadata("design:type", String)
 ], User.prototype, "phone", void 0);
 __decorate([
-    (0, typeorm_1.Column)("varchar", { name: "favorite", nullable: true, length: 50 }),
-    __metadata("design:type", String)
-], User.prototype, "favorite", void 0);
-__decorate([
-    (0, typeorm_1.Column)("datetime", { name: "enrolldate", nullable: true }),
+    (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
-], User.prototype, "enrolldate", void 0);
-__decorate([
-    (0, typeorm_1.Column)("char", { name: "regflag", nullable: true, length: 1 }),
-    __metadata("design:type", String)
-], User.prototype, "regflag", void 0);
+], User.prototype, "enrollDate", void 0);
 __decorate([
     (0, typeorm_1.Column)("varchar", { name: "password", nullable: true, length: 300 }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
-    (0, typeorm_1.Column)("varchar", { name: "type", nullable: true, length: 300 }),
-    __metadata("design:type", String)
-], User.prototype, "type", void 0);
+    (0, typeorm_1.OneToMany)(() => ChatUser_1.ChatUser, (chatUser) => chatUser.userIdx2),
+    __metadata("design:type", Array)
+], User.prototype, "chatUsers", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => LikePost_1.LikePost, (likePost) => likePost.userIdx2),
+    __metadata("design:type", LikePost_1.LikePost)
+], User.prototype, "likePost", void 0);
 User = __decorate([
-    (0, typeorm_1.Entity)("user", { schema: "immersion_DB" })
+    (0, typeorm_1.Index)("User_id_uindex", ["id"], { unique: true }),
+    (0, typeorm_1.Index)("User_userIdx_uindex", ["userIdx"], { unique: true }),
+    (0, typeorm_1.Entity)("User", { schema: "immersion_DB" })
 ], User);
 exports.User = User;
-//# sourceMappingURL=user.entity.js.map
+//# sourceMappingURL=User.js.map

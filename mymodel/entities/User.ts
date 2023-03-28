@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   OneToMany,
@@ -25,7 +26,7 @@ export class User {
   @Column("char", { name: "phone", nullable: true, length: 11 })
   phone: string | null;
 
-  @Column("timestamp", { name: "enrollDate", nullable: true })
+  @CreateDateColumn()
   enrollDate: Date | null;
 
   @Column("varchar", { name: "password", nullable: true, length: 300 })

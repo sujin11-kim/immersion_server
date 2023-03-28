@@ -2,7 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const dotenv = require("dotenv");
-const user_entity_1 = require("./mymodel/entities/user.entity");
+const User_1 = require("./mymodel/entities/User");
+const ChatRoom_1 = require("./mymodel/entities/ChatRoom");
+const ChatUser_1 = require("./mymodel/entities/ChatUser");
+const Comment_1 = require("./mymodel/entities/Comment");
+const LikePost_1 = require("./mymodel/entities/LikePost");
+const Post_1 = require("./mymodel/entities/Post");
+const Message_1 = require("./mymodel/entities/Message");
 dotenv.config();
 const dataSource = new typeorm_1.DataSource({
     type: "mysql",
@@ -10,8 +16,8 @@ const dataSource = new typeorm_1.DataSource({
     port: 3306,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
-    database: "sleact",
-    entities: [user_entity_1.User],
+    database: "immersion_DB",
+    entities: [User_1.User, ChatRoom_1.ChatRoom, ChatUser_1.ChatUser, Comment_1.Comment, LikePost_1.LikePost, Post_1.Post, Message_1.Message],
     migrations: [__dirname + "/src/migrations/*.ts"],
     charset: "utf8mb4",
     synchronize: false,

@@ -11,7 +11,7 @@ exports.AuthModule = void 0;
 const typeorm_1 = require("@nestjs/typeorm");
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
-const user_entity_1 = require("../../mymodel/entities/user.entity");
+const User_1 = require("../../mymodel/entities/User");
 const passport_1 = require("@nestjs/passport");
 const jwt_1 = require("@nestjs/jwt");
 const users_module_1 = require("../users/users.module");
@@ -21,7 +21,7 @@ let AuthModule = AuthModule_1 = class AuthModule {
 AuthModule = AuthModule_1 = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User]),
+            typeorm_1.TypeOrmModule.forFeature([User_1.User]),
             passport_1.PassportModule.register({ defaultStrategy: "jwt", session: false }),
             jwt_1.JwtModule.register({
                 secret: "secretKey",
