@@ -5,3 +5,4 @@ export class CreateUserDto {
   readonly enrollDate: Date;
   readonly password: string;
 }
+

@@ -7,8 +7,8 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { ChatUser } from "./ChatUser";
-import { LikePost } from "./LikePost";
+// import { ChatUser } from "./ChatUser";
+// import { LikePost } from "./LikePost";
 
 @Index("User_id_uindex", ["id"], { unique: true })
 @Index("User_userIdx_uindex", ["userIdx"], { unique: true })
@@ -32,9 +32,9 @@ export class User {
   @Column("varchar", { name: "password", nullable: true, length: 300 })
   password: string | null;
 
-  @OneToMany(() => ChatUser, (chatUser) => chatUser.userIdx2)
-  chatUsers: ChatUser[];
+  // @OneToMany(() => ChatUser, (chatUser) => chatUser.userIdx2)
+  // chatUsers: ChatUser[];
 
-  @OneToOne(() => LikePost, (likePost) => likePost.userIdx2)
-  likePost: LikePost;
+  // @OneToOne(() => LikePost, (likePost) => likePost.userIdx2)
+  // likePost: LikePost;
 }
