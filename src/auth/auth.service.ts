@@ -1,5 +1,6 @@
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
+import { Injectable } from "@nestjs/common";
 import {
   HttpException,
   Injectable,
