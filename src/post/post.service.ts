@@ -9,6 +9,7 @@ import * as multerS3 from "multer-s3";
 import * as AWS from "aws-sdk";
 import { AwsService } from "src/aws.service";
 import { User } from "mymodel/entities/User";
+import { Comment } from "mymodel/entities/Comment";
 
 @Injectable()
 export class PostService {
@@ -19,6 +20,8 @@ export class PostService {
     private readonly imageRepository: Repository<Image>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Comment)
+    private readonly commentRepository: Repository<Comment>,
     private readonly awsService: AwsService,
     private dataSource: DataSource
   ) {}
@@ -77,6 +80,7 @@ export class PostService {
       return {
         ...savedPost,
         imagePath: pathArray,
+        commentList: [],
       };
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -97,7 +101,11 @@ export class PostService {
             where: { postIdx: post.postIdx },
           });
           const imagePath = images.map((image) => image.path);
-          return { ...post, imagePath };
+          const Comments = await queryRunner.manager.find(Comment, {
+            where: { postIdx: post.postIdx },
+          });
+          const commentList = Comments.map((comment) => comment);
+          return { ...post, imagePath, commentList };
         })
       );
       return result;
@@ -119,9 +127,15 @@ export class PostService {
       });
       const imagePath = images.map((image) => image.path);
 
+      const Comments = await this.commentRepository.find({
+        where: { postIdx: post.postIdx },
+      });
+      const commentList = Comments.map((comment) => comment);
+
       const readonlyPost: readonlyPostDto = {
         ...post,
         imagePath,
+        commentList,
       };
       readonlyPosts.push(readonlyPost);
     }
@@ -142,10 +156,15 @@ export class PostService {
         where: { postIdx: post.postIdx },
       });
       const imagePath = images.map((image) => image.path);
+      const Comments = await this.commentRepository.find({
+        where: { postIdx: post.postIdx },
+      });
+      const commentList = Comments.map((comment) => comment);
 
       const readonlyPost: readonlyPostDto = {
         ...post,
         imagePath,
+        commentList,
       };
       readonlyPosts.push(readonlyPost);
     }
