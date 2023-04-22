@@ -18,14 +18,26 @@ export class Comment {
   @Column("int", { primary: true, name: "postIdx" })
   postIdx: number;
 
-  @Column("varchar", { name: "commnetWriter", nullable: true, length: 20 })
-  commnetWriter: string | null;
+  @Column("varchar", { name: "CommentWriter", nullable: true, length: 20 })
+  CommentWriter: string | null;
+
+  @Column("int", { name: "parentCommentIdx", nullable: true })
+  parentCommentIdx: number | null;
+
+  @Column("int", { name: "depth", nullable: true })
+  depth: number | null;
 
   @Column("timestamp", { name: "commentAt", nullable: true })
   commentAt: Date | null;
 
   @Column("varchar", { name: "commentContent", nullable: true, length: 500 })
   commentContent: string | null;
+
+  @Column("bool", { name: "isDeleted", nullable: true })
+  isDeleted: boolean | null;
+
+  @Column("int", { name: "writeIdx", nullable: true })
+  writeIdx: number | null;
 
   @ManyToOne(() => Post, (post) => post.comments, {
     onDelete: "NO ACTION",

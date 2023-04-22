@@ -7,13 +7,13 @@ import {
 import { Request, Response } from "express";
 
 @Catch(HttpException)
-export class HttpExceptionFilter implements ExceptionFilter {
+export class RegisterHttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
-    const error = exception.getResponse();
+    const error = exception.getResponse() as { message: string | string[] };
 
     const curr = new Date();
     const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
@@ -21,10 +21,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const kr_curr = new Date(utc + KR_TIME_DIFF);
 
     response.status(status).json({
-      success: true,
+      isSuccess: true,
       code: status,
-      data: error,
       kr_curr,
+      ...error,
     });
   }
 }

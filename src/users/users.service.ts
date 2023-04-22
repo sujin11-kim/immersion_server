@@ -24,45 +24,24 @@ export class UsersService {
     password: string
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
 
-    await queryRunner.startTransaction();
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    try {
-      const userid = await this.userRepository.findOne({ where: { id } });
-      const user = new User();
-      (user.id = id),
-        (user.nickName = nickname),
-        (user.phone = phone),
-        (user.enrollDate = enrollDate),
-        (user.password = hashedPassword),
-        await queryRunner.manager.save(user);
+    const userid = await this.userRepository.findOne({ where: { id } });
 
-      await queryRunner.commitTransaction();
-    } catch (error) {
-      const userid = await this.userRepository.findOne({ where: { id } });
-      if (userid) {
-        const curr = new Date();
-        const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
-        const KR_TIME_DIFF = 18 * 60 * 60 * 1000;
-        const kr_curr = new Date(utc + KR_TIME_DIFF);
-
-        throw new HttpException(
-          {
-            isSuccess: true,
-            code: 2000,
-            kr_curr,
-            message: "이미 존재하는 id 입니다.",
-          },
-          200
-        );
-      }
-      console.error(error);
-      await queryRunner.rollbackTransaction();
-    } finally {
-      await queryRunner.release();
+    if (userid) {
+      throw new HttpException({ message: "이미 존재하는 id 입니다." }, 201);
     }
+
+    const user = new User();
+    (user.id = id),
+      (user.nickName = nickname),
+      (user.phone = phone),
+      (user.enrollDate = enrollDate),
+      (user.password = hashedPassword),
+      await queryRunner.manager.save(user);
+
+    return { message: "회원가입에 성공하였습니다." };
   }
 
   async login(_id: string, _password: string): Promise<string> {

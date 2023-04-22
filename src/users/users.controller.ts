@@ -25,10 +25,11 @@ import { UseInterceptors } from "@nestjs/common/decorators/core/use-interceptors
 import { SuccessInterceptor } from "src/common/intercepors/suucess.interceptor";
 import { UseFilters } from "@nestjs/common/decorators/core/exception-filters.decorator";
 import { HttpExceptionFilter } from "src/common/exception/http-exception.filter";
+import { RegisterSuccessInterceptor } from "src/common/intercepors/register.success.interceptor";
+import { RegisterHttpExceptionFilter } from "src/common/exception/register.http-exceptoin.filter";
 
 @ApiTags("USERS")
 @Controller("users")
-@UseInterceptors(SuccessInterceptor)
 export class UsersController {
   constructor(
     private usersService: UsersService,
@@ -36,14 +37,23 @@ export class UsersController {
   ) {}
 
   @ApiOperation({ summary: "회원가입" })
+  @UseInterceptors(RegisterSuccessInterceptor)
+  @UseFilters(RegisterHttpExceptionFilter)
   @Post("register")
-  // @UseFilters(HttpExceptionFilter)
-  async create(@Body() dto: CreateUserDto): Promise<void> {
+  async create(@Body() dto: CreateUserDto) {
     const { id, nickName, phone, enrollDate, password } = dto;
-    await this.usersService.create(id, nickName, phone, enrollDate, password);
+    return await this.usersService.create(
+      id,
+      nickName,
+      phone,
+      enrollDate,
+      password
+    );
   }
 
   @ApiOperation({ summary: "로그인" })
+  @UseInterceptors(SuccessInterceptor)
+  @UseFilters(HttpExceptionFilter)
   @Post("login")
   login(@Body() data: LoginRequestDto) {
     return this.authService.jwtLogIn(data);
