@@ -17,7 +17,10 @@ import { LikePost } from "mymodel/entities/LikePost";
 import { Comment } from "mymodel/entities/Comment";
 import { ChatUser } from "mymodel/entities/ChatUser";
 import { ChatRoom } from "mymodel/entities/ChatRoom";
-import { PostModule } from './post/post.module';
+import { PostModule } from "./post/post.module";
+import { CommentModule } from "./comment/comment.module";
+import { Image } from "mymodel/entities/Image";
+import { AwsService } from "./aws.service";
 
 @Module({
   imports: [
@@ -38,7 +41,16 @@ import { PostModule } from './post/post.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, Post, Message, LikePost, Comment, ChatUser, ChatRoom],
+      entities: [
+        User,
+        Post,
+        Message,
+        LikePost,
+        Comment,
+        ChatUser,
+        ChatRoom,
+        Image,
+      ],
       autoLoadEntities: true,
       keepConnectionAlive: true,
       migrations: [__dirname + "/migrations/*.ts"],
@@ -49,8 +61,9 @@ import { PostModule } from './post/post.module';
     UsersModule,
     AuthModule,
     PostModule,
+    CommentModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AwsService],
 })
 export class AppModule {}

@@ -1,33 +1,83 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource, QueryRunner } from 'typeorm';
-import { Post } from '../../mymodel/entities/Post';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, DataSource, QueryRunner } from "typeorm";
+import { Post } from "../../mymodel/entities/Post";
+import { UserLoginDto } from "src/users/dto/user-login.dto";
+import { Image } from "mymodel/entities/Image";
+import { readonlyPostDto } from "./dto/readonly-post.dto";
+import * as multerS3 from "multer-s3";
+import * as AWS from "aws-sdk";
+import { AwsService } from "src/aws.service";
+import { User } from "mymodel/entities/User";
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
+    @InjectRepository(Image)
+    private readonly imageRepository: Repository<Image>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly awsService: AwsService,
     private dataSource: DataSource
   ) {}
 
   async createPost(
-    title: string, 
-    content: string
-    ): Promise<Post> { // 객체 타입 선언 : Promise 
-    const queryRunner = this.dataSource.createQueryRunner();
+    user: UserLoginDto,
+    category: string,
+    title: string,
+    content: string,
+    files: multerS3.File[]
+  ): Promise<readonlyPostDto> {
+    const queryRunner =
+      this.postRepository.manager.connection.createQueryRunner();
     await queryRunner.connect();
 
     await queryRunner.startTransaction();
 
     try {
+      const loginUser = await this.userRepository.findOne({
+        where: { id: user.id },
+      });
+      const nickName = loginUser.nickName;
+
       const post = new Post();
+      post.writeIdx = user.id;
+      post.category = category;
       post.title = title;
       post.content = content;
-      const savedPost = await queryRunner.manager.save(post); // insert 문과 대응.
+      post.nickName = nickName;
+      const savedPost = await queryRunner.manager.save(post);
+
+      const lastPost = await this.postRepository.findOne({
+        where: {},
+        order: { postIdx: "DESC" },
+      });
+
+      const lastPostIdx = lastPost.postIdx;
+
+      const pathArray = [];
+
+      const imagePromise = files.map(async (file) => {
+        const s3Object = await this.awsService.uploadFileToS3("post", file);
+        const image = new Image();
+        image.postIdx = lastPostIdx + 1;
+        image.path = this.awsService.getAwsS3FileUrl(s3Object.key);
+        pathArray.push(image.path);
+        image.imageName = file.originalname;
+        image.size = file.size;
+        image.Type = file.mimetype;
+        image.imageKey = s3Object.key;
+        return queryRunner.manager.save(image);
+      });
+      await Promise.all(imagePromise);
 
       await queryRunner.commitTransaction();
-      return savedPost;
+      return {
+        ...savedPost,
+        imagePath: pathArray,
+      };
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw err;
@@ -36,24 +86,70 @@ export class PostService {
     }
   }
 
-  async findAll(): Promise<Post[]> {
+  async findAll(): Promise<readonlyPostDto[]> {
     const queryRunner = this.dataSource.createQueryRunner();
     try {
       await queryRunner.connect();
-      return await queryRunner.manager.find(Post);
+      const posts = await queryRunner.manager.find(Post);
+      const result: readonlyPostDto[] = await Promise.all(
+        posts.map(async (post) => {
+          const images = await queryRunner.manager.find(Image, {
+            where: { postIdx: post.postIdx },
+          });
+          const imagePath = images.map((image) => image.path);
+          return { ...post, imagePath };
+        })
+      );
+      return result;
     } finally {
       await queryRunner.release();
     }
   }
 
-  async findOne(writeIdx: number): Promise<Post> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    try {
-      await queryRunner.connect();
-      return await queryRunner.manager.findOne(Post, { relations: ["writeIdx"] });
-    } finally {
-      await queryRunner.release();
+  async findIdPost(id: number): Promise<readonlyPostDto[]> {
+    const posts = await this.postRepository.find({
+      where: { writeIdx: id },
+    });
+
+    const readonlyPosts = [];
+
+    for (const post of posts) {
+      const images = await this.imageRepository.find({
+        where: { postIdx: post.postIdx },
+      });
+      const imagePath = images.map((image) => image.path);
+
+      const readonlyPost: readonlyPostDto = {
+        ...post,
+        imagePath,
+      };
+      readonlyPosts.push(readonlyPost);
     }
+
+    return readonlyPosts;
+  }
+
+  async findCategoryPost(category: string): Promise<readonlyPostDto[]> {
+    console.log(category);
+    const posts = await this.postRepository.find({
+      where: { category: category },
+    });
+
+    const readonlyPosts = [];
+
+    for (const post of posts) {
+      const images = await this.imageRepository.find({
+        where: { postIdx: post.postIdx },
+      });
+      const imagePath = images.map((image) => image.path);
+
+      const readonlyPost: readonlyPostDto = {
+        ...post,
+        imagePath,
+      };
+      readonlyPosts.push(readonlyPost);
+    }
+
+    return readonlyPosts;
   }
 }
-

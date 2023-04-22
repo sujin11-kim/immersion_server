@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
 @Injectable()
-export class SuccessInterceptor implements NestInterceptor {
+export class RegisterSuccessInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const curr = new Date();
     const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
@@ -17,10 +17,10 @@ export class SuccessInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map((data) => ({
-        success: true,
+        isSuccess: true,
         code: 201,
-        data,
         kr_curr,
+        message: data.message,
       }))
     );
   }
