@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
@@ -27,7 +28,7 @@ export class Comment {
   @Column("int", { name: "depth", nullable: true })
   depth: number | null;
 
-  @Column("timestamp", { name: "commentAt", nullable: true })
+  @CreateDateColumn()
   commentAt: Date | null;
 
   @Column("varchar", { name: "commentContent", nullable: true, length: 500 })
