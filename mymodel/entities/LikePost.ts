@@ -5,6 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToOne,
+  PrimaryGeneratedColumn,
 } from "typeorm";
 import { Post } from "./Post";
 import { User } from "./User";
@@ -12,8 +13,11 @@ import { User } from "./User";
 @Index("FK_Post_TO_LikePost_1", ["postIdx"], {})
 @Entity("LikePost", { schema: "immersion_DB" })
 export class LikePost {
-  @Column("int", { primary: true, name: "userIdx" })
-  userIdx: number;
+  @PrimaryGeneratedColumn({ type: "int", name: "likeIdx" })
+  likeIdx: number;
+
+  @Column("int", { name: "userId" })
+  userId: number;
 
   @Column("int", { name: "postIdx" })
   postIdx: number;
@@ -25,10 +29,10 @@ export class LikePost {
   @JoinColumn([{ name: "postIdx", referencedColumnName: "postIdx" }])
   postIdx2: Post;
 
-  @OneToOne(() => User, (user) => user.likePost, {
+  @ManyToOne(() => User, (user) => user.likePost, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
-  @JoinColumn([{ name: "userIdx", referencedColumnName: "userIdx" }])
-  userIdx2: User;
+  @JoinColumn([{ name: "userId", referencedColumnName: "id" }])
+  userId2: User;
 }

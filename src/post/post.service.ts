@@ -10,6 +10,7 @@ import * as AWS from "aws-sdk";
 import { AwsService } from "src/aws.service";
 import { User } from "mymodel/entities/User";
 import { Comment } from "mymodel/entities/Comment";
+import { LikePost } from "mymodel/entities/LikePost";
 
 @Injectable()
 export class PostService {
@@ -20,6 +21,8 @@ export class PostService {
     private readonly imageRepository: Repository<Image>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(LikePost)
+    private readonly likePostRepository: Repository<LikePost>,
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
     private readonly awsService: AwsService,
@@ -53,19 +56,12 @@ export class PostService {
       post.nickName = nickName;
       const savedPost = await queryRunner.manager.save(post);
 
-      const lastPost = await this.postRepository.findOne({
-        where: {},
-        order: { postIdx: "DESC" },
-      });
-
-      const lastPostIdx = lastPost.postIdx;
-
       const pathArray = [];
 
       const imagePromise = files.map(async (file) => {
         const s3Object = await this.awsService.uploadFileToS3("post", file);
         const image = new Image();
-        image.postIdx = lastPostIdx + 1;
+        image.postIdx = savedPost.postIdx;
         image.path = this.awsService.getAwsS3FileUrl(s3Object.key);
         pathArray.push(image.path);
         image.imageName = file.originalname;
@@ -170,5 +166,94 @@ export class PostService {
     }
 
     return readonlyPosts;
+  }
+
+  async postLike(user: UserLoginDto, postIdx: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const editpost = await this.postRepository.findOne({
+        where: { postIdx },
+      });
+
+      editpost.likeNum += 1;
+      const likeEditPost = await queryRunner.manager.save(editpost);
+
+      const likePost = new LikePost();
+      likePost.postIdx = postIdx;
+      likePost.userId = user.id;
+      await queryRunner.manager.save(likePost);
+
+      const images = await this.imageRepository.find({
+        where: { postIdx },
+      });
+      const imagePath = images.map((image) => image.path);
+
+      const Comments = await this.commentRepository.find({
+        where: { postIdx },
+      });
+      const commentList = Comments.map((comment) => comment);
+
+      const readonlyPost: readonlyPostDto = {
+        ...likeEditPost,
+        imagePath,
+        commentList,
+      };
+
+      await queryRunner.commitTransaction();
+
+      return readonlyPost;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async postLikeCancel(user: UserLoginDto, postIdx: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const editpost = await this.postRepository.findOne({
+        where: { postIdx },
+      });
+
+      editpost.likeNum -= 1;
+      const likeEditPost = await queryRunner.manager.save(editpost);
+
+      await this.likePostRepository.delete({ userId: user.id });
+
+      const images = await this.imageRepository.find({
+        where: { postIdx },
+      });
+      const imagePath = images.map((image) => image.path);
+
+      const Comments = await this.commentRepository.find({
+        where: { postIdx },
+      });
+      const commentList = Comments.map((comment) => comment);
+
+      const readonlyPost: readonlyPostDto = {
+        ...likeEditPost,
+        imagePath,
+        commentList,
+      };
+
+      await queryRunner.commitTransaction();
+
+      return readonlyPost;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

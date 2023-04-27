@@ -35,6 +35,6 @@ export class User {
   @OneToMany(() => ChatUser, (chatUser) => chatUser.userIdx2)
   chatUsers: ChatUser[];
 
-  @OneToOne(() => LikePost, (likePost) => likePost.userIdx2)
+  @OneToOne(() => LikePost, (likePost) => likePost.userId2)
   likePost: LikePost;
 }

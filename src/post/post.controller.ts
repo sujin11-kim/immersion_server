@@ -69,8 +69,23 @@ export class PostController {
     return this.postService.createPost(user, category, title, content, files);
   }
 
-  @Post("image")
-  getImage(@Body("key") key: string) {
-    return this.awsService.deleteS3Object(key);
+  @ApiOperation({ summary: "게시물 좋아요" })
+  @UseGuards(JwtAuthGuard)
+  @Post("/likePost")
+  postLike(
+    @Body("postIdx") postIdx: number,
+    @CurrentUser() user: UserLoginDto
+  ) {
+    return this.postService.postLike(user, postIdx);
+  }
+
+  @ApiOperation({ summary: "게시물 좋아요 취소" })
+  @UseGuards(JwtAuthGuard)
+  @Post("/likeCancelPost")
+  postLikeCancel(
+    @Body("postIdx") postIdx: number,
+    @CurrentUser() user: UserLoginDto
+  ) {
+    return this.postService.postLikeCancel(user, postIdx);
   }
 }
