@@ -7,7 +7,7 @@ export declare class PostController {
     private readonly postService;
     private readonly awsService;
     constructor(postService: PostService, awsService: AwsService);
-    findAll(): Promise<import("./dto/readonly-post.dto").readonlyPostDto[]>;
+    findAll(page: number, pageSize: number): Promise<import("./dto/readonly-post.dto").readonlyPostDto[]>;
     findIdPost(user: UserLoginDto): Promise<import("./dto/readonly-post.dto").readonlyPostDto[]>;
     findCategoryPost(category: string): Promise<import("./dto/readonly-post.dto").readonlyPostDto[]>;
     create(createPostDto: CreatePostDto, files: Express.Multer.File[], user: UserLoginDto): Promise<import("./dto/readonly-post.dto").readonlyPostDto>;

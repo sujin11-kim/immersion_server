@@ -29,8 +29,8 @@ let PostController = class PostController {
         this.postService = postService;
         this.awsService = awsService;
     }
-    findAll() {
-        return this.postService.findAll();
+    findAll(page, pageSize) {
+        return this.postService.findAll(page, pageSize);
     }
     findIdPost(user) {
         return this.postService.findIdPost(user.id);
@@ -55,8 +55,10 @@ let PostController = class PostController {
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "모든 게시물 조회" }),
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)("page")),
+    __param(1, (0, common_1.Query)("pageSize")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", void 0)
 ], PostController.prototype, "findAll", null);
 __decorate([
@@ -69,9 +71,9 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], PostController.prototype, "findIdPost", null);
 __decorate([
-    (0, swagger_1.ApiOperation)({ summary: "현재 user의 게시물 조회" }),
-    (0, common_1.Post)("/category"),
-    __param(0, (0, common_1.Body)("category")),
+    (0, swagger_1.ApiOperation)({ summary: "카테고리 게시물 조회" }),
+    (0, common_1.Get)("/category"),
+    __param(0, (0, common_1.Query)("category")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)

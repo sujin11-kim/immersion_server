@@ -86,28 +86,27 @@ export class PostService {
     }
   }
 
-  async findAll(): Promise<readonlyPostDto[]> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    try {
-      await queryRunner.connect();
-      const posts = await queryRunner.manager.find(Post);
-      const result: readonlyPostDto[] = await Promise.all(
-        posts.map(async (post) => {
-          const images = await queryRunner.manager.find(Image, {
-            where: { postIdx: post.postIdx },
-          });
-          const imagePath = images.map((image) => image.path);
-          const Comments = await queryRunner.manager.find(Comment, {
-            where: { postIdx: post.postIdx },
-          });
-          const commentList = Comments.map((comment) => comment);
-          return { ...post, imagePath, commentList };
-        })
-      );
-      return result;
-    } finally {
-      await queryRunner.release();
-    }
+  async findAll(page: number, pageSize: number): Promise<readonlyPostDto[]> {
+    const manager = this.dataSource.manager;
+    const offset = (page - 1) * pageSize;
+    const posts = await manager.find(Post, {
+      skip: offset,
+      take: pageSize,
+    });
+    const result: readonlyPostDto[] = await Promise.all(
+      posts.map(async (post) => {
+        const images = await manager.find(Image, {
+          where: { postIdx: post.postIdx },
+        });
+        const imagePath = images.map((image) => image.path);
+        const comments = await manager.find(Comment, {
+          where: { postIdx: post.postIdx },
+        });
+        const commentList = comments.map((comment) => comment);
+        return { ...post, imagePath, commentList };
+      })
+    );
+    return result;
   }
 
   async findIdPost(id: number): Promise<readonlyPostDto[]> {
