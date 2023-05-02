@@ -8,6 +8,7 @@ import {
   UploadedFiles,
   UseInterceptors,
   UseFilters,
+  Query,
 } from "@nestjs/common";
 import { PostService } from "./post.service";
 import { CreatePostDto } from "./dto/create-post.dto";
@@ -35,8 +36,8 @@ export class PostController {
 
   @ApiOperation({ summary: "모든 게시물 조회" })
   @Get()
-  findAll() {
-    return this.postService.findAll();
+  findAll(@Query("page") page: number, @Query("pageSize") pageSize: number) {
+    return this.postService.findAll(page, pageSize);
   }
 
   @ApiOperation({ summary: "현재 user의 게시물 조회" })
@@ -46,9 +47,9 @@ export class PostController {
     return this.postService.findIdPost(user.id);
   }
 
-  @ApiOperation({ summary: "현재 user의 게시물 조회" })
-  @Post("/category")
-  findCategoryPost(@Body("category") category: string) {
+  @ApiOperation({ summary: "카테고리 게시물 조회" })
+  @Get("/category")
+  findCategoryPost(@Query("category") category: string) {
     console.log(category);
     return this.postService.findCategoryPost(category);
   }
