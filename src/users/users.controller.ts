@@ -11,6 +11,7 @@ import {
   ForbiddenException,
   Req,
   HttpCode,
+  Headers
 } from "@nestjs/common";
 import { ApiCookieAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -57,6 +58,14 @@ export class UsersController {
   @Post("login")
   login(@Body() data: LoginRequestDto) {
     return this.authService.jwtLogIn(data);
+  }
+
+  @ApiOperation({ summary: "카카오로그인" })
+  @UseInterceptors(SuccessInterceptor)
+  @UseFilters(HttpExceptionFilter)
+  @Get("kakaologin")
+  kakaoLogin(@Headers('Authorization') customHeader: string) {
+    return this.authService.kakaoTokenToLocalToken(customHeader);
   }
 
   @ApiOperation({ summary: "인증확인:현재유저 가져오기" })
