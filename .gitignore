@@ -3,4 +3,5 @@ node_modules
 *-audit.json
 .DS_STORE
 .history/
-dist/
+
+dist/tsconfig.build.tsbuildinfo

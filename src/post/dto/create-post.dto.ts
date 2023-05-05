@@ -1,11 +1,9 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { PickType } from "@nestjs/swagger";
+import { IsNotEmpty, IsString } from "class-validator";
+import { Post } from "mymodel/entities/Post";
 
-export class CreatePostDto {
-  @IsNotEmpty()
-  @IsString()
-  readonly title: string;
-
-  @IsNotEmpty()
-  @IsString()
-  readonly content: string;
-}
+export class CreatePostDto extends PickType(Post, [
+  "title",
+  "content",
+  "category",
+] as const) {}
