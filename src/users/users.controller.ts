@@ -61,7 +61,7 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: "카카오로그인" })
-  @UseInterceptors(SuccessInterceptor)
+  // @UseInterceptors(SuccessInterceptor)
   @UseFilters(HttpExceptionFilter)
   @Get("kakaologin")
   kakaoLogin(@Headers('Authorization') customHeader: string) {

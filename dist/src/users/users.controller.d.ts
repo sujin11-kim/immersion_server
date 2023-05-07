@@ -12,5 +12,6 @@ export declare class UsersController {
     login(data: LoginRequestDto): Promise<{
         token: string;
     }>;
+    kakaoLogin(customHeader: string): Promise<any>;
     getCurrentUser(user: any): any;
 }

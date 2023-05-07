@@ -19,10 +19,14 @@ const common_1 = require("@nestjs/common");
 const User_1 = require("../../mymodel/entities/User");
 const typeorm_1 = require("typeorm");
 const typeorm_2 = require("@nestjs/typeorm");
+const axios_1 = require("axios");
 let AuthService = class AuthService {
     constructor(userRepository, jwtService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.axiosInstance = axios_1.default.create({
+            baseURL: 'https://kapi.kakao.com/v2/user/me',
+        });
     }
     async jwtLogIn(data) {
         const { id, password } = data;
@@ -37,6 +41,24 @@ let AuthService = class AuthService {
         }
         else {
             throw new common_1.HttpException({ token: "" }, 201);
+        }
+    }
+    async kakaoTokenToLocalToken(token) {
+        try {
+            const response = await this.axiosInstance.get('', {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const kakaoUser = new User_1.User();
+            kakaoUser.id = response.data.id;
+            kakaoUser.nickName = response.data.properties.nickname;
+            await this.userRepository.save(kakaoUser);
+            const id = kakaoUser.id;
+            const user = await this.userRepository.findOneBy({ id });
+            const payload = { userIdx: user.userIdx };
+            return { token: this.jwtService.sign(payload) };
+        }
+        catch (error) {
+            throw new common_1.HttpException({ token: '' }, 201);
         }
     }
 };

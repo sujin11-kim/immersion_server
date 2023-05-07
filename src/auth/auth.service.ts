@@ -9,15 +9,19 @@ import { User } from "mymodel/entities/User";
 import { Repository } from "typeorm";
 import { LoginRequestDto } from "./dto/login.request.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 @Injectable()
 export class AuthService {
+  private readonly axiosInstance: AxiosInstance;
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService
-  ) {}
+  ) {
+    this.axiosInstance = axios.create({
+      baseURL: 'https://kapi.kakao.com/v1/user/access_token_info',
+    })
+  }
 
   async jwtLogIn(data: LoginRequestDto) {
     const { id, password } = data;
@@ -43,16 +47,17 @@ export class AuthService {
     }
   }
 
-  async kakaoTokenToLocalToken(token: string): Promise<any> {
+  async kakaoTokenToLocalToken(token: string): Promise<any>{
+  try{
     /* 카카오 서버에 토큰 유효성 검사 */
-    const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    // const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
+    //   headers: {
+    //     Authorization: `${token}`,
+    //   },
+    // });
+    const response = await this.axiosInstance.get('', {
+      headers: { Authorization: `Bearer ${token}` },
     });
-    if(!response) {
-      throw new HttpException({ token: "" }, 201);
-    }
     const kakaoUser = new User();
     kakaoUser.id = response.data.id;
     kakaoUser.nickName = response.data.properties.nickname;
@@ -64,5 +69,8 @@ export class AuthService {
     const user = await this.userRepository.findOneBy({ id });
     const payload = { userIdx : user.userIdx };
     return { token: this.jwtService.sign(payload) };
+  } catch (error) {
+    throw new HttpException({token: ''},201);
+    }
   }
 }
