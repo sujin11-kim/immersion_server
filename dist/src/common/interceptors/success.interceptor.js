@@ -15,16 +15,19 @@ let SuccessInterceptor = class SuccessInterceptor {
         const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
         const KR_TIME_DIFF = 18 * 60 * 60 * 1000;
         const kr_curr = new Date(utc + KR_TIME_DIFF);
-        return next.handle().pipe((0, operators_1.map)((data) => ({
-            success: true,
-            code: 201,
-            data,
-            kr_curr,
-        })));
+        return next.handle().pipe((0, operators_1.map)((data) => {
+            const response = context.switchToHttp().getResponse();
+            if (response.statusCode === common_1.HttpStatus.OK) {
+                return { isSuccess: true, code: common_1.HttpStatus.OK, kr_curr, message: data };
+            }
+            else {
+                return { isSuccess: false, code: common_1.HttpStatus.UNAUTHORIZED, kr_curr };
+            }
+        }));
     }
 };
 SuccessInterceptor = __decorate([
     (0, common_1.Injectable)()
 ], SuccessInterceptor);
 exports.SuccessInterceptor = SuccessInterceptor;
-//# sourceMappingURL=suucess.interceptor.js.map
+//# sourceMappingURL=success.interceptor.js.map

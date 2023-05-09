@@ -21,7 +21,7 @@ const platform_express_1 = require("@nestjs/platform-express");
 const jwt_guard_1 = require("../auth/jwt/jwt.guard");
 const user_decorator_1 = require("../common/decorators/user.decorator");
 const user_login_dto_1 = require("../users/dto/user-login.dto");
-const suucess_interceptor_1 = require("../common/intercepors/suucess.interceptor");
+const success_interceptor_1 = require("../common/interceptors/success.interceptor");
 const http_exception_filter_1 = require("../common/exception/http-exception.filter");
 const aws_service_1 = require("../aws.service");
 let PostController = class PostController {
@@ -112,7 +112,7 @@ __decorate([
 ], PostController.prototype, "postLikeCancel", null);
 PostController = __decorate([
     (0, swagger_1.ApiTags)("POST"),
-    (0, common_1.UseInterceptors)(suucess_interceptor_1.SuccessInterceptor),
+    (0, common_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
     (0, common_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),
     (0, common_1.Controller)("posts"),
     __metadata("design:paramtypes", [post_service_1.PostService,

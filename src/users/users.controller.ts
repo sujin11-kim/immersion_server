@@ -1,32 +1,23 @@
 import {
   Body,
   Controller,
-  NotFoundException,
   Post,
   UseGuards,
-  Request,
   Get,
-  Res,
-  Session,
-  ForbiddenException,
-  Req,
-  HttpCode,
   Headers
 } from "@nestjs/common";
-import { ApiCookieAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { UserLoginDto } from "./dto/user-login.dto";
 import { UsersService } from "./users.service";
-import * as bcrypt from "bcrypt";
 import { AuthService } from "src/auth/auth.service";
 import { LoginRequestDto } from "src/auth/dto/login.request.dto";
 import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { UseInterceptors } from "@nestjs/common/decorators/core/use-interceptors.decorator";
-import { SuccessInterceptor } from "src/common/intercepors/suucess.interceptor";
+import { SuccessInterceptor } from "src/common/interceptors/success.interceptor";
 import { UseFilters } from "@nestjs/common/decorators/core/exception-filters.decorator";
 import { HttpExceptionFilter } from "src/common/exception/http-exception.filter";
-import { RegisterSuccessInterceptor } from "src/common/intercepors/register.success.interceptor";
+import { RegisterSuccessInterceptor } from "src/common/interceptors/register.success.interceptor";
 import { RegisterHttpExceptionFilter } from "src/common/exception/register.http-exceptoin.filter";
 
 @ApiTags("USERS")

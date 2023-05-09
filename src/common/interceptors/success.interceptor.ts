@@ -3,6 +3,7 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
+  HttpStatus
 } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -16,12 +17,15 @@ export class SuccessInterceptor implements NestInterceptor {
     const kr_curr = new Date(utc + KR_TIME_DIFF);
 
     return next.handle().pipe(
-      map((data) => ({
-        success: true,
-        code: 201,
-        data,
-        kr_curr,
-      }))
+      map((data) => {
+        const response = context.switchToHttp().getResponse();
+        if (response.statusCode === HttpStatus.OK) {
+          return { isSuccess: true, code: HttpStatus.OK, kr_curr, message : data };
+        } else {
+          return { isSuccess: false, code: HttpStatus.UNAUTHORIZED, kr_curr };
+        }
+      })
     );
   }
 }
+

@@ -3,15 +3,13 @@ import * as bcrypt from "bcrypt";
 import {
   HttpException,
   Injectable,
-  UnauthorizedException,
-  Logger
+  
 } from "@nestjs/common";
 import { User } from "mymodel/entities/User";
 import { Repository } from "typeorm";
 import { LoginRequestDto } from "./dto/login.request.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import axios, { AxiosInstance } from 'axios';
-import { exist } from "joi";
 @Injectable()
 export class AuthService {
   private readonly axiosInstance: AxiosInstance;
@@ -27,21 +25,15 @@ export class AuthService {
 
   async jwtLogIn(data: LoginRequestDto) {
     const { id, password } = data;
-
     const user = await this.userRepository.findOneBy({ id });
-
     if (!user) {
       throw new HttpException({ token: "" }, 201);
     }
-
-    //* password가 일치한지
     const isPasswordValidated: boolean = await bcrypt.compare(
       password,
       user.password
     );
-
     const payload = { id };
-
     if (user && (await bcrypt.compare(password, user.password))) {
       return { token: this.jwtService.sign(payload) };
     } else {
@@ -51,12 +43,6 @@ export class AuthService {
 
   async kakaoTokenToLocalToken(token: string): Promise<any>{
   try{
-    /* 카카오 서버에 토큰 유효성 검사 */
-    // const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
-    //   headers: {
-    //     Authorization: `${token}`,
-    //   },
-    // });
     const response = await this.axiosInstance.get('', {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -64,12 +50,13 @@ export class AuthService {
     kakaoUser.id = response.data.id;
     kakaoUser.nickName = response.data.properties.nickname;
     const kakaoId = kakaoUser.id;
-    const checkExist = await this.userRepository.findOneBy({ id : kakaoId });
-    if (!checkExist) {
+    const checkExistUser = await this.userRepository.findOneBy({ id : kakaoId });
+    if (!checkExistUser) {
       await this.userRepository.save(kakaoUser);
     }
-    const user = await this.userRepository.findOneBy({ id : kakaoId });
-    const payload = { userIdx : user.userIdx };
+    
+    const userForToken = await this.userRepository.findOneBy({ id : kakaoId });
+    const payload = { userIdx : userForToken.userIdx };
     return { token: this.jwtService.sign(payload) };
   } catch (error) {
     throw new HttpException({token:'not authorization'},401);
