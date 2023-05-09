@@ -17,10 +17,10 @@ export class SuccessInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map((data) => ({
-        isSuccess: true,
-        code: 1000,
+        success: true,
+        code: 201,
+        data,
         kr_curr,
-        message: "회원가입에 성공하였습니다.",
       }))
     );
   }

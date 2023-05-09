@@ -6,7 +6,9 @@ export declare class UsersController {
     private usersService;
     private readonly authService;
     constructor(usersService: UsersService, authService: AuthService);
-    create(dto: CreateUserDto): Promise<void>;
+    create(dto: CreateUserDto): Promise<{
+        message: string;
+    }>;
     login(data: LoginRequestDto): Promise<{
         token: string;
     }>;

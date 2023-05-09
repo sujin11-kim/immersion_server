@@ -25,40 +25,19 @@ let UsersService = class UsersService {
     }
     async create(id, nickname, phone, enrollDate, password) {
         const queryRunner = this.dataSource.createQueryRunner();
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
         const hashedPassword = await bcrypt.hash(password, 12);
-        try {
-            const userid = await this.userRepository.findOne({ where: { id } });
-            const user = new User_1.User();
-            (user.id = id),
-                (user.nickName = nickname),
-                (user.phone = phone),
-                (user.enrollDate = enrollDate),
-                (user.password = hashedPassword),
-                await queryRunner.manager.save(user);
-            await queryRunner.commitTransaction();
+        const userid = await this.userRepository.findOne({ where: { id } });
+        if (userid) {
+            throw new common_1.HttpException({ message: "이미 존재하는 id 입니다." }, 201);
         }
-        catch (error) {
-            const userid = await this.userRepository.findOne({ where: { id } });
-            if (userid) {
-                const curr = new Date();
-                const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
-                const KR_TIME_DIFF = 18 * 60 * 60 * 1000;
-                const kr_curr = new Date(utc + KR_TIME_DIFF);
-                throw new common_1.HttpException({
-                    isSuccess: true,
-                    code: 2000,
-                    kr_curr,
-                    message: "이미 존재하는 id 입니다.",
-                }, 403);
-            }
-            console.error(error);
-            await queryRunner.rollbackTransaction();
-        }
-        finally {
-            await queryRunner.release();
-        }
+        const user = new User_1.User();
+        (user.id = id),
+            (user.nickName = nickname),
+            (user.phone = phone),
+            (user.enrollDate = enrollDate),
+            (user.password = hashedPassword),
+            await queryRunner.manager.save(user);
+        return { message: "회원가입에 성공하였습니다." };
     }
     async login(_id, _password) {
         throw new Error("Method not implemented");

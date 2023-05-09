@@ -16,10 +16,10 @@ let SuccessInterceptor = class SuccessInterceptor {
         const KR_TIME_DIFF = 18 * 60 * 60 * 1000;
         const kr_curr = new Date(utc + KR_TIME_DIFF);
         return next.handle().pipe((0, operators_1.map)((data) => ({
-            isSuccess: true,
-            code: 1000,
+            success: true,
+            code: 201,
+            data,
             kr_curr,
-            message: "회원가입에 성공하였습니다.",
         })));
     }
 };

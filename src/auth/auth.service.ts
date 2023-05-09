@@ -1,6 +1,10 @@
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { User } from "mymodel/entities/User";
 import { Repository } from "typeorm";
 import { LoginRequestDto } from "./dto/login.request.dto";
@@ -18,6 +22,10 @@ export class AuthService {
 
     const user = await this.userRepository.findOneBy({ id });
 
+    if (!user) {
+      throw new HttpException({ token: "" }, 201);
+    }
+
     //* password가 일치한지
     const isPasswordValidated: boolean = await bcrypt.compare(
       password,
@@ -27,11 +35,9 @@ export class AuthService {
     const payload = { id };
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      return {
-        token: this.jwtService.sign(payload),
-      };
+      return { token: this.jwtService.sign(payload) };
     } else {
-      throw new UnauthorizedException("login failed");
+      throw new HttpException({ token: "" }, 201);
     }
   }
 }

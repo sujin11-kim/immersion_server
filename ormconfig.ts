@@ -2,6 +2,16 @@ import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
 import { User } from "./mymodel/entities/User";
 
+import { ChatRoom } from "./mymodel/entities/ChatRoom";
+import { ChatUser } from "./mymodel/entities/ChatUser";
+import { Comment } from "./mymodel/entities/Comment";
+import { LikePost } from "./mymodel/entities/LikePost";
+import { Post } from "./mymodel/entities/Post";
+import { Message } from "./mymodel/entities/Message";
+// import { Post } from "@nestjs/common";
+
+
+
 dotenv.config();
 
 const dataSource = new DataSource({
@@ -10,8 +20,8 @@ const dataSource = new DataSource({
   port: 3306,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  database: "sleact",
-  entities: [User],
+  database: "immersion_DB",
+  entities: [User, ChatRoom, ChatUser, Comment, LikePost, Post, Message],
   migrations: [__dirname + "/src/migrations/*.ts"],
   charset: "utf8mb4",
   synchronize: false,

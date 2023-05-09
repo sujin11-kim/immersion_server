@@ -27,15 +27,16 @@ let AuthService = class AuthService {
     async jwtLogIn(data) {
         const { id, password } = data;
         const user = await this.userRepository.findOneBy({ id });
+        if (!user) {
+            throw new common_1.HttpException({ token: "" }, 201);
+        }
         const isPasswordValidated = await bcrypt.compare(password, user.password);
         const payload = { id };
         if (user && (await bcrypt.compare(password, user.password))) {
-            return {
-                token: this.jwtService.sign(payload),
-            };
+            return { token: this.jwtService.sign(payload) };
         }
         else {
-            throw new common_1.UnauthorizedException("login failed");
+            throw new common_1.HttpException({ token: "" }, 201);
         }
     }
 };

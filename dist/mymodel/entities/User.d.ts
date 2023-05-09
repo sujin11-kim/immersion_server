@@ -1,3 +1,5 @@
+import { ChatUser } from "./ChatUser";
+import { LikePost } from "./LikePost";
 export declare class User {
     userIdx: number;
     id: number;
@@ -5,4 +7,6 @@ export declare class User {
     phone: string | null;
     enrollDate: Date | null;
     password: string | null;
+    chatUsers: ChatUser[];
+    likePost: LikePost;
 }

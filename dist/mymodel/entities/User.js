@@ -11,6 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
+const ChatUser_1 = require("./ChatUser");
+const LikePost_1 = require("./LikePost");
 let User = class User {
 };
 __decorate([
@@ -30,13 +32,21 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "phone", void 0);
 __decorate([
-    (0, typeorm_1.Column)("timestamp", { name: "enrollDate", nullable: true }),
+    (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], User.prototype, "enrollDate", void 0);
 __decorate([
     (0, typeorm_1.Column)("varchar", { name: "password", nullable: true, length: 300 }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => ChatUser_1.ChatUser, (chatUser) => chatUser.userIdx2),
+    __metadata("design:type", Array)
+], User.prototype, "chatUsers", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => LikePost_1.LikePost, (likePost) => likePost.userId2),
+    __metadata("design:type", LikePost_1.LikePost)
+], User.prototype, "likePost", void 0);
 User = __decorate([
     (0, typeorm_1.Index)("User_id_uindex", ["id"], { unique: true }),
     (0, typeorm_1.Index)("User_userIdx_uindex", ["userIdx"], { unique: true }),

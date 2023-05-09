@@ -1,34 +1,38 @@
-// import {
-//   Column,
-//   Entity,
-//   Index,
-//   JoinColumn,
-//   ManyToOne,
-//   OneToOne,
-// } from "typeorm";
-// import { Post } from "./Post";
-// import { User } from "./User";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Post } from "./Post";
+import { User } from "./User";
 
-// @Index("FK_Post_TO_LikePost_1", ["postIdx"], {})
-// @Entity("LikePost", { schema: "immersion_DB" })
-// export class LikePost {
-//   @Column("int", { primary: true, name: "userIdx" })
-//   userIdx: number;
+@Index("FK_Post_TO_LikePost_1", ["postIdx"], {})
+@Entity("LikePost", { schema: "immersion_DB" })
+export class LikePost {
+  @PrimaryGeneratedColumn({ type: "int", name: "likeIdx" })
+  likeIdx: number;
 
-//   @Column("int", { name: "postIdx" })
-//   postIdx: number;
+  @Column("int", { name: "userId" })
+  userId: number;
 
-//   @ManyToOne(() => Post, (post) => post.likePosts, {
-//     onDelete: "NO ACTION",
-//     onUpdate: "NO ACTION",
-//   })
-//   @JoinColumn([{ name: "postIdx", referencedColumnName: "postIdx" }])
-//   postIdx2: Post;
+  @Column("int", { name: "postIdx" })
+  postIdx: number;
 
-//   @OneToOne(() => User, (user) => user.likePost, {
-//     onDelete: "NO ACTION",
-//     onUpdate: "NO ACTION",
-//   })
-//   @JoinColumn([{ name: "userIdx", referencedColumnName: "userIdx" }])
-//   userIdx2: User;
-// }
+  @ManyToOne(() => Post, (post) => post.likePosts, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "postIdx", referencedColumnName: "postIdx" }])
+  postIdx2: Post;
+
+  @ManyToOne(() => User, (user) => user.likePost, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "userId", referencedColumnName: "id" }])
+  userId2: User;
+}
