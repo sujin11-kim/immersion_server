@@ -51,14 +51,17 @@ let AuthService = class AuthService {
             const kakaoUser = new User_1.User();
             kakaoUser.id = response.data.id;
             kakaoUser.nickName = response.data.properties.nickname;
-            await this.userRepository.save(kakaoUser);
-            const id = kakaoUser.id;
-            const user = await this.userRepository.findOneBy({ id });
+            const kakaoId = kakaoUser.id;
+            const checkExist = await this.userRepository.findOneBy({ id: kakaoId });
+            if (!checkExist) {
+                await this.userRepository.save(kakaoUser);
+            }
+            const user = await this.userRepository.findOneBy({ id: kakaoId });
             const payload = { userIdx: user.userIdx };
             return { token: this.jwtService.sign(payload) };
         }
         catch (error) {
-            throw new common_1.HttpException({ token: '' }, 201);
+            throw new common_1.HttpException({ token: 'not authorization' }, 401);
         }
     }
 };

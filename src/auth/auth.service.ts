@@ -4,12 +4,14 @@ import {
   HttpException,
   Injectable,
   UnauthorizedException,
+  Logger
 } from "@nestjs/common";
 import { User } from "mymodel/entities/User";
 import { Repository } from "typeorm";
 import { LoginRequestDto } from "./dto/login.request.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import axios, { AxiosInstance } from 'axios';
+import { exist } from "joi";
 @Injectable()
 export class AuthService {
   private readonly axiosInstance: AxiosInstance;
@@ -19,7 +21,7 @@ export class AuthService {
     private jwtService: JwtService
   ) {
     this.axiosInstance = axios.create({
-      baseURL: 'https://kapi.kakao.com/v1/user/access_token_info',
+      baseURL: 'https://kapi.kakao.com/v2/user/me',
     })
   }
 
@@ -61,16 +63,16 @@ export class AuthService {
     const kakaoUser = new User();
     kakaoUser.id = response.data.id;
     kakaoUser.nickName = response.data.properties.nickname;
-
-    /* 회원가입 */
-    await this.userRepository.save(kakaoUser);
-    /* useridx 추가해서 새로 발급 */
-    const id = kakaoUser.id;
-    const user = await this.userRepository.findOneBy({ id });
+    const kakaoId = kakaoUser.id;
+    const checkExist = await this.userRepository.findOneBy({ id : kakaoId });
+    if (!checkExist) {
+      await this.userRepository.save(kakaoUser);
+    }
+    const user = await this.userRepository.findOneBy({ id : kakaoId });
     const payload = { userIdx : user.userIdx };
     return { token: this.jwtService.sign(payload) };
   } catch (error) {
-    throw new HttpException({token: ''},201);
+    throw new HttpException({token:'not authorization'},401);
     }
   }
 }
