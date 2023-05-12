@@ -13,11 +13,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestaurantsController = void 0;
-const swagger_1 = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
+const swagger_1 = require("@nestjs/swagger");
+const common_2 = require("@nestjs/common");
 const restaurants_service_1 = require("./restaurants.service");
 const swagger_2 = require("@nestjs/swagger");
-const common_2 = require("@nestjs/common");
+const common_3 = require("@nestjs/common");
 const location_dto_1 = require("./dto/location.dto");
 let RestaurantsController = class RestaurantsController {
     constructor(restaurantsService) {
@@ -31,26 +32,37 @@ let RestaurantsController = class RestaurantsController {
         const { userIdx, latitude, longitude } = location;
         return this.restaurantsService.updateUserLocation(userIdx, latitude, longitude);
     }
+    getrestaurantlist(userIdx) {
+        return this.restaurantsService.getrestaurantlist(userIdx);
+    }
 };
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "API No. 5-1 유저 경도위도 저장" }),
-    (0, common_1.Post)("mylocation"),
-    __param(0, (0, common_2.Body)()),
+    (0, common_2.Post)("mylocation"),
+    __param(0, (0, common_3.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [location_dto_1.LocationDto]),
     __metadata("design:returntype", void 0)
 ], RestaurantsController.prototype, "createUserLocation", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "API No. 5-2유저 경도위도 업데이트" }),
-    (0, common_1.Patch)("mylocation"),
-    __param(0, (0, common_2.Body)()),
+    (0, common_2.Patch)("mylocation"),
+    __param(0, (0, common_3.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [location_dto_1.LocationDto]),
     __metadata("design:returntype", void 0)
 ], RestaurantsController.prototype, "updateUserLocation", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: "API No. 5-3 현재 user 3km이내 음식점 정보 조회" }),
+    (0, common_1.Get)("list/:userIdx"),
+    __param(0, (0, common_1.Param)("userIdx")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], RestaurantsController.prototype, "getrestaurantlist", null);
 RestaurantsController = __decorate([
     (0, swagger_2.ApiTags)("Restaurants"),
-    (0, common_2.Controller)("restaurants"),
+    (0, common_3.Controller)("restaurants"),
     __metadata("design:paramtypes", [restaurants_service_1.RestaurantsService])
 ], RestaurantsController);
 exports.RestaurantsController = RestaurantsController;

@@ -7,4 +7,12 @@ export declare class RestaurantsService {
     constructor(userRepository: Repository<User>, restaurantRepository: Repository<Restaurant>);
     createUserLocation(userIdx: number, latitude: number, longitude: number): Promise<User>;
     updateUserLocation(userIdx: number, latitude: number, longitude: number): Promise<User>;
+    getrestaurantlist(userIdx: number): Promise<number[] | {
+        isSuccess: boolean;
+        code: number;
+        kr_curr: Date;
+        message: {
+            nearbyRestaurantIdxs: number[];
+        };
+    }>;
 }

@@ -1,4 +1,4 @@
-import { Get, UseGuards } from "@nestjs/common";
+import { Get, Param, UseGuards } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
 import { Post, Patch } from "@nestjs/common";
 import { RestaurantsService } from "./restaurants.service";
@@ -42,9 +42,9 @@ export class RestaurantsController {
     );
   }
 
-  // @ApiOperation({ summary: "API No. 5-3 현재 user 3km이내 음식점 정보 조회" })
-  // @Get("list")
-  // getrestaurantlist(@CurrentUser() user: UserLoginDto){
-  //     return  this.restaurantsService.getrestaurantlist(user.id)
-  // }
+  @ApiOperation({ summary: "API No. 5-3 현재 user 3km이내 음식점 정보 조회" })
+  @Get("list/:userIdx")
+  getrestaurantlist(@Param("userIdx") userIdx: number) {
+    return this.restaurantsService.getrestaurantlist(userIdx);
+  }
 }
