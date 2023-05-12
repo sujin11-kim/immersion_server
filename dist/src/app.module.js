@@ -25,6 +25,8 @@ const post_module_1 = require("./post/post.module");
 const comment_module_1 = require("./comment/comment.module");
 const Image_1 = require("../mymodel/entities/Image");
 const aws_service_1 = require("./aws.service");
+const Restaurant_1 = require("../mymodel/entities/Restaurant");
+const restaurants_module_1 = require("./restaurants/restaurants.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -50,6 +52,7 @@ AppModule = __decorate([
                     ChatUser_1.ChatUser,
                     ChatRoom_1.ChatRoom,
                     Image_1.Image,
+                    Restaurant_1.Restaurant,
                 ],
                 autoLoadEntities: true,
                 keepConnectionAlive: true,
@@ -62,6 +65,7 @@ AppModule = __decorate([
             auth_module_1.AuthModule,
             post_module_1.PostModule,
             comment_module_1.CommentModule,
+            restaurants_module_1.RestaurantsModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, aws_service_1.AwsService],

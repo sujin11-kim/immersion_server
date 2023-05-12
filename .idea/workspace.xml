@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="74543066-4380-4ebc-a879-d71d4a1c0374" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/common/intercepors/suucess.interceptor.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/intercepors/suucess.interceptor.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/common/intercepors/suucess.interceptor.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/intercepors/suucess.interceptor.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/users/users.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/users/users.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/users/users.service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/users/users.service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/tsconfig.build.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/dist/tsconfig.build.tsbuildinfo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/intercepors/suucess.interceptor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/intercepors/suucess.interceptor.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/users/users.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/users.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/mymodel/entities/User.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dist/mymodel/entities/User.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/mymodel/entities/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/mymodel/entities/User.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/mymodel/entities/User.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/mymodel/entities/User.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/app.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/app.module.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/app.module.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/app.module.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mymodel/entities/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mymodel/entities/User.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.module.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

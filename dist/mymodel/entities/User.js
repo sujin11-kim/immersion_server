@@ -13,6 +13,7 @@ exports.User = void 0;
 const typeorm_1 = require("typeorm");
 const ChatUser_1 = require("./ChatUser");
 const LikePost_1 = require("./LikePost");
+const Restaurant_1 = require("./Restaurant");
 let User = class User {
 };
 __decorate([
@@ -40,6 +41,24 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
+    (0, typeorm_1.Column)("double", {
+        name: "latitude",
+        nullable: true,
+        precision: 22,
+        default: () => "'0'",
+    }),
+    __metadata("design:type", Number)
+], User.prototype, "latitude", void 0);
+__decorate([
+    (0, typeorm_1.Column)("double", {
+        name: "longitude",
+        nullable: true,
+        precision: 22,
+        default: () => "'0'",
+    }),
+    __metadata("design:type", Number)
+], User.prototype, "longitude", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => ChatUser_1.ChatUser, (chatUser) => chatUser.userIdx2),
     __metadata("design:type", Array)
 ], User.prototype, "chatUsers", void 0);
@@ -47,6 +66,10 @@ __decorate([
     (0, typeorm_1.OneToOne)(() => LikePost_1.LikePost, (likePost) => likePost.userId2),
     __metadata("design:type", LikePost_1.LikePost)
 ], User.prototype, "likePost", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Restaurant_1.Restaurant, (restaurant) => restaurant.userIdx2),
+    __metadata("design:type", Array)
+], User.prototype, "restaurants", void 0);
 User = __decorate([
     (0, typeorm_1.Index)("User_id_uindex", ["id"], { unique: true }),
     (0, typeorm_1.Index)("User_userIdx_uindex", ["userIdx"], { unique: true }),
