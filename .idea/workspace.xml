@@ -6,13 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="74543066-4380-4ebc-a879-d71d4a1c0374" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/common/intercepors/suucess.interceptor.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/intercepors/suucess.interceptor.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/common/intercepors/suucess.interceptor.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/intercepors/suucess.interceptor.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/users/users.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/users/users.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/users/users.service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/users/users.service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/tsconfig.build.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/dist/tsconfig.build.tsbuildinfo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/intercepors/suucess.interceptor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/intercepors/suucess.interceptor.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/users/users.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/users.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/restaurants/restaurants.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/restaurants/restaurants.controller.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/restaurants/restaurants.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/restaurants/restaurants.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/restaurants/restaurants.controller.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/restaurants/restaurants.controller.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/restaurants/restaurants.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/restaurants/restaurants.service.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/restaurants/restaurants.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/restaurants/restaurants.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/restaurants/restaurants.service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/restaurants/restaurants.service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/restaurants/restaurants.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/restaurants/restaurants.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/restaurants/restaurants.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/restaurants/restaurants.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

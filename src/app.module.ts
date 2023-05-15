@@ -21,6 +21,8 @@ import { PostModule } from "./post/post.module";
 import { CommentModule } from "./comment/comment.module";
 import { Image } from "mymodel/entities/Image";
 import { AwsService } from "./aws.service";
+import { Restaurant } from "mymodel/entities/Restaurant";
+import { RestaurantsModule } from "./restaurants/restaurants.module";
 
 @Module({
   imports: [
@@ -50,6 +52,7 @@ import { AwsService } from "./aws.service";
         ChatUser,
         ChatRoom,
         Image,
+        Restaurant,
       ],
       autoLoadEntities: true,
       keepConnectionAlive: true,
@@ -62,6 +65,7 @@ import { AwsService } from "./aws.service";
     AuthModule,
     PostModule,
     CommentModule,
+    RestaurantsModule,
   ],
   controllers: [AppController],
   providers: [AppService, AwsService],
