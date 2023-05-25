@@ -4,7 +4,6 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Post } from "./Post";
@@ -16,8 +15,8 @@ export class LikePost {
   @PrimaryGeneratedColumn({ type: "int", name: "likeIdx" })
   likeIdx: number;
 
-  @Column("int", { name: "userId" })
-  userId: number;
+  @Column("int", { name: "userIdx" })
+  userIdx: number;
 
   @Column("int", { name: "postIdx" })
   postIdx: number;
@@ -33,6 +32,6 @@ export class LikePost {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
-  @JoinColumn([{ name: "userId", referencedColumnName: "id" }])
-  userId2: User;
+  @JoinColumn([{ name: "userIdx", referencedColumnName: "userIdx" }])
+  userIdx2: User;
 }

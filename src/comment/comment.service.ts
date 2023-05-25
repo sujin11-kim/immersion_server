@@ -2,7 +2,6 @@ import { HttpException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, DataSource, QueryRunner } from "typeorm";
 import { Comment } from "../../mymodel/entities/Comment";
-import { Image } from "mymodel/entities/Image";
 import { User } from "mymodel/entities/User";
 import { Post } from "mymodel/entities/Post";
 
@@ -34,7 +33,7 @@ export class CommentService {
     parentCommentIdx: number,
     depth: number,
     commentContent: string
-  ): Promise<Comment> {
+  ) {
     // 객체 타입 선언 : Promise
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -53,22 +52,21 @@ export class CommentService {
       }
 
       const user = await this.userRepository.findOne({
-        where: { id: CommentWriterIdx },
+        where: { userIdx: CommentWriterIdx },
       });
       const nickName = user.nickName;
 
       const comment = new Comment();
       comment.postIdx = PostIdx;
-      comment.CommentWriter = nickName;
       comment.parentCommentIdx = parentCommentIdx;
-      comment.writeIdx = CommentWriterIdx;
+      comment.userIdx = CommentWriterIdx;
       comment.commentContent = commentContent;
       comment.depth = depth;
 
       const savedComment = await queryRunner.manager.save(comment);
 
       await queryRunner.commitTransaction();
-      return savedComment;
+      return { ...savedComment, nickName: user.nickName };
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw err;

@@ -11,21 +11,24 @@ import { ChatUser } from "./ChatUser";
 import { LikePost } from "./LikePost";
 import { Restaurant } from "./Restaurant";
 
-@Index("User_id_uindex", ["id"], { unique: true })
+@Index("User_id_uindex", ["email"], { unique: true })
 @Index("User_userIdx_uindex", ["userIdx"], { unique: true })
 @Entity("User", { schema: "immersion_DB" })
 export class User {
   @PrimaryGeneratedColumn({ type: "int", name: "userIdx" })
   userIdx: number;
 
-  @Column("int", { name: "id", unique: true })
-  id: number;
+  @Column("varchar", { name: "email", unique: true })
+  email: string;
 
   @Column("varchar", { name: "nickName", nullable: true, length: 20 })
   nickName: string | null;
 
   @Column("char", { name: "phone", nullable: true, length: 11 })
   phone: string | null;
+
+  @Column("varchar", { name: "fcmtoken", nullable: true, length: 255 })
+  fcmtoken: string | null;
 
   @CreateDateColumn()
   enrollDate: Date | null;
@@ -52,8 +55,9 @@ export class User {
   @OneToMany(() => ChatUser, (chatUser) => chatUser.userIdx2)
   chatUsers: ChatUser[];
 
-  @OneToOne(() => LikePost, (likePost) => likePost.userId2)
+  @OneToOne(() => LikePost, (likePost) => likePost.userIdx2)
   likePost: LikePost;
+
   @OneToMany(() => Restaurant, (restaurant) => restaurant.userIdx2)
   restaurants: Restaurant[];
 }

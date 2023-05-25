@@ -20,9 +20,9 @@ __decorate([
     __metadata("design:type", Number)
 ], Post.prototype, "postIdx", void 0);
 __decorate([
-    (0, typeorm_1.Column)("int", { name: "writeIdx" }),
+    (0, typeorm_1.Column)("int", { name: "userIdx" }),
     __metadata("design:type", Number)
-], Post.prototype, "writeIdx", void 0);
+], Post.prototype, "userIdx", void 0);
 __decorate([
     (0, typeorm_1.Column)("varchar", { name: "category", nullable: true, length: 20 }),
     __metadata("design:type", String)
@@ -51,10 +51,6 @@ __decorate([
     (0, typeorm_1.Column)("int", { name: "viewNum", nullable: true }),
     __metadata("design:type", Number)
 ], Post.prototype, "viewNum", void 0);
-__decorate([
-    (0, typeorm_1.Column)("varchar", { name: "nickName", nullable: true, length: 300 }),
-    __metadata("design:type", String)
-], Post.prototype, "nickName", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Comment_1.Comment, (comment) => comment.postIdx2),
     __metadata("design:type", Array)

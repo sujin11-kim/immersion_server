@@ -23,21 +23,50 @@ let UsersService = class UsersService {
         this.userRepository = userRepository;
         this.dataSource = dataSource;
     }
-    async create(id, nickname, phone, enrollDate, password) {
+    async create(email, nickname, phone, password) {
         const queryRunner = this.dataSource.createQueryRunner();
         const hashedPassword = await bcrypt.hash(password, 12);
-        const userid = await this.userRepository.findOne({ where: { id } });
-        if (userid) {
-            throw new common_1.HttpException({ message: "이미 존재하는 id 입니다." }, 201);
+        const userEmail = await this.userRepository.findOne({ where: { email } });
+        console.log(userEmail);
+        if (userEmail) {
+            throw new common_1.HttpException({ message: "이미 존재하는 이메일 입니다." }, 201);
         }
         const user = new User_1.User();
-        (user.id = id),
+        (user.email = email),
             (user.nickName = nickname),
             (user.phone = phone),
-            (user.enrollDate = enrollDate),
             (user.password = hashedPassword),
             await queryRunner.manager.save(user);
         return { message: "회원가입에 성공하였습니다." };
+    }
+    async saveFCMToken(loginUser, fcmToken) {
+        const queryRunner = this.dataSource.createQueryRunner();
+        try {
+            await queryRunner.startTransaction();
+            const user = await this.userRepository.findOne({
+                where: { email: loginUser.email },
+            });
+            if (!user) {
+                throw new Error("User not found");
+            }
+            user.fcmtoken = fcmToken;
+            const updateUser = await this.userRepository.save(user);
+            console.log(user);
+            await queryRunner.commitTransaction();
+            return { message: "FCM 토큰이 저장되었습니다." };
+        }
+        catch (error) {
+            await queryRunner.rollbackTransaction();
+            throw error;
+        }
+        finally {
+            await queryRunner.release();
+        }
+    }
+    async findFCM() {
+        const users = await this.userRepository.find();
+        const fcmTokens = users.map((user) => user.fcmtoken);
+        return { fcmTokens };
     }
     async login(_id, _password) {
         throw new Error("Method not implemented");

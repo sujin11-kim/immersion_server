@@ -1,17 +1,10 @@
-import { Get, Param, UseGuards } from "@nestjs/common";
+import { Get, Param } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
 import { Post, Patch } from "@nestjs/common";
 import { RestaurantsService } from "./restaurants.service";
-import { UseFilters } from "@nestjs/common/decorators/core/exception-filters.decorator";
-import { UseInterceptors } from "@nestjs/common/decorators/core/use-interceptors.decorator";
 import { ApiTags } from "@nestjs/swagger";
 import { Controller, Body } from "@nestjs/common";
-import { HttpExceptionFilter } from "src/common/exception/http-exception.filter";
-import { SuccessInterceptor } from "src/common/intercepors/suucess.interceptor";
 import { LocationDto } from "./dto/location.dto";
-import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
-import { CurrentUser } from "src/common/decorators/user.decorator";
-import { UserLoginDto } from "src/users/dto/user-login.dto";
 
 @ApiTags("Restaurants")
 // @UseInterceptors(SuccessInterceptor)

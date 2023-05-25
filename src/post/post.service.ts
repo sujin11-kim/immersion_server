@@ -6,7 +6,6 @@ import { UserLoginDto } from "src/users/dto/user-login.dto";
 import { Image } from "mymodel/entities/Image";
 import { readonlyPostDto } from "./dto/readonly-post.dto";
 import * as multerS3 from "multer-s3";
-import * as AWS from "aws-sdk";
 import { AwsService } from "src/aws.service";
 import { User } from "mymodel/entities/User";
 import { Comment } from "mymodel/entities/Comment";
@@ -44,16 +43,14 @@ export class PostService {
 
     try {
       const loginUser = await this.userRepository.findOne({
-        where: { id: user.id },
+        where: { userIdx: user.userIdx },
       });
-      const nickName = loginUser.nickName;
 
       const post = new Post();
-      post.writeIdx = user.id;
+      post.userIdx = user.userIdx;
       post.category = category;
       post.title = title;
       post.content = content;
-      post.nickName = nickName;
       const savedPost = await queryRunner.manager.save(post);
 
       const pathArray = [];
@@ -75,6 +72,7 @@ export class PostService {
       await queryRunner.commitTransaction();
       return {
         ...savedPost,
+        nickName: loginUser.nickName,
         imagePath: pathArray,
         commentList: [],
       };
@@ -95,28 +93,41 @@ export class PostService {
     });
     const result: readonlyPostDto[] = await Promise.all(
       posts.map(async (post) => {
+        const user = await manager.findOne(User, {
+          where: { userIdx: post.userIdx },
+        });
+
+        const nickName = user ? user.nickName : "";
+
         const images = await manager.find(Image, {
           where: { postIdx: post.postIdx },
         });
         const imagePath = images.map((image) => image.path);
+
         const comments = await manager.find(Comment, {
           where: { postIdx: post.postIdx },
         });
         const commentList = comments.map((comment) => comment);
-        return { ...post, imagePath, commentList };
+
+        return { ...post, nickName, imagePath, commentList };
       })
     );
     return result;
   }
 
-  async findIdPost(id: number): Promise<readonlyPostDto[]> {
+  async findIdPost(userIdx: number): Promise<readonlyPostDto[]> {
     const posts = await this.postRepository.find({
-      where: { writeIdx: id },
+      where: { userIdx },
     });
 
     const readonlyPosts = [];
 
     for (const post of posts) {
+      const user = await this.userRepository.findOne({
+        where: { userIdx: post.userIdx },
+      });
+      const nickName = user ? user.nickName : "";
+
       const images = await this.imageRepository.find({
         where: { postIdx: post.postIdx },
       });
@@ -129,6 +140,7 @@ export class PostService {
 
       const readonlyPost: readonlyPostDto = {
         ...post,
+        nickName,
         imagePath,
         commentList,
       };
@@ -147,10 +159,16 @@ export class PostService {
     const readonlyPosts = [];
 
     for (const post of posts) {
+      const user = await this.userRepository.findOne({
+        where: { userIdx: post.userIdx },
+      });
+      const nickName = user ? user.nickName : "";
+
       const images = await this.imageRepository.find({
         where: { postIdx: post.postIdx },
       });
       const imagePath = images.map((image) => image.path);
+
       const Comments = await this.commentRepository.find({
         where: { postIdx: post.postIdx },
       });
@@ -158,6 +176,7 @@ export class PostService {
 
       const readonlyPost: readonlyPostDto = {
         ...post,
+        nickName,
         imagePath,
         commentList,
       };
@@ -183,7 +202,7 @@ export class PostService {
 
       const likePost = new LikePost();
       likePost.postIdx = postIdx;
-      likePost.userId = user.id;
+      likePost.userIdx = user.userIdx;
       await queryRunner.manager.save(likePost);
 
       const images = await this.imageRepository.find({
@@ -198,6 +217,7 @@ export class PostService {
 
       const readonlyPost: readonlyPostDto = {
         ...likeEditPost,
+        nickName: user.nickName,
         imagePath,
         commentList,
       };
@@ -227,7 +247,7 @@ export class PostService {
       editpost.likeNum -= 1;
       const likeEditPost = await queryRunner.manager.save(editpost);
 
-      await this.likePostRepository.delete({ userId: user.id });
+      await this.likePostRepository.delete({ userIdx: user.userIdx });
 
       const images = await this.imageRepository.find({
         where: { postIdx },
@@ -241,6 +261,7 @@ export class PostService {
 
       const readonlyPost: readonlyPostDto = {
         ...likeEditPost,
+        nickName: user.nickName,
         imagePath,
         commentList,
       };

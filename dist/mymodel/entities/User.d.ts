@@ -3,9 +3,10 @@ import { LikePost } from "./LikePost";
 import { Restaurant } from "./Restaurant";
 export declare class User {
     userIdx: number;
-    id: number;
+    email: string;
     nickName: string | null;
     phone: string | null;
+    fcmtoken: string | null;
     enrollDate: Date | null;
     password: string | null;
     latitude: number | null;

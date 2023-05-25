@@ -23,17 +23,15 @@ const user_decorator_1 = require("../common/decorators/user.decorator");
 const user_login_dto_1 = require("../users/dto/user-login.dto");
 const suucess_interceptor_1 = require("../common/intercepors/suucess.interceptor");
 const http_exception_filter_1 = require("../common/exception/http-exception.filter");
-const aws_service_1 = require("../aws.service");
 let PostController = class PostController {
-    constructor(postService, awsService) {
+    constructor(postService) {
         this.postService = postService;
-        this.awsService = awsService;
     }
     findAll(page, pageSize) {
         return this.postService.findAll(page, pageSize);
     }
     findIdPost(user) {
-        return this.postService.findIdPost(user.id);
+        return this.postService.findIdPost(user.userIdx);
     }
     findCategoryPost(category) {
         console.log(category);
@@ -82,7 +80,7 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: "게시물 생성" }),
     (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)("image", 10)),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Post)(),
+    (0, common_1.Post)("/create"),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.UploadedFiles)()),
     __param(2, (0, user_decorator_1.CurrentUser)()),
@@ -115,8 +113,7 @@ PostController = __decorate([
     (0, common_1.UseInterceptors)(suucess_interceptor_1.SuccessInterceptor),
     (0, common_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),
     (0, common_1.Controller)("posts"),
-    __metadata("design:paramtypes", [post_service_1.PostService,
-        aws_service_1.AwsService])
+    __metadata("design:paramtypes", [post_service_1.PostService])
 ], PostController);
 exports.PostController = PostController;
 //# sourceMappingURL=post.controller.js.map

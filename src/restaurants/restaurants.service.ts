@@ -4,7 +4,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
 import { User } from "mymodel/entities/User";
 import { Restaurant } from "mymodel/entities/Restaurant";
-import { LocationDto } from "./dto/location.dto";
 
 function calculateDistance(
   lat1: number,

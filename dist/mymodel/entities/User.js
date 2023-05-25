@@ -21,9 +21,9 @@ __decorate([
     __metadata("design:type", Number)
 ], User.prototype, "userIdx", void 0);
 __decorate([
-    (0, typeorm_1.Column)("int", { name: "id", unique: true }),
-    __metadata("design:type", Number)
-], User.prototype, "id", void 0);
+    (0, typeorm_1.Column)("varchar", { name: "email", unique: true }),
+    __metadata("design:type", String)
+], User.prototype, "email", void 0);
 __decorate([
     (0, typeorm_1.Column)("varchar", { name: "nickName", nullable: true, length: 20 }),
     __metadata("design:type", String)
@@ -32,6 +32,10 @@ __decorate([
     (0, typeorm_1.Column)("char", { name: "phone", nullable: true, length: 11 }),
     __metadata("design:type", String)
 ], User.prototype, "phone", void 0);
+__decorate([
+    (0, typeorm_1.Column)("varchar", { name: "fcmtoken", nullable: true, length: 255 }),
+    __metadata("design:type", String)
+], User.prototype, "fcmtoken", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
@@ -63,7 +67,7 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "chatUsers", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => LikePost_1.LikePost, (likePost) => likePost.userId2),
+    (0, typeorm_1.OneToOne)(() => LikePost_1.LikePost, (likePost) => likePost.userIdx2),
     __metadata("design:type", LikePost_1.LikePost)
 ], User.prototype, "likePost", void 0);
 __decorate([
@@ -71,7 +75,7 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "restaurants", void 0);
 User = __decorate([
-    (0, typeorm_1.Index)("User_id_uindex", ["id"], { unique: true }),
+    (0, typeorm_1.Index)("User_id_uindex", ["email"], { unique: true }),
     (0, typeorm_1.Index)("User_userIdx_uindex", ["userIdx"], { unique: true }),
     (0, typeorm_1.Entity)("User", { schema: "immersion_DB" })
 ], User);

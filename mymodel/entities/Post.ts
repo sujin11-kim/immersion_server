@@ -16,8 +16,8 @@ export class Post {
   @PrimaryGeneratedColumn({ type: "int", name: "postIdx" })
   postIdx: number;
 
-  @Column("int", { name: "writeIdx" })
-  writeIdx: number | null;
+  @Column("int", { name: "userIdx" })
+  userIdx: number;
 
   @Column("varchar", { name: "category", nullable: true, length: 20 })
   category: string | null;
@@ -39,9 +39,6 @@ export class Post {
 
   @Column("int", { name: "viewNum", nullable: true })
   viewNum: number | null;
-
-  @Column("varchar", { name: "nickName", nullable: true, length: 300 })
-  nickName: string | null;
 
   @OneToMany(() => Comment, (comment) => comment.postIdx2)
   comments: Comment[];

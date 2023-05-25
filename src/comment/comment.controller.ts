@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { CommentService } from "./comment.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
-import { ApiCookieAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
 import { SuccessInterceptor } from "src/common/intercepors/suucess.interceptor";
 import { HttpExceptionFilter } from "src/common/exception/http-exception.filter";
@@ -40,7 +40,7 @@ export class CommentController {
       createCommentDto;
     return this.commentService.createComment(
       postIdx,
-      user.id,
+      user.userIdx,
       parentCommentIdx,
       depth,
       commentContent

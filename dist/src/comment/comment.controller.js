@@ -32,7 +32,7 @@ let CommentController = class CommentController {
     }
     createComment(createCommentDto, user) {
         const { postIdx, parentCommentIdx, depth, commentContent } = createCommentDto;
-        return this.commentService.createComment(postIdx, user.id, parentCommentIdx, depth, commentContent);
+        return this.commentService.createComment(postIdx, user.userIdx, parentCommentIdx, depth, commentContent);
     }
     modifyComment(createCommentDto) {
         const { postIdx, commentContent } = createCommentDto;

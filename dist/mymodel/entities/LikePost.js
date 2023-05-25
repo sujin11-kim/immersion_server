@@ -20,9 +20,9 @@ __decorate([
     __metadata("design:type", Number)
 ], LikePost.prototype, "likeIdx", void 0);
 __decorate([
-    (0, typeorm_1.Column)("int", { name: "userId" }),
+    (0, typeorm_1.Column)("int", { name: "userIdx" }),
     __metadata("design:type", Number)
-], LikePost.prototype, "userId", void 0);
+], LikePost.prototype, "userIdx", void 0);
 __decorate([
     (0, typeorm_1.Column)("int", { name: "postIdx" }),
     __metadata("design:type", Number)
@@ -40,9 +40,9 @@ __decorate([
         onDelete: "NO ACTION",
         onUpdate: "NO ACTION",
     }),
-    (0, typeorm_1.JoinColumn)([{ name: "userId", referencedColumnName: "id" }]),
+    (0, typeorm_1.JoinColumn)([{ name: "userIdx", referencedColumnName: "userIdx" }]),
     __metadata("design:type", User_1.User)
-], LikePost.prototype, "userId2", void 0);
+], LikePost.prototype, "userIdx2", void 0);
 LikePost = __decorate([
     (0, typeorm_1.Index)("FK_Post_TO_LikePost_1", ["postIdx"], {}),
     (0, typeorm_1.Entity)("LikePost", { schema: "immersion_DB" })

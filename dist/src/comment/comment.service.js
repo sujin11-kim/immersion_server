@@ -48,19 +48,18 @@ let CommentService = class CommentService {
                 throw new common_1.HttpException({ message: "존재하지 않는 게시물 입니다." }, 201);
             }
             const user = await this.userRepository.findOne({
-                where: { id: CommentWriterIdx },
+                where: { userIdx: CommentWriterIdx },
             });
             const nickName = user.nickName;
             const comment = new Comment_1.Comment();
             comment.postIdx = PostIdx;
-            comment.CommentWriter = nickName;
             comment.parentCommentIdx = parentCommentIdx;
-            comment.writeIdx = CommentWriterIdx;
+            comment.userIdx = CommentWriterIdx;
             comment.commentContent = commentContent;
             comment.depth = depth;
             const savedComment = await queryRunner.manager.save(comment);
             await queryRunner.commitTransaction();
-            return savedComment;
+            return Object.assign(Object.assign({}, savedComment), { nickName: user.nickName });
         }
         catch (err) {
             await queryRunner.rollbackTransaction();
