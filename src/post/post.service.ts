@@ -109,7 +109,12 @@ export class PostService {
         });
         const commentList = comments.map((comment) => comment);
 
-        return { ...post, nickName, imagePath, commentList };
+        return {
+          ...post,
+          nickName,
+          imagePath,
+          commentList,
+        };
       })
     );
     return result;

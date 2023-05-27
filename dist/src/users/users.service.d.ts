@@ -12,7 +12,7 @@ export declare class UsersService {
         message: string;
     }>;
     findFCM(): Promise<{
-        fcmTokens: string[];
+        fcmTokens: {};
     }>;
     login(_id: string, _password: string): Promise<string>;
 }

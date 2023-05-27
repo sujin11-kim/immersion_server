@@ -91,7 +91,9 @@ let PostService = class PostService {
                 where: { postIdx: post.postIdx },
             });
             const commentList = comments.map((comment) => comment);
-            return Object.assign(Object.assign({}, post), { nickName, imagePath, commentList });
+            return Object.assign(Object.assign({}, post), { nickName,
+                imagePath,
+                commentList });
         }));
         return result;
     }

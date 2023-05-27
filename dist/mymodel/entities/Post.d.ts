@@ -6,8 +6,8 @@ export declare class Post {
     category: string | null;
     title: string | null;
     content: string | null;
-    createdAt: Date;
-    updatedAt: Date | null;
+    createdAt: string;
+    updatedAt: string;
     likeNum: number | null;
     viewNum: number | null;
     comments: Comment[];

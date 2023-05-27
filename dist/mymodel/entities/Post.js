@@ -13,6 +13,7 @@ exports.Post = void 0;
 const typeorm_1 = require("typeorm");
 const Comment_1 = require("./Comment");
 const LikePost_1 = require("./LikePost");
+const moment = require("moment");
 let Post = class Post {
 };
 __decorate([
@@ -36,12 +37,35 @@ __decorate([
     __metadata("design:type", String)
 ], Post.prototype, "content", void 0);
 __decorate([
-    (0, typeorm_1.CreateDateColumn)(),
-    __metadata("design:type", Date)
+    (0, typeorm_1.CreateDateColumn)({
+        type: "timestamp",
+        default: () => "CURRENT_TIMESTAMP(6)",
+        transformer: {
+            to(value) {
+                return moment(value).format("YYYY-MM-DD HH:mm");
+            },
+            from(value) {
+                return moment(value).format("YYYY-MM-DD HH:mm");
+            },
+        },
+    }),
+    __metadata("design:type", String)
 ], Post.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.UpdateDateColumn)(),
-    __metadata("design:type", Date)
+    (0, typeorm_1.UpdateDateColumn)({
+        type: "timestamp",
+        default: () => "CURRENT_TIMESTAMP(6)",
+        onUpdate: "CURRENT_TIMESTAMP(6)",
+        transformer: {
+            to(value) {
+                return moment(value).format("YYYY-MM-DD HH:mm");
+            },
+            from(value) {
+                return moment(value).format("YYYY-MM-DD HH:mm");
+            },
+        },
+    }),
+    __metadata("design:type", String)
 ], Post.prototype, "updatedAt", void 0);
 __decorate([
     (0, typeorm_1.Column)("int", { name: "likeNum", nullable: true }),

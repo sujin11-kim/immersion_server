@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Comment } from "./Comment";
 import { LikePost } from "./LikePost";
+import * as moment from "moment";
 
 @Index("Post_postIdx_uindex", ["postIdx"], { unique: true })
 @Entity("Post", { schema: "immersion_DB" })
@@ -28,11 +29,34 @@ export class Post {
   @Column("varchar", { name: "content", nullable: true, length: 300 })
   content: string | null;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @CreateDateColumn({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP(6)",
+    transformer: {
+      to(value: Date): string {
+        return moment(value).format("YYYY-MM-DD HH:mm");
+      },
+      from(value: Date): string {
+        return moment(value).format("YYYY-MM-DD HH:mm");
+      },
+    },
+  })
+  createdAt: string;
 
-  @UpdateDateColumn()
-  updatedAt: Date | null;
+  @UpdateDateColumn({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP(6)",
+    onUpdate: "CURRENT_TIMESTAMP(6)",
+    transformer: {
+      to(value: Date): string {
+        return moment(value).format("YYYY-MM-DD HH:mm");
+      },
+      from(value: Date): string {
+        return moment(value).format("YYYY-MM-DD HH:mm");
+      },
+    },
+  })
+  updatedAt: string;
 
   @Column("int", { name: "likeNum", nullable: true })
   likeNum: number | null;

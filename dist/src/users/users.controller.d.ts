@@ -17,7 +17,7 @@ export declare class UsersController {
         message: string;
     }>;
     findFCM(): Promise<{
-        fcmTokens: string[];
+        fcmTokens: {};
     }>;
     getCurrentUser(user: any): any;
 }

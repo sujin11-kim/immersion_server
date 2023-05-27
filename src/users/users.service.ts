@@ -68,7 +68,11 @@ export class UsersService {
 
   async findFCM() {
     const users = await this.userRepository.find();
-    const fcmTokens = users.map((user) => user.fcmtoken);
+    const fcmTokens = users.reduce((result, user) => {
+      result[user.userIdx] = user.fcmtoken;
+      return result;
+    }, {});
+
     return { fcmTokens };
   }
 
