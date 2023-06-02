@@ -22,10 +22,10 @@ const login_request_dto_1 = require("../auth/dto/login.request.dto");
 const jwt_guard_1 = require("../auth/jwt/jwt.guard");
 const user_decorator_1 = require("../common/decorators/user.decorator");
 const use_interceptors_decorator_1 = require("@nestjs/common/decorators/core/use-interceptors.decorator");
-const suucess_interceptor_1 = require("../common/intercepors/suucess.interceptor");
+const success_interceptor_1 = require("../common/interceptors/success.interceptor");
 const exception_filters_decorator_1 = require("@nestjs/common/decorators/core/exception-filters.decorator");
 const http_exception_filter_1 = require("../common/exception/http-exception.filter");
-const register_success_interceptor_1 = require("../common/intercepors/register.success.interceptor");
+const register_success_interceptor_1 = require("../common/interceptors/register.success.interceptor");
 const register_http_exceptoin_filter_1 = require("../common/exception/register.http-exceptoin.filter");
 let UsersController = class UsersController {
     constructor(usersService, authService) {
@@ -38,6 +38,9 @@ let UsersController = class UsersController {
     }
     login(data) {
         return this.authService.jwtLogIn(data);
+    }
+    kakaoLogin(customHeader) {
+        return this.authService.kakaoTokenToLocalToken(customHeader);
     }
     getCurrentUser(user) {
         return user;
@@ -55,7 +58,7 @@ __decorate([
 ], UsersController.prototype, "create", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "로그인" }),
-    (0, use_interceptors_decorator_1.UseInterceptors)(suucess_interceptor_1.SuccessInterceptor),
+    (0, use_interceptors_decorator_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
     (0, exception_filters_decorator_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),
     (0, common_1.Post)("login"),
     __param(0, (0, common_1.Body)()),
@@ -63,6 +66,16 @@ __decorate([
     __metadata("design:paramtypes", [login_request_dto_1.LoginRequestDto]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "login", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: "카카오로그인" }),
+    (0, use_interceptors_decorator_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
+    (0, exception_filters_decorator_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),
+    (0, common_1.Get)("kakaologin"),
+    __param(0, (0, common_1.Headers)('Authorization')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "kakaoLogin", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "인증확인:현재유저 가져오기" }),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),

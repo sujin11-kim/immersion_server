@@ -18,7 +18,7 @@ import { FilesInterceptor } from "@nestjs/platform-express";
 import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { UserLoginDto } from "src/users/dto/user-login.dto";
-import { SuccessInterceptor } from "src/common/intercepors/suucess.interceptor";
+import { SuccessInterceptor } from "src/common/interceptors/success.interceptor";
 import { HttpExceptionFilter } from "src/common/exception/http-exception.filter";
 import * as AWS from "aws-sdk";
 import * as multerS3 from "multer-s3";
