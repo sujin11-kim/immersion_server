@@ -1,10 +1,6 @@
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import {
-  HttpException,
-  Injectable,
-  
-} from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import { User } from "mymodel/entities/User";
 import { Repository } from "typeorm";
 import { LoginRequestDto } from "./dto/login.request.dto";
@@ -24,8 +20,10 @@ export class AuthService {
   }
 
   async jwtLogIn(data: LoginRequestDto) {
-    const { id, password } = data;
-    const user = await this.userRepository.findOneBy({ id });
+    const { email, password } = data;
+
+    const user = await this.userRepository.findOneBy({ email });
+
     if (!user) {
       throw new HttpException({ token: "" }, 201);
     }
@@ -33,7 +31,9 @@ export class AuthService {
       password,
       user.password
     );
-    const payload = { id };
+    
+    const payload = { email };
+
     if (user && (await bcrypt.compare(password, user.password))) {
       return { token: this.jwtService.sign(payload) };
     } else {

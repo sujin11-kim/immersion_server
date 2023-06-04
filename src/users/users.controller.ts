@@ -19,6 +19,7 @@ import { UseFilters } from "@nestjs/common/decorators/core/exception-filters.dec
 import { HttpExceptionFilter } from "src/common/exception/http-exception.filter";
 import { RegisterSuccessInterceptor } from "src/common/interceptors/register.success.interceptor";
 import { RegisterHttpExceptionFilter } from "src/common/exception/register.http-exceptoin.filter";
+import { UserLoginDto } from "./dto/user-login.dto";
 
 @ApiTags("USERS")
 @Controller("users")
@@ -33,14 +34,8 @@ export class UsersController {
   @UseFilters(RegisterHttpExceptionFilter)
   @Post("register")
   async create(@Body() dto: CreateUserDto) {
-    const { id, nickName, phone, enrollDate, password } = dto;
-    return await this.usersService.create(
-      id,
-      nickName,
-      phone,
-      enrollDate,
-      password
-    );
+    const { email, nickName, phone, password } = dto;
+    return await this.usersService.create(email, nickName, phone, password);
   }
 
   @ApiOperation({ summary: "로그인" })
@@ -51,12 +46,33 @@ export class UsersController {
     return this.authService.jwtLogIn(data);
   }
 
+
+  @ApiOperation({ summary: "FCM 토큰 추가" })
+  @UseInterceptors(SuccessInterceptor)
+  @UseFilters(HttpExceptionFilter)
+  @UseGuards(JwtAuthGuard)
+  @Post("save/fcm")
+  saveFCMToken(
+    @CurrentUser() user: UserLoginDto,
+    @Body("fcmToken") fcmToken: string
+  ) {
+    return this.usersService.saveFCMToken(user, fcmToken);
+  }
+
+  @ApiOperation({ summary: "모든 FCM 토큰 조회" })
+  @UseInterceptors(SuccessInterceptor)
+  @UseFilters(HttpExceptionFilter)
+  @Get("get/fcm")
+  findFCM() {
+    return this.usersService.findFCM();
+
   @ApiOperation({ summary: "카카오로그인" })
   @UseInterceptors(SuccessInterceptor)
   @UseFilters(HttpExceptionFilter)
   @Get("kakaologin")
   kakaoLogin(@Headers('Authorization') customHeader: string) {
     return this.authService.kakaoTokenToLocalToken(customHeader);
+
   }
 
   @ApiOperation({ summary: "인증확인:현재유저 가져오기" })

@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
   UseGuards,
   UploadedFiles,
@@ -12,27 +11,20 @@ import {
 } from "@nestjs/common";
 import { PostService } from "./post.service";
 import { CreatePostDto } from "./dto/create-post.dto";
-import { ApiCookieAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { multerOptions } from "src/common/utils/multer.options";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { UserLoginDto } from "src/users/dto/user-login.dto";
 import { SuccessInterceptor } from "src/common/interceptors/success.interceptor";
 import { HttpExceptionFilter } from "src/common/exception/http-exception.filter";
-import * as AWS from "aws-sdk";
-import * as multerS3 from "multer-s3";
-import { AwsService } from "src/aws.service";
 
 @ApiTags("POST")
 @UseInterceptors(SuccessInterceptor)
 @UseFilters(HttpExceptionFilter)
 @Controller("posts")
 export class PostController {
-  constructor(
-    private readonly postService: PostService,
-    private readonly awsService: AwsService
-  ) {}
+  constructor(private readonly postService: PostService) {}
 
   @ApiOperation({ summary: "모든 게시물 조회" })
   @Get()
@@ -44,7 +36,7 @@ export class PostController {
   @UseGuards(JwtAuthGuard)
   @Get("/userIdx")
   findIdPost(@CurrentUser() user: UserLoginDto) {
-    return this.postService.findIdPost(user.id);
+    return this.postService.findIdPost(user.userIdx);
   }
 
   @ApiOperation({ summary: "카테고리 게시물 조회" })
@@ -57,7 +49,7 @@ export class PostController {
   @ApiOperation({ summary: "게시물 생성" })
   @UseInterceptors(FilesInterceptor("image", 10))
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post("/create")
   create(
     @Body() createPostDto: CreatePostDto,
     @UploadedFiles() files: Express.Multer.File[],

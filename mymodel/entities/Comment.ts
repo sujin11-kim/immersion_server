@@ -19,8 +19,8 @@ export class Comment {
   @Column("int", { primary: true, name: "postIdx" })
   postIdx: number;
 
-  @Column("varchar", { name: "CommentWriter", nullable: true, length: 20 })
-  CommentWriter: string | null;
+  @Column("int", { name: "userIdx" })
+  userIdx: number;
 
   @Column("int", { name: "parentCommentIdx", nullable: true })
   parentCommentIdx: number | null;
@@ -36,9 +36,6 @@ export class Comment {
 
   @Column("bool", { name: "isDeleted", nullable: true })
   isDeleted: boolean | null;
-
-  @Column("int", { name: "writeIdx", nullable: true })
-  writeIdx: number | null;
 
   @ManyToOne(() => Post, (post) => post.comments, {
     onDelete: "NO ACTION",

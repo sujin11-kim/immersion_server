@@ -23,9 +23,9 @@ __decorate([
     __metadata("design:type", Number)
 ], Comment.prototype, "postIdx", void 0);
 __decorate([
-    (0, typeorm_1.Column)("varchar", { name: "CommentWriter", nullable: true, length: 20 }),
-    __metadata("design:type", String)
-], Comment.prototype, "CommentWriter", void 0);
+    (0, typeorm_1.Column)("int", { name: "userIdx" }),
+    __metadata("design:type", Number)
+], Comment.prototype, "userIdx", void 0);
 __decorate([
     (0, typeorm_1.Column)("int", { name: "parentCommentIdx", nullable: true }),
     __metadata("design:type", Number)
@@ -46,10 +46,6 @@ __decorate([
     (0, typeorm_1.Column)("bool", { name: "isDeleted", nullable: true }),
     __metadata("design:type", Boolean)
 ], Comment.prototype, "isDeleted", void 0);
-__decorate([
-    (0, typeorm_1.Column)("int", { name: "writeIdx", nullable: true }),
-    __metadata("design:type", Number)
-], Comment.prototype, "writeIdx", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Post_1.Post, (post) => post.comments, {
         onDelete: "NO ACTION",

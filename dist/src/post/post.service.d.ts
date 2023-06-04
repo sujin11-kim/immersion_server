@@ -19,7 +19,7 @@ export declare class PostService {
     constructor(postRepository: Repository<Post>, imageRepository: Repository<Image>, userRepository: Repository<User>, likePostRepository: Repository<LikePost>, commentRepository: Repository<Comment>, awsService: AwsService, dataSource: DataSource);
     createPost(user: UserLoginDto, category: string, title: string, content: string, files: multerS3.File[]): Promise<readonlyPostDto>;
     findAll(page: number, pageSize: number): Promise<readonlyPostDto[]>;
-    findIdPost(id: number): Promise<readonlyPostDto[]>;
+    findIdPost(userIdx: number): Promise<readonlyPostDto[]>;
     findCategoryPost(category: string): Promise<readonlyPostDto[]>;
     postLike(user: UserLoginDto, postIdx: number): Promise<readonlyPostDto>;
     postLikeCancel(user: UserLoginDto, postIdx: number): Promise<readonlyPostDto>;

@@ -38,15 +38,13 @@ let PostService = class PostService {
         await queryRunner.startTransaction();
         try {
             const loginUser = await this.userRepository.findOne({
-                where: { id: user.id },
+                where: { userIdx: user.userIdx },
             });
-            const nickName = loginUser.nickName;
             const post = new Post_1.Post();
-            post.writeIdx = user.id;
+            post.userIdx = user.userIdx;
             post.category = category;
             post.title = title;
             post.content = content;
-            post.nickName = nickName;
             const savedPost = await queryRunner.manager.save(post);
             const pathArray = [];
             const imagePromise = files.map(async (file) => {
@@ -63,7 +61,7 @@ let PostService = class PostService {
             });
             await Promise.all(imagePromise);
             await queryRunner.commitTransaction();
-            return Object.assign(Object.assign({}, savedPost), { imagePath: pathArray, commentList: [] });
+            return Object.assign(Object.assign({}, savedPost), { nickName: loginUser.nickName, imagePath: pathArray, commentList: [] });
         }
         catch (err) {
             await queryRunner.rollbackTransaction();
@@ -81,6 +79,10 @@ let PostService = class PostService {
             take: pageSize,
         });
         const result = await Promise.all(posts.map(async (post) => {
+            const user = await manager.findOne(User_1.User, {
+                where: { userIdx: post.userIdx },
+            });
+            const nickName = user ? user.nickName : "";
             const images = await manager.find(Image_1.Image, {
                 where: { postIdx: post.postIdx },
             });
@@ -89,16 +91,22 @@ let PostService = class PostService {
                 where: { postIdx: post.postIdx },
             });
             const commentList = comments.map((comment) => comment);
-            return Object.assign(Object.assign({}, post), { imagePath, commentList });
+            return Object.assign(Object.assign({}, post), { nickName,
+                imagePath,
+                commentList });
         }));
         return result;
     }
-    async findIdPost(id) {
+    async findIdPost(userIdx) {
         const posts = await this.postRepository.find({
-            where: { writeIdx: id },
+            where: { userIdx },
         });
         const readonlyPosts = [];
         for (const post of posts) {
+            const user = await this.userRepository.findOne({
+                where: { userIdx: post.userIdx },
+            });
+            const nickName = user ? user.nickName : "";
             const images = await this.imageRepository.find({
                 where: { postIdx: post.postIdx },
             });
@@ -107,7 +115,8 @@ let PostService = class PostService {
                 where: { postIdx: post.postIdx },
             });
             const commentList = Comments.map((comment) => comment);
-            const readonlyPost = Object.assign(Object.assign({}, post), { imagePath,
+            const readonlyPost = Object.assign(Object.assign({}, post), { nickName,
+                imagePath,
                 commentList });
             readonlyPosts.push(readonlyPost);
         }
@@ -120,6 +129,10 @@ let PostService = class PostService {
         });
         const readonlyPosts = [];
         for (const post of posts) {
+            const user = await this.userRepository.findOne({
+                where: { userIdx: post.userIdx },
+            });
+            const nickName = user ? user.nickName : "";
             const images = await this.imageRepository.find({
                 where: { postIdx: post.postIdx },
             });
@@ -128,7 +141,8 @@ let PostService = class PostService {
                 where: { postIdx: post.postIdx },
             });
             const commentList = Comments.map((comment) => comment);
-            const readonlyPost = Object.assign(Object.assign({}, post), { imagePath,
+            const readonlyPost = Object.assign(Object.assign({}, post), { nickName,
+                imagePath,
                 commentList });
             readonlyPosts.push(readonlyPost);
         }
@@ -146,7 +160,7 @@ let PostService = class PostService {
             const likeEditPost = await queryRunner.manager.save(editpost);
             const likePost = new LikePost_1.LikePost();
             likePost.postIdx = postIdx;
-            likePost.userId = user.id;
+            likePost.userIdx = user.userIdx;
             await queryRunner.manager.save(likePost);
             const images = await this.imageRepository.find({
                 where: { postIdx },
@@ -156,7 +170,7 @@ let PostService = class PostService {
                 where: { postIdx },
             });
             const commentList = Comments.map((comment) => comment);
-            const readonlyPost = Object.assign(Object.assign({}, likeEditPost), { imagePath,
+            const readonlyPost = Object.assign(Object.assign({}, likeEditPost), { nickName: user.nickName, imagePath,
                 commentList });
             await queryRunner.commitTransaction();
             return readonlyPost;
@@ -179,7 +193,7 @@ let PostService = class PostService {
             });
             editpost.likeNum -= 1;
             const likeEditPost = await queryRunner.manager.save(editpost);
-            await this.likePostRepository.delete({ userId: user.id });
+            await this.likePostRepository.delete({ userIdx: user.userIdx });
             const images = await this.imageRepository.find({
                 where: { postIdx },
             });
@@ -188,7 +202,7 @@ let PostService = class PostService {
                 where: { postIdx },
             });
             const commentList = Comments.map((comment) => comment);
-            const readonlyPost = Object.assign(Object.assign({}, likeEditPost), { imagePath,
+            const readonlyPost = Object.assign(Object.assign({}, likeEditPost), { nickName: user.nickName, imagePath,
                 commentList });
             await queryRunner.commitTransaction();
             return readonlyPost;

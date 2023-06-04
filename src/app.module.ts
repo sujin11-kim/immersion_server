@@ -1,16 +1,13 @@
-import { Module } from "@nestjs/common";
+import { Global, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { UsersController } from "./users/users.controller";
-import { UsersService } from "./users/users.service";
 import { UsersModule } from "./users/users.module";
 import { User } from "mymodel/entities/User";
 import { AuthModule } from "./auth/auth.module";
 
-import Joi from "joi";
-import { AuthService } from "./auth/auth.service";
+import * as moment from "moment";
 import { Message } from "mymodel/entities/Message";
 import { Post } from "mymodel/entities/Post";
 import { LikePost } from "mymodel/entities/LikePost";
@@ -70,4 +67,9 @@ import { RestaurantsModule } from "./restaurants/restaurants.module";
   controllers: [AppController],
   providers: [AppService, AwsService],
 })
-export class AppModule {}
+@Global()
+export class AppModule {
+  constructor() {
+    moment.locale("en"); // 원하는 로캘을 선택하여 Moment.js의 언어 설정을 변경할 수 있습니다.
+  }
+}
