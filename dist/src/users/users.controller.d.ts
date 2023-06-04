@@ -13,11 +13,15 @@ export declare class UsersController {
     login(data: LoginRequestDto): Promise<{
         token: string;
     }>;
+
     saveFCMToken(user: UserLoginDto, fcmToken: string): Promise<{
         message: string;
     }>;
     findFCM(): Promise<{
         fcmTokens: {};
     }>;
+
+    kakaoLogin(customHeader: string): Promise<any>;
+
     getCurrentUser(user: any): any;
 }
