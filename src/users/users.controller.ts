@@ -4,7 +4,7 @@ import {
   Post,
   UseGuards,
   Get,
-  Headers
+  Headers,
 } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -46,7 +46,6 @@ export class UsersController {
     return this.authService.jwtLogIn(data);
   }
 
-
   @ApiOperation({ summary: "FCM 토큰 추가" })
   @UseInterceptors(SuccessInterceptor)
   @UseFilters(HttpExceptionFilter)
@@ -65,14 +64,14 @@ export class UsersController {
   @Get("get/fcm")
   findFCM() {
     return this.usersService.findFCM();
+  }
 
   @ApiOperation({ summary: "카카오로그인" })
   @UseInterceptors(SuccessInterceptor)
   @UseFilters(HttpExceptionFilter)
   @Get("kakaologin")
-  kakaoLogin(@Headers('Authorization') customHeader: string) {
+  kakaoLogin(@Headers("Authorization") customHeader: string) {
     return this.authService.kakaoTokenToLocalToken(customHeader);
-
   }
 
   @ApiOperation({ summary: "인증확인:현재유저 가져오기" })

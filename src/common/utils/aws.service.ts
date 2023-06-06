@@ -3,8 +3,7 @@ import * as AWS from "aws-sdk";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PromiseResult } from "aws-sdk/lib/request";
-
-// sharp
+import * as sharp from "sharp";
 
 @Injectable()
 export class AwsService {
@@ -29,6 +28,28 @@ export class AwsService {
     contentType: string;
   }> {
     try {
+      // Check image format
+      const allowedFormats = ["image/jpeg", "image/png", "image/jpg"];
+      if (!allowedFormats.includes(file.mimetype)) {
+        throw new BadRequestException(
+          "Only JPG, PNG, JPEG images are allowed."
+        );
+      }
+
+      // Read image size
+      const image = sharp(file.buffer);
+      const metadata = await image.metadata();
+      const { width, height } = metadata;
+
+      // Check image size
+      const maxSize = 1000;
+      if (width > maxSize || height > maxSize) {
+        throw new BadRequestException(
+          `Image size should not exceed ${maxSize}x${maxSize} pixels.`
+        );
+      }
+
+      // Upload image
       const key = `${folder}/${Date.now()}_${path.basename(
         file.originalname
       )}`.replace(/ /g, "");
