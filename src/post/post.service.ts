@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, DataSource, QueryRunner } from "typeorm";
 import { Post } from "../../mymodel/entities/Post";
@@ -6,7 +6,7 @@ import { UserLoginDto } from "src/users/dto/user-login.dto";
 import { Image } from "mymodel/entities/Image";
 import { readonlyPostDto } from "./dto/readonly-post.dto";
 import * as multerS3 from "multer-s3";
-import { AwsService } from "src/aws.service";
+import { AwsService } from "src/common/utils/aws.service";
 import { User } from "mymodel/entities/User";
 import { Comment } from "mymodel/entities/Comment";
 import { LikePost } from "mymodel/entities/LikePost";
@@ -50,7 +50,7 @@ export class PostService {
       post.userIdx = user.userIdx;
       post.category = category;
       post.title = title;
-      post.content = content;
+      post.content = this.validateContent(content);
       const savedPost = await queryRunner.manager.save(post);
 
       const pathArray = [];
@@ -85,6 +85,13 @@ export class PostService {
   }
 
   async findAll(page: number, pageSize: number): Promise<readonlyPostDto[]> {
+    if (page <= 0 || pageSize <= 0) {
+      throw new HttpException(
+        { message: "Page and pageSize must be greater than 0." },
+        201
+      );
+    }
+
     const manager = this.dataSource.manager;
     const offset = (page - 1) * pageSize;
     const posts = await manager.find(Post, {
@@ -228,12 +235,14 @@ export class PostService {
       };
 
       await queryRunner.commitTransaction();
-
+      console.log("성공");
       return readonlyPost;
     } catch (error) {
+      console.log("실패");
       await queryRunner.rollbackTransaction();
       throw error;
     } finally {
+      console.log("실패?");
       await queryRunner.release();
     }
   }
@@ -280,5 +289,25 @@ export class PostService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  validateContent(content: string) {
+    const maxContentLength = 5;
+    const contentWithoutEmojis = content.replace(/[\u{1F600}-\u{1F6FF}]/gu, ""); // 이모지 제거
+    const contentWithoutSpecialChars = contentWithoutEmojis.replace(
+      /[^\w\s]/gi,
+      ""
+    ); // 특수문자 제거
+    const contentWithoutSpecialCharsAndSpaces =
+      contentWithoutSpecialChars.replace(/\s/g, ""); // 공백 제거
+
+    if (contentWithoutSpecialCharsAndSpaces.length > maxContentLength) {
+      throw new HttpException(
+        { message: "Content length exceeds the maximum allowed limit." },
+        201
+      );
+    }
+
+    return contentWithoutSpecialChars;
   }
 }

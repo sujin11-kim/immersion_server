@@ -4,7 +4,7 @@ import { UserLoginDto } from "src/users/dto/user-login.dto";
 import { Image } from "mymodel/entities/Image";
 import { readonlyPostDto } from "./dto/readonly-post.dto";
 import * as multerS3 from "multer-s3";
-import { AwsService } from "src/aws.service";
+import { AwsService } from "src/common/utils/aws.service";
 import { User } from "mymodel/entities/User";
 import { Comment } from "mymodel/entities/Comment";
 import { LikePost } from "mymodel/entities/LikePost";
@@ -23,4 +23,5 @@ export declare class PostService {
     findCategoryPost(category: string): Promise<readonlyPostDto[]>;
     postLike(user: UserLoginDto, postIdx: number): Promise<readonlyPostDto>;
     postLikeCancel(user: UserLoginDto, postIdx: number): Promise<readonlyPostDto>;
+    validateContent(content: string): string;
 }
