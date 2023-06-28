@@ -31,6 +31,7 @@ const Image_1 = require("../mymodel/entities/Image");
 const aws_service_1 = require("./common/utils/aws.service");
 const Restaurant_1 = require("../mymodel/entities/Restaurant");
 const restaurants_module_1 = require("./restaurants/restaurants.module");
+const review_module_1 = require("./review/review.module");
 let AppModule = class AppModule {
     constructor() {
         moment.locale("en");
@@ -73,6 +74,7 @@ AppModule = __decorate([
             post_module_1.PostModule,
             comment_module_1.CommentModule,
             restaurants_module_1.RestaurantsModule,
+            review_module_1.ReviewModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, aws_service_1.AwsService],

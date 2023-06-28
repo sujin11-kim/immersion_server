@@ -50,9 +50,14 @@ export class RestaurantsService {
 
     user.latitude = latitude;
     user.longitude = longitude;
-    return await this.userRepository.save(user);
 
-    // return { message: "유저의 위치 저장에 성공하였습니다." };
+    await this.userRepository.save(user);
+    return {
+      isSuccess: true,
+      code: 200,
+      //kr_curr,
+      result: [user.userIdx, user.latitude, user.longitude],
+    };
   }
 
   async updateUserLocation(
@@ -64,9 +69,13 @@ export class RestaurantsService {
 
     user.latitude = latitude;
     user.longitude = longitude;
-    return await this.userRepository.save(user);
-
-    // return { message: "유저의 위치 업데이트에 성공하였습니다." };
+    await this.userRepository.save(user);
+    return {
+      isSuccess: true,
+      code: 200,
+      //kr_curr,
+      result: [user.userIdx, user.latitude, user.longitude],
+    };
   }
 
   async getrestaurantlist(userIdx: number) {
@@ -93,10 +102,8 @@ export class RestaurantsService {
     return {
       isSuccess: true,
       code: 200,
-      kr_curr,
-      message: { nearbyRestaurantIdxs },
+      //kr_curr,
+      result: nearbyRestaurantIdxs,
     };
-
-    return nearbyRestaurantIdxs;
   }
 }

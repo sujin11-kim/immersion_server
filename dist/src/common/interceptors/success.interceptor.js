@@ -22,8 +22,7 @@ let SuccessInterceptor = class SuccessInterceptor {
                 return {
                     isSuccess: true,
                     code: common_1.HttpStatus.OK,
-                    kr_curr,
-                    message: data,
+                    result: data,
                 };
             }
             else {

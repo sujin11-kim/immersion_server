@@ -26,8 +26,8 @@ export class SuccessInterceptor implements NestInterceptor {
           return {
             isSuccess: true,
             code: HttpStatus.OK,
-            kr_curr,
-            message: data,
+            // kr_curr,
+            result: data,
           };
         } else {
           return { isSuccess: false, code: HttpStatus.UNAUTHORIZED, kr_curr };
