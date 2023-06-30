@@ -45,14 +45,14 @@ let ReviewController = class ReviewController {
 };
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "모든 리뷰 조회" }),
-    (0, common_1.Get)(),
+    (0, common_1.Get)("AllReview"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], ReviewController.prototype, "getAllReview", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "특정 리뷰 조회" }),
-    (0, common_1.Get)(":id"),
+    (0, common_1.Get)("Onereview/:id"),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -61,7 +61,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "리뷰 작성" }),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Post)(),
+    (0, common_1.Post)("Newreview"),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
@@ -72,7 +72,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "특정리뷰 수정" }),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Patch)(":id"),
+    (0, common_1.Patch)("Onereviewupdate/:id"),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -82,7 +82,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "특정리뷰 삭제" }),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Delete)(":id"),
+    (0, common_1.Delete)("delete/:id"),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),

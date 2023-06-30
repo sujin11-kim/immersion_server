@@ -27,20 +27,20 @@ export class ReviewController {
   constructor(private reveiwservice: ReviewService) {}
 
   @ApiOperation({ summary: "모든 리뷰 조회" })
-  @Get()
+  @Get("AllReview")
   getAllReview() {
     return this.reveiwservice.getAllReview();
   }
 
   @ApiOperation({ summary: "특정 리뷰 조회" })
-  @Get(":id")
+  @Get("Onereview/:id")
   getoneReview(@Param("id") reviewIdx: number) {
     return this.reveiwservice.getoneReview(reviewIdx);
   }
 
   @ApiOperation({ summary: "리뷰 작성" })
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post("Newreview")
   create(
     @Body() createReviewDto: CreateReviewDto,
     @CurrentUser() user: UserLoginDto
@@ -50,7 +50,7 @@ export class ReviewController {
 
   @ApiOperation({ summary: "특정리뷰 수정" })
   @UseGuards(JwtAuthGuard)
-  @Patch(":id")
+  @Patch("Onereviewupdate/:id")
   update(
     @Param("id") reviewIdx: number,
     @Body() updateReviewDto: UpdateReviewDto
@@ -60,7 +60,7 @@ export class ReviewController {
 
   @ApiOperation({ summary: "특정리뷰 삭제" })
   @UseGuards(JwtAuthGuard)
-  @Delete(":id")
+  @Delete("delete/:id")
   delete(@Param("id") reviewIdx: number) {
     return this.reveiwservice.delete(reviewIdx);
   }
