@@ -38,7 +38,7 @@ let RestaurantsController = class RestaurantsController {
 };
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "API No. 5-1 유저 경도위도 저장" }),
-    (0, common_2.Post)("mylocation"),
+    (0, common_2.Post)("mylocationsave"),
     __param(0, (0, common_3.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [location_dto_1.LocationDto]),
@@ -46,7 +46,7 @@ __decorate([
 ], RestaurantsController.prototype, "createUserLocation", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "API No. 5-2유저 경도위도 업데이트" }),
-    (0, common_2.Patch)("mylocation"),
+    (0, common_2.Patch)("mylocationupdate"),
     __param(0, (0, common_3.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [location_dto_1.LocationDto]),
