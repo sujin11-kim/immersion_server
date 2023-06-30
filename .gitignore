@@ -4,4 +4,4 @@ log/*
 .DS_STORE
 .history/
 
-dist/tsconfig.build.tsbuildinfo
+# dist/tsconfig.build.tsbuildinfo
