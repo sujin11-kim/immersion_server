@@ -65,6 +65,7 @@ export class UsersController {
   @Get("get/fcm")
   findFCM() {
     return this.usersService.findFCM();
+  }
 
   @ApiOperation({ summary: "카카오로그인" })
   @UseInterceptors(SuccessInterceptor)
@@ -72,7 +73,6 @@ export class UsersController {
   @Get("kakaologin")
   kakaoLogin(@Headers('Authorization') customHeader: string) {
     return this.authService.kakaoTokenToLocalToken(customHeader);
-
   }
 
   @ApiOperation({ summary: "인증확인:현재유저 가져오기" })

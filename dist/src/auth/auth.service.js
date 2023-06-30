@@ -49,15 +49,15 @@ let AuthService = class AuthService {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const kakaoUser = new User_1.User();
-            kakaoUser.id = response.data.id;
+            kakaoUser.email = response.data.id;
             kakaoUser.nickName = response.data.properties.nickname;
-            const kakaoId = kakaoUser.id;
-            const checkExist = await this.userRepository.findOneBy({ id: kakaoId });
-            if (!checkExist) {
+            const kakaoId = kakaoUser.email;
+            const checkExistUser = await this.userRepository.findOneBy({ email: kakaoId });
+            if (!checkExistUser) {
                 await this.userRepository.save(kakaoUser);
             }
-            const user = await this.userRepository.findOneBy({ id: kakaoId });
-            const payload = { userIdx: user.userIdx };
+            const userForToken = await this.userRepository.findOneBy({ email: kakaoId });
+            const payload = { userIdx: userForToken.userIdx };
             return { token: this.jwtService.sign(payload) };
         }
         catch (error) {
