@@ -20,6 +20,7 @@ import { Image } from "mymodel/entities/Image";
 import { AwsService } from "./common/utils/aws.service";
 import { Restaurant } from "mymodel/entities/Restaurant";
 import { RestaurantsModule } from "./restaurants/restaurants.module";
+import { ReviewModule } from "./review/review.module";
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { RestaurantsModule } from "./restaurants/restaurants.module";
     PostModule,
     CommentModule,
     RestaurantsModule,
+    ReviewModule,
   ],
   controllers: [AppController],
   providers: [AppService, AwsService],

@@ -14,7 +14,7 @@ export class RestaurantsController {
   constructor(private restaurantsService: RestaurantsService) {}
 
   @ApiOperation({ summary: "API No. 5-1 유저 경도위도 저장" })
-  @Post("mylocation")
+  @Post("mylocationsave")
   createUserLocation(@Body() location: LocationDto) {
     const { userIdx, latitude, longitude } = location;
     return this.restaurantsService.createUserLocation(
@@ -25,7 +25,7 @@ export class RestaurantsController {
   }
 
   @ApiOperation({ summary: "API No. 5-2유저 경도위도 업데이트" })
-  @Patch("mylocation")
+  @Patch("mylocationupdate")
   updateUserLocation(@Body() location: LocationDto) {
     const { userIdx, latitude, longitude } = location;
     return this.restaurantsService.updateUserLocation(
