@@ -17,8 +17,14 @@ let SuccessInterceptor = class SuccessInterceptor {
         const kr_curr = new Date(utc + KR_TIME_DIFF);
         return next.handle().pipe((0, operators_1.map)((data) => {
             const response = context.switchToHttp().getResponse();
-            if (response.statusCode === common_1.HttpStatus.OK) {
-                return { isSuccess: true, code: common_1.HttpStatus.OK, kr_curr, message: data };
+            if (response.statusCode === common_1.HttpStatus.OK ||
+                response.statusCode === common_1.HttpStatus.CREATED) {
+                return {
+                    isSuccess: true,
+                    code: common_1.HttpStatus.OK,
+                    kr_curr,
+                    message: data,
+                };
             }
             else {
                 return { isSuccess: false, code: common_1.HttpStatus.UNAUTHORIZED, kr_curr };

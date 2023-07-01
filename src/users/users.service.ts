@@ -1,7 +1,4 @@
-import {
-  HttpException,
-  Injectable,
-} from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import * as bcrypt from "bcrypt";

@@ -14,6 +14,7 @@ const path = require("path");
 const AWS = require("aws-sdk");
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const sharp = require("sharp");
 let AwsService = class AwsService {
     constructor(configService) {
         this.configService = configService;
@@ -26,6 +27,17 @@ let AwsService = class AwsService {
     }
     async uploadFileToS3(folder, file) {
         try {
+            const allowedFormats = ["image/jpeg", "image/png", "image/jpg"];
+            if (!allowedFormats.includes(file.mimetype)) {
+                throw new common_1.BadRequestException("Only JPG, PNG, JPEG images are allowed.");
+            }
+            const image = sharp(file.buffer);
+            const metadata = await image.metadata();
+            const { width, height } = metadata;
+            const maxSize = 1000;
+            if (width > maxSize || height > maxSize) {
+                throw new common_1.BadRequestException(`Image size should not exceed ${maxSize}x${maxSize} pixels.`);
+            }
             const key = `${folder}/${Date.now()}_${path.basename(file.originalname)}`.replace(/ /g, "");
             const s3Object = await this.awsS3
                 .putObject({

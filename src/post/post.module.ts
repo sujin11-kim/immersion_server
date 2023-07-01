@@ -4,7 +4,7 @@ import { Post } from "mymodel/entities/Post";
 import { PostController } from "./post.controller";
 import { PostService } from "./post.service";
 import { Image } from "mymodel/entities/Image";
-import { AwsService } from "src/aws.service";
+import { AwsService } from "src/common/utils/aws.service";
 import { User } from "mymodel/entities/User";
 import { Comment } from "mymodel/entities/Comment";
 import { LikePost } from "mymodel/entities/LikePost";

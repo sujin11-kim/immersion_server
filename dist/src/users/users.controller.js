@@ -99,7 +99,7 @@ __decorate([
     (0, use_interceptors_decorator_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
     (0, exception_filters_decorator_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),
     (0, common_1.Get)("kakaologin"),
-    __param(0, (0, common_1.Headers)('Authorization')),
+    __param(0, (0, common_1.Headers)("Authorization")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)

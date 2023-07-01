@@ -25,7 +25,7 @@ let AuthService = class AuthService {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.axiosInstance = axios_1.default.create({
-            baseURL: 'https://kapi.kakao.com/v2/user/me',
+            baseURL: "https://kapi.kakao.com/v2/user/me",
         });
     }
     async jwtLogIn(data) {
@@ -45,10 +45,11 @@ let AuthService = class AuthService {
     }
     async kakaoTokenToLocalToken(token) {
         try {
-            const response = await this.axiosInstance.get('', {
+            const response = await this.axiosInstance.get("", {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const kakaoUser = new User_1.User();
+
             kakaoUser.email = response.data.id;
             kakaoUser.nickName = response.data.properties.nickname;
             const kakaoId = kakaoUser.email;
@@ -57,11 +58,12 @@ let AuthService = class AuthService {
                 await this.userRepository.save(kakaoUser);
             }
             const userForToken = await this.userRepository.findOneBy({ email: kakaoId });
+
             const payload = { userIdx: userForToken.userIdx };
             return { token: this.jwtService.sign(payload) };
         }
         catch (error) {
-            throw new common_1.HttpException({ token: 'not authorization' }, 401);
+            throw new common_1.HttpException({ token: "not authorization" }, 401);
         }
     }
 };

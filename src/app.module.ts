@@ -17,7 +17,7 @@ import { ChatRoom } from "mymodel/entities/ChatRoom";
 import { PostModule } from "./post/post.module";
 import { CommentModule } from "./comment/comment.module";
 import { Image } from "mymodel/entities/Image";
-import { AwsService } from "./aws.service";
+import { AwsService } from "./common/utils/aws.service";
 import { Restaurant } from "mymodel/entities/Restaurant";
 import { RestaurantsModule } from "./restaurants/restaurants.module";
 

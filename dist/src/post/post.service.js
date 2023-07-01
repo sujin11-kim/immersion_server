@@ -18,7 +18,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const Post_1 = require("../../mymodel/entities/Post");
 const Image_1 = require("../../mymodel/entities/Image");
-const aws_service_1 = require("../aws.service");
+const aws_service_1 = require("../common/utils/aws.service");
 const User_1 = require("../../mymodel/entities/User");
 const Comment_1 = require("../../mymodel/entities/Comment");
 const LikePost_1 = require("../../mymodel/entities/LikePost");
@@ -44,7 +44,7 @@ let PostService = class PostService {
             post.userIdx = user.userIdx;
             post.category = category;
             post.title = title;
-            post.content = content;
+            post.content = this.validateContent(content);
             const savedPost = await queryRunner.manager.save(post);
             const pathArray = [];
             const imagePromise = files.map(async (file) => {
@@ -72,6 +72,9 @@ let PostService = class PostService {
         }
     }
     async findAll(page, pageSize) {
+        if (page <= 0 || pageSize <= 0) {
+            throw new common_1.HttpException({ message: "Page and pageSize must be greater than 0." }, 201);
+        }
         const manager = this.dataSource.manager;
         const offset = (page - 1) * pageSize;
         const posts = await manager.find(Post_1.Post, {
@@ -173,13 +176,16 @@ let PostService = class PostService {
             const readonlyPost = Object.assign(Object.assign({}, likeEditPost), { nickName: user.nickName, imagePath,
                 commentList });
             await queryRunner.commitTransaction();
+            console.log("성공");
             return readonlyPost;
         }
         catch (error) {
+            console.log("실패");
             await queryRunner.rollbackTransaction();
             throw error;
         }
         finally {
+            console.log("실패?");
             await queryRunner.release();
         }
     }
@@ -214,6 +220,16 @@ let PostService = class PostService {
         finally {
             await queryRunner.release();
         }
+    }
+    validateContent(content) {
+        const maxContentLength = 5;
+        const contentWithoutEmojis = content.replace(/[\u{1F600}-\u{1F6FF}]/gu, "");
+        const contentWithoutSpecialChars = contentWithoutEmojis.replace(/[^\w\s]/gi, "");
+        const contentWithoutSpecialCharsAndSpaces = contentWithoutSpecialChars.replace(/\s/g, "");
+        if (contentWithoutSpecialCharsAndSpaces.length > maxContentLength) {
+            throw new common_1.HttpException({ message: "Content length exceeds the maximum allowed limit." }, 201);
+        }
+        return contentWithoutSpecialChars;
     }
 };
 PostService = __decorate([

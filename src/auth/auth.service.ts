@@ -5,7 +5,7 @@ import { User } from "mymodel/entities/User";
 import { Repository } from "typeorm";
 import { LoginRequestDto } from "./dto/login.request.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance } from "axios";
 @Injectable()
 export class AuthService {
   private readonly axiosInstance: AxiosInstance;
@@ -15,8 +15,8 @@ export class AuthService {
     private jwtService: JwtService
   ) {
     this.axiosInstance = axios.create({
-      baseURL: 'https://kapi.kakao.com/v2/user/me',
-    })
+      baseURL: "https://kapi.kakao.com/v2/user/me",
+    });
   }
 
   async jwtLogIn(data: LoginRequestDto) {
@@ -31,7 +31,7 @@ export class AuthService {
       password,
       user.password
     );
-    
+
     const payload = { email };
 
     if (user && (await bcrypt.compare(password, user.password))) {
@@ -40,6 +40,7 @@ export class AuthService {
       throw new HttpException({ token: "" }, 201);
     }
   }
+
 
   async kakaoTokenToLocalToken(token: string): Promise<any>{
   try{
@@ -60,6 +61,7 @@ export class AuthService {
     return { token: this.jwtService.sign(payload) };
   } catch (error) {
     throw new HttpException({token:'not authorization'},401);
+
     }
   }
 }
