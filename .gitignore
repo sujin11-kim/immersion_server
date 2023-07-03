@@ -1,4 +1,7 @@
 log/*
-node_modules
+# node_modules
 *-audit.json
 .DS_STORE
+.history/
+
+# dist/tsconfig.build.tsbuildinfo
