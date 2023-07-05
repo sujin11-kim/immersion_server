@@ -21,10 +21,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const kr_curr = new Date(utc + KR_TIME_DIFF);
 
     response.status(status).json({
-      success: true,
-      code: status,
-      data: error,
-      kr_curr,
+      success: false,
+      code: 2000,
+      result: error,
+      //kr_curr,
     });
   }
 }
