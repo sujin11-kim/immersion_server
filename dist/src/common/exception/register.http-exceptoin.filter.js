@@ -19,7 +19,11 @@ let RegisterHttpExceptionFilter = class RegisterHttpExceptionFilter {
         const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
         const KR_TIME_DIFF = 18 * 60 * 60 * 1000;
         const kr_curr = new Date(utc + KR_TIME_DIFF);
-        response.status(status).json(Object.assign({ isSuccess: true, code: status, kr_curr }, error));
+        response.status(status).json({
+            isSuccess: false,
+            code: 2000,
+            result: [],
+        });
     }
 };
 RegisterHttpExceptionFilter = __decorate([

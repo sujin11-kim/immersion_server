@@ -41,27 +41,29 @@ export class AuthService {
     }
   }
 
+  async kakaoTokenToLocalToken(token: string): Promise<any> {
+    try {
+      const response = await this.axiosInstance.get("", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const kakaoUser = new User();
+      kakaoUser.email = response.data.id;
+      kakaoUser.nickName = response.data.properties.nickname;
+      const kakaoId = kakaoUser.email;
+      const checkExistUser = await this.userRepository.findOneBy({
+        email: kakaoId,
+      });
+      if (!checkExistUser) {
+        await this.userRepository.save(kakaoUser);
+      }
 
-  async kakaoTokenToLocalToken(token: string): Promise<any>{
-  try{
-    const response = await this.axiosInstance.get('', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const kakaoUser = new User();
-    kakaoUser.email = response.data.id;
-    kakaoUser.nickName = response.data.properties.nickname;
-    const kakaoId = kakaoUser.email;
-    const checkExistUser = await this.userRepository.findOneBy({ email : kakaoId });
-    if (!checkExistUser) {
-      await this.userRepository.save(kakaoUser);
-    }
-    
-    const userForToken = await this.userRepository.findOneBy({ email : kakaoId });
-    const payload = { userIdx : userForToken.userIdx };
-    return { token: this.jwtService.sign(payload) };
-  } catch (error) {
-    throw new HttpException({token:'not authorization'},401);
-
+      const userForToken = await this.userRepository.findOneBy({
+        email: kakaoId,
+      });
+      const payload = { userIdx: userForToken.userIdx };
+      return { token: this.jwtService.sign(payload) };
+    } catch (error) {
+      throw new HttpException({ token: "not authorization" }, 401);
     }
   }
 }

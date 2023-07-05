@@ -49,7 +49,7 @@ let RestaurantsService = class RestaurantsService {
         await this.userRepository.save(user);
         return {
             isSuccess: true,
-            code: 200,
+            code: 1000,
             result: [user.userIdx, user.latitude, user.longitude],
         };
     }
@@ -60,7 +60,7 @@ let RestaurantsService = class RestaurantsService {
         await this.userRepository.save(user);
         return {
             isSuccess: true,
-            code: 200,
+            code: 1000,
             result: [user.userIdx, user.latitude, user.longitude],
         };
     }
@@ -80,7 +80,7 @@ let RestaurantsService = class RestaurantsService {
         const kr_curr = new Date(utc + KR_TIME_DIFF);
         return {
             isSuccess: true,
-            code: 200,
+            code: 1000,
             result: nearbyRestaurantIdxs,
         };
     }

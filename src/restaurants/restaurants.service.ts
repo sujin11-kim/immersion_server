@@ -54,7 +54,7 @@ export class RestaurantsService {
     await this.userRepository.save(user);
     return {
       isSuccess: true,
-      code: 200,
+      code: 1000,
       //kr_curr,
       result: [user.userIdx, user.latitude, user.longitude],
     };
@@ -72,7 +72,7 @@ export class RestaurantsService {
     await this.userRepository.save(user);
     return {
       isSuccess: true,
-      code: 200,
+      code: 1000,
       //kr_curr,
       result: [user.userIdx, user.latitude, user.longitude],
     };
@@ -101,7 +101,7 @@ export class RestaurantsService {
 
     return {
       isSuccess: true,
-      code: 200,
+      code: 1000,
       //kr_curr,
       result: nearbyRestaurantIdxs,
     };

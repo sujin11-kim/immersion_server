@@ -31,13 +31,15 @@ let ReviewService = class ReviewService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const review = new Review_1.Review();
+            const review = queryRunner.manager.getRepository(Review_1.Review).create();
             (review.userIdx = user.userIdx),
                 (review.postIdx = createReviewDto.postIdx),
                 (review.restaurantIdx = createReviewDto.restaurantIdx),
                 (review.content = createReviewDto.content),
                 (review.score = createReviewDto.score);
-            return await this.reviewRepostitory.save(review);
+            await queryRunner.manager.getRepository(Review_1.Review).save(review);
+            await queryRunner.commitTransaction();
+            return review;
         }
         catch (err) {
             await queryRunner.rollbackTransaction();
@@ -62,11 +64,15 @@ let ReviewService = class ReviewService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const review = await this.getoneReview(reviewIdx);
+            const review = await queryRunner.manager
+                .getRepository(Review_1.Review)
+                .findOne({ where: { reviewIdx } });
             const { content, score } = updateReviewDto;
             review.content = content;
             review.score = score;
-            return await this.reviewRepostitory.save(review);
+            await queryRunner.manager.getRepository(Review_1.Review).save(review);
+            await queryRunner.commitTransaction();
+            return review;
         }
         catch (err) {
             await queryRunner.rollbackTransaction();
@@ -81,14 +87,15 @@ let ReviewService = class ReviewService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const post = await this.reviewRepostitory.findOne({
-                where: { reviewIdx },
-            });
-            if (!post) {
+            const review = await queryRunner.manager
+                .getRepository(Review_1.Review)
+                .findOne({ where: { reviewIdx } });
+            if (!review) {
                 throw new common_1.NotFoundException(`Review with ID ${reviewIdx} not found`);
             }
+            await queryRunner.manager.getRepository(Review_1.Review).delete(reviewIdx);
             await this.reviewRepostitory.delete(reviewIdx);
-            return post;
+            return review;
         }
         catch (err) {
             await queryRunner.rollbackTransaction();

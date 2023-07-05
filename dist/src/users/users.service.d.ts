@@ -5,9 +5,7 @@ export declare class UsersService {
     private userRepository;
     private dataSource;
     constructor(userRepository: Repository<User>, dataSource: DataSource);
-    create(email: string, nickname: string, phone: string, password: string): Promise<{
-        message: string;
-    }>;
+    create(email: string, nickname: string, phone: string, password: string): Promise<number>;
     saveFCMToken(loginUser: UserLoginDto, fcmToken: string): Promise<{
         message: string;
     }>;

@@ -17,9 +17,8 @@ let RegisterSuccessInterceptor = class RegisterSuccessInterceptor {
         const kr_curr = new Date(utc + KR_TIME_DIFF);
         return next.handle().pipe((0, operators_1.map)((data) => ({
             isSuccess: true,
-            code: 201,
-            kr_curr,
-            message: data.message,
+            code: 1000,
+            result: { userIdx: data },
         })));
     }
 };
