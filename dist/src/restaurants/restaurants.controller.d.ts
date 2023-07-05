@@ -16,6 +16,6 @@ export declare class RestaurantsController {
     getrestaurantlist(userIdx: number): Promise<{
         isSuccess: boolean;
         code: number;
-        result: number[];
+        result: import("../../mymodel/entities/Restaurant").Restaurant[];
     }>;
 }

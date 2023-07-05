@@ -74,14 +74,15 @@ let RestaurantsService = class RestaurantsService {
                 nearbyRestaurantIdxs.push(restaurant.restaurantIdx);
             }
         }
-        const curr = new Date();
-        const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
-        const KR_TIME_DIFF = 18 * 60 * 60 * 1000;
-        const kr_curr = new Date(utc + KR_TIME_DIFF);
+        const nearbyrestaurant = await this.restaurantRepository.find({
+            where: {
+                restaurantIdx: (0, typeorm_1.In)(nearbyRestaurantIdxs),
+            },
+        });
         return {
             isSuccess: true,
             code: 1000,
-            result: nearbyRestaurantIdxs,
+            result: nearbyrestaurant,
         };
     }
 };
