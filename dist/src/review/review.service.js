@@ -93,8 +93,9 @@ let ReviewService = class ReviewService {
             if (!review) {
                 throw new common_1.NotFoundException(`Review with ID ${reviewIdx} not found`);
             }
+            console.log("11111111111111111111111");
             await queryRunner.manager.getRepository(Review_1.Review).delete(reviewIdx);
-            await this.reviewRepostitory.delete(reviewIdx);
+            console.log("212222222222222222");
             return review;
         }
         catch (err) {

@@ -103,10 +103,11 @@ export class ReviewService {
       if (!review) {
         throw new NotFoundException(`Review with ID ${reviewIdx} not found`);
       }
-
+      console.log("11111111111111111111111");
       await queryRunner.manager.getRepository(Review).delete(reviewIdx);
-      await this.reviewRepostitory.delete(reviewIdx);
-
+      console.log("212222222222222222");
+      // await this.reviewRepostitory.delete(reviewIdx);
+      // console.log("33333333333");
       return review;
     } catch (err) {
       await queryRunner.rollbackTransaction();
