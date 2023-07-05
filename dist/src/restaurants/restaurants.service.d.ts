@@ -18,6 +18,6 @@ export declare class RestaurantsService {
     getrestaurantlist(userIdx: number): Promise<{
         isSuccess: boolean;
         code: number;
-        result: number[];
+        result: Restaurant[];
     }>;
 }
