@@ -1,5 +1,5 @@
 import { HttpException } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { Repository, In } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
 import { User } from "mymodel/entities/User";
@@ -54,7 +54,7 @@ export class RestaurantsService {
     await this.userRepository.save(user);
     return {
       isSuccess: true,
-      code: 200,
+      code: 1000,
       //kr_curr,
       result: [user.userIdx, user.latitude, user.longitude],
     };
@@ -72,7 +72,7 @@ export class RestaurantsService {
     await this.userRepository.save(user);
     return {
       isSuccess: true,
-      code: 200,
+      code: 1000,
       //kr_curr,
       result: [user.userIdx, user.latitude, user.longitude],
     };
@@ -94,16 +94,17 @@ export class RestaurantsService {
         nearbyRestaurantIdxs.push(restaurant.restaurantIdx);
       }
     }
-    const curr = new Date();
-    const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
-    const KR_TIME_DIFF = 18 * 60 * 60 * 1000;
-    const kr_curr = new Date(utc + KR_TIME_DIFF);
+
+    const nearbyrestaurant = await this.restaurantRepository.find({
+      where: {
+        restaurantIdx: In(nearbyRestaurantIdxs),
+      },
+    });
 
     return {
       isSuccess: true,
-      code: 200,
-      //kr_curr,
-      result: nearbyRestaurantIdxs,
+      code: 1000,
+      result: nearbyrestaurant,
     };
   }
 }

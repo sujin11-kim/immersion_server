@@ -25,7 +25,7 @@ export class SuccessInterceptor implements NestInterceptor {
         ) {
           return {
             isSuccess: true,
-            code: HttpStatus.OK,
+            code: 1000,
             // kr_curr,
             result: data,
           };

@@ -35,7 +35,7 @@ export class UsersService {
       (user.password = hashedPassword),
       await queryRunner.manager.save(user);
 
-    return { message: "회원가입에 성공하였습니다." };
+    return user.userIdx;
   }
 
   async saveFCMToken(loginUser: UserLoginDto, fcmToken: string) {

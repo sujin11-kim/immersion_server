@@ -18,9 +18,9 @@ export class RegisterSuccessInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data) => ({
         isSuccess: true,
-        code: 201,
-        kr_curr,
-        message: data.message,
+        code: 1000,
+        //kr_curr,
+        result: { userIdx: data },
       }))
     );
   }
