@@ -12,7 +12,7 @@ export declare class CommentController {
         userIdx: number;
         parentCommentIdx: number;
         depth: number;
-        commentAt: Date;
+        commentAt: string;
         commentContent: string;
         isDeleted: boolean;
         postIdx2: import("../../mymodel/entities/Post").Post;

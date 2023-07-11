@@ -16,7 +16,7 @@ export declare class CommentService {
         userIdx: number;
         parentCommentIdx: number;
         depth: number;
-        commentAt: Date;
+        commentAt: string;
         commentContent: string;
         isDeleted: boolean;
         postIdx2: Post;

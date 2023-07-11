@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Post } from "./Post";
+import * as moment from "moment";
 
 @Index("Comment_commentIdx_uindex", ["commentIdx"], { unique: true })
 @Index("FK_Post_TO_Comment_1", ["postIdx"], {})
@@ -28,8 +29,19 @@ export class Comment {
   @Column("int", { name: "depth", nullable: true })
   depth: number | null;
 
-  @CreateDateColumn()
-  commentAt: Date | null;
+  @CreateDateColumn({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP(6)",
+    transformer: {
+      to(value: Date): string {
+        return moment(value).format("YYYY-MM-DD HH:mm");
+      },
+      from(value: Date): string {
+        return moment(value).format("YYYY-MM-DD HH:mm");
+      },
+    },
+  })
+  commentAt: string;
 
   @Column("varchar", { name: "commentContent", nullable: true, length: 500 })
   commentContent: string | null;

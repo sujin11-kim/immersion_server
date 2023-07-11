@@ -16,26 +16,42 @@ export class UsersService {
     email: string,
     nickname: string,
     phone: string,
-    password: string
+    password: string,
+    fcmToken: string
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    try {
+      await queryRunner.startTransaction();
 
-    const userEmail = await this.userRepository.findOne({ where: { email } });
-    console.log(userEmail);
-    if (userEmail) {
-      throw new HttpException({ message: "이미 존재하는 이메일 입니다." }, 201);
-    }
+      const hashedPassword = await bcrypt.hash(password, 12);
 
-    const user = new User();
-    (user.email = email),
-      (user.nickName = nickname),
-      (user.phone = phone),
-      (user.password = hashedPassword),
+      const userEmail = await this.userRepository.findOne({ where: { email } });
+
+      if (userEmail) {
+        throw new HttpException(
+          { message: "이미 존재하는 이메일 입니다." },
+          201
+        );
+      }
+
+      const user = new User();
+      (user.email = email),
+        (user.nickName = nickname),
+        (user.phone = phone),
+        (user.password = hashedPassword),
+        (user.fcmtoken = fcmToken);
       await queryRunner.manager.save(user);
 
-    return user.userIdx;
+      await queryRunner.commitTransaction();
+
+      return { userIdx: user.userIdx };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async saveFCMToken(loginUser: UserLoginDto, fcmToken: string) {

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Comment = void 0;
 const typeorm_1 = require("typeorm");
 const Post_1 = require("./Post");
+const moment = require("moment");
 let Comment = class Comment {
 };
 __decorate([
@@ -35,8 +36,19 @@ __decorate([
     __metadata("design:type", Number)
 ], Comment.prototype, "depth", void 0);
 __decorate([
-    (0, typeorm_1.CreateDateColumn)(),
-    __metadata("design:type", Date)
+    (0, typeorm_1.CreateDateColumn)({
+        type: "timestamp",
+        default: () => "CURRENT_TIMESTAMP(6)",
+        transformer: {
+            to(value) {
+                return moment(value).format("YYYY-MM-DD HH:mm");
+            },
+            from(value) {
+                return moment(value).format("YYYY-MM-DD HH:mm");
+            },
+        },
+    }),
+    __metadata("design:type", String)
 ], Comment.prototype, "commentAt", void 0);
 __decorate([
     (0, typeorm_1.Column)("varchar", { name: "commentContent", nullable: true, length: 500 }),

@@ -5,7 +5,7 @@ export declare class Comment {
     userIdx: number;
     parentCommentIdx: number | null;
     depth: number | null;
-    commentAt: Date | null;
+    commentAt: string;
     commentContent: string | null;
     isDeleted: boolean | null;
     postIdx2: Post;
