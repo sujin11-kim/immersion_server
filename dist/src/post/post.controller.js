@@ -52,7 +52,7 @@ let PostController = class PostController {
 };
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "모든 게시물 조회" }),
-    (0, common_1.Get)(),
+    (0, common_1.Get)("/get"),
     __param(0, (0, common_1.Query)("page")),
     __param(1, (0, common_1.Query)("pageSize")),
     __metadata("design:type", Function),
@@ -62,7 +62,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "현재 user의 게시물 조회" }),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Get)("/userIdx"),
+    (0, common_1.Get)("/get/userIdx"),
     __param(0, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_login_dto_1.UserLoginDto]),
@@ -70,7 +70,7 @@ __decorate([
 ], PostController.prototype, "findIdPost", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "카테고리 게시물 조회" }),
-    (0, common_1.Get)("/category"),
+    (0, common_1.Get)("/get/category"),
     __param(0, (0, common_1.Query)("category")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -91,7 +91,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "게시물 좋아요" }),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Post)("/likePost"),
+    (0, common_1.Post)("/like"),
     __param(0, (0, common_1.Body)("postIdx")),
     __param(1, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
@@ -101,7 +101,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "게시물 좋아요 취소" }),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Post)("/likeCancelPost"),
+    (0, common_1.Post)("/like/cancel"),
     __param(0, (0, common_1.Body)("postIdx")),
     __param(1, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
@@ -112,7 +112,7 @@ PostController = __decorate([
     (0, swagger_1.ApiTags)("POST"),
     (0, common_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
     (0, common_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),
-    (0, common_1.Controller)("posts"),
+    (0, common_1.Controller)("post"),
     __metadata("design:paramtypes", [post_service_1.PostService])
 ], PostController);
 exports.PostController = PostController;

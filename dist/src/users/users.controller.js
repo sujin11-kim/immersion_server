@@ -25,8 +25,6 @@ const use_interceptors_decorator_1 = require("@nestjs/common/decorators/core/use
 const success_interceptor_1 = require("../common/interceptors/success.interceptor");
 const exception_filters_decorator_1 = require("@nestjs/common/decorators/core/exception-filters.decorator");
 const http_exception_filter_1 = require("../common/exception/http-exception.filter");
-const register_success_interceptor_1 = require("../common/interceptors/register.success.interceptor");
-const register_http_exceptoin_filter_1 = require("../common/exception/register.http-exceptoin.filter");
 const user_login_dto_1 = require("./dto/user-login.dto");
 let UsersController = class UsersController {
     constructor(usersService, authService) {
@@ -34,8 +32,8 @@ let UsersController = class UsersController {
         this.authService = authService;
     }
     async create(dto) {
-        const { email, nickName, phone, password } = dto;
-        return await this.usersService.create(email, nickName, phone, password);
+        const { email, nickName, phone, password, fcmToken } = dto;
+        return await this.usersService.create(email, nickName, phone, password, fcmToken);
     }
     login(data) {
         return this.authService.jwtLogIn(data);
@@ -55,8 +53,8 @@ let UsersController = class UsersController {
 };
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "회원가입" }),
-    (0, use_interceptors_decorator_1.UseInterceptors)(register_success_interceptor_1.RegisterSuccessInterceptor),
-    (0, exception_filters_decorator_1.UseFilters)(register_http_exceptoin_filter_1.RegisterHttpExceptionFilter),
+    (0, use_interceptors_decorator_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
+    (0, exception_filters_decorator_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),
     (0, common_1.Post)("register"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -115,7 +113,7 @@ __decorate([
 ], UsersController.prototype, "getCurrentUser", null);
 UsersController = __decorate([
     (0, swagger_1.ApiTags)("USERS"),
-    (0, common_1.Controller)("users"),
+    (0, common_1.Controller)("user"),
     __metadata("design:paramtypes", [users_service_1.UsersService,
         auth_service_1.AuthService])
 ], UsersController);

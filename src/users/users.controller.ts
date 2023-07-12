@@ -17,12 +17,10 @@ import { UseInterceptors } from "@nestjs/common/decorators/core/use-interceptors
 import { SuccessInterceptor } from "src/common/interceptors/success.interceptor";
 import { UseFilters } from "@nestjs/common/decorators/core/exception-filters.decorator";
 import { HttpExceptionFilter } from "src/common/exception/http-exception.filter";
-import { RegisterSuccessInterceptor } from "src/common/interceptors/register.success.interceptor";
-import { RegisterHttpExceptionFilter } from "src/common/exception/register.http-exceptoin.filter";
 import { UserLoginDto } from "./dto/user-login.dto";
 
 @ApiTags("USERS")
-@Controller("users")
+@Controller("user")
 export class UsersController {
   constructor(
     private usersService: UsersService,
@@ -30,12 +28,18 @@ export class UsersController {
   ) {}
 
   @ApiOperation({ summary: "회원가입" })
-  @UseInterceptors(RegisterSuccessInterceptor)
-  @UseFilters(RegisterHttpExceptionFilter)
+  @UseInterceptors(SuccessInterceptor)
+  @UseFilters(HttpExceptionFilter)
   @Post("register")
   async create(@Body() dto: CreateUserDto) {
-    const { email, nickName, phone, password } = dto;
-    return await this.usersService.create(email, nickName, phone, password);
+    const { email, nickName, phone, password, fcmToken } = dto;
+    return await this.usersService.create(
+      email,
+      nickName,
+      phone,
+      password,
+      fcmToken
+    );
   }
 
   @ApiOperation({ summary: "로그인" })

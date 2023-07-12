@@ -11,6 +11,7 @@ import {
 import { Post } from "./Post";
 import * as moment from "moment";
 import { LikeComment } from "./LikeComment";
+
 @Index("Comment_commentIdx_uindex", ["commentIdx"], { unique: true })
 @Index("FK_Post_TO_Comment_1", ["postIdx"], {})
 @Entity("Comment", { schema: "immersion_DB" })
@@ -25,6 +26,7 @@ export class Comment {
   parentCommentIdx: number | null;
   @Column("int", { name: "depth", nullable: true })
   depth: number | null;
+  
   @CreateDateColumn({
     type: "timestamp",
     default: () => "CURRENT_TIMESTAMP(6)",
@@ -38,6 +40,7 @@ export class Comment {
     },
   })
   commentAt: string;
+
   @Column("varchar", { name: "commentContent", nullable: true, length: 500 })
   commentContent: string | null;
   @Column("bool", { name: "isDeleted", nullable: true })

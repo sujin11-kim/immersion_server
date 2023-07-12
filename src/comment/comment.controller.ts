@@ -32,7 +32,7 @@ export class CommentController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post("/create")
   createComment(
     @Body() createCommentDto: CreateCommentDto,
     @CurrentUser() user: UserLoginDto

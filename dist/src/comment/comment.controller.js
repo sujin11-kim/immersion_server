@@ -60,7 +60,7 @@ __decorate([
 ], CommentController.prototype, "findAllComment", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Post)(),
+    (0, common_1.Post)("/create"),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),

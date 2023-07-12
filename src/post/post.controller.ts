@@ -22,25 +22,25 @@ import { HttpExceptionFilter } from "src/common/exception/http-exception.filter"
 @ApiTags("POST")
 @UseInterceptors(SuccessInterceptor)
 @UseFilters(HttpExceptionFilter)
-@Controller("posts")
+@Controller("post")
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @ApiOperation({ summary: "모든 게시물 조회" })
-  @Get()
+  @Get("/get")
   findAll(@Query("page") page: number, @Query("pageSize") pageSize: number) {
     return this.postService.findAll(page, pageSize);
   }
 
   @ApiOperation({ summary: "현재 user의 게시물 조회" })
   @UseGuards(JwtAuthGuard)
-  @Get("/userIdx")
+  @Get("/get/userIdx")
   findIdPost(@CurrentUser() user: UserLoginDto) {
     return this.postService.findIdPost(user.userIdx);
   }
 
   @ApiOperation({ summary: "카테고리 게시물 조회" })
-  @Get("/category")
+  @Get("/get/category")
   findCategoryPost(@Query("category") category: string) {
     console.log(category);
     return this.postService.findCategoryPost(category);
@@ -64,7 +64,7 @@ export class PostController {
 
   @ApiOperation({ summary: "게시물 좋아요" })
   @UseGuards(JwtAuthGuard)
-  @Post("/likePost")
+  @Post("/like")
   postLike(
     @Body("postIdx") postIdx: number,
     @CurrentUser() user: UserLoginDto
@@ -74,7 +74,7 @@ export class PostController {
 
   @ApiOperation({ summary: "게시물 좋아요 취소" })
   @UseGuards(JwtAuthGuard)
-  @Post("/likeCancelPost")
+  @Post("/like/cancel")
   postLikeCancel(
     @Body("postIdx") postIdx: number,
     @CurrentUser() user: UserLoginDto
