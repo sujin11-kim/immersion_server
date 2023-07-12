@@ -22,6 +22,7 @@ const success_interceptor_1 = require("../common/interceptors/success.intercepto
 const http_exception_filter_1 = require("../common/exception/http-exception.filter");
 const user_decorator_1 = require("../common/decorators/user.decorator");
 const user_login_dto_1 = require("../users/dto/user-login.dto");
+const like_comment_dto_1 = require("./dto/like-comment.dto");
 let CommentController = class CommentController {
     constructor(commentService) {
         this.commentService = commentService;
@@ -40,6 +41,14 @@ let CommentController = class CommentController {
     }
     removeComment(commentIdx) {
         return this.commentService.removeComment(commentIdx);
+    }
+    commentLike(Idx) {
+        const { userIdx, postIdx, commentIdx } = Idx;
+        return this.commentService.postLike(userIdx, postIdx, commentIdx);
+    }
+    commentLikeCancel(Idx) {
+        const { userIdx, postIdx, commentIdx } = Idx;
+        return this.commentService.postLikeCancel(userIdx, postIdx, commentIdx);
     }
 };
 __decorate([
@@ -73,6 +82,22 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], CommentController.prototype, "removeComment", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: "게시물 좋아요" }),
+    (0, common_1.Post)("/likeComment"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [like_comment_dto_1.LikeCommentDto]),
+    __metadata("design:returntype", void 0)
+], CommentController.prototype, "commentLike", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: "게시물 좋아요 취소" }),
+    (0, common_1.Post)("/likeCancelComment"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [like_comment_dto_1.LikeCommentDto]),
+    __metadata("design:returntype", void 0)
+], CommentController.prototype, "commentLikeCancel", null);
 CommentController = __decorate([
     (0, common_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
     (0, common_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),

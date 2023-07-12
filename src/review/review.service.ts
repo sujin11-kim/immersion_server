@@ -59,7 +59,7 @@ export class ReviewService {
 
     return review;
   }
-
+////////////////////////////////////////////////////////////////////////////////////////////
   async update(reviewIdx: number, updateReviewDto: UpdateReviewDto) {
     const queryRunner =
       this.postRepository.manager.connection.createQueryRunner();
@@ -87,7 +87,7 @@ export class ReviewService {
       await queryRunner.release();
     }
   }
-
+////////////////////////////////////////////////////////////////////////////////////////////
   async delete(reviewIdx: number) {
     const queryRunner =
       this.postRepository.manager.connection.createQueryRunner();

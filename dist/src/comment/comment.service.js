@@ -71,6 +71,26 @@ let CommentService = class CommentService {
     }
     async modifyComment(PostIdx, commentContent) { }
     async removeComment(commentIdx) { }
+    async postLike(userIdx, postIdx, commentIdx) {
+        const editcomment = await this.commentRepository.findOne({ where: { commentIdx }, });
+        editcomment.likeNum += 1;
+        await this.commentRepository.save(editcomment);
+        return {
+            isSuccess: true,
+            code: 1000,
+            result: editcomment
+        };
+    }
+    async postLikeCancel(userIdx, postIdx, commentIdx) {
+        const editcomment = await this.commentRepository.findOne({ where: { commentIdx }, });
+        editcomment.likeNum -= 1;
+        await this.commentRepository.save(editcomment);
+        return {
+            isSuccess: true,
+            code: 1000,
+            result: editcomment
+        };
+    }
 };
 CommentService = __decorate([
     (0, common_1.Injectable)(),
