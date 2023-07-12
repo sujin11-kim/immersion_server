@@ -72,24 +72,48 @@ let CommentService = class CommentService {
     async modifyComment(PostIdx, commentContent) { }
     async removeComment(commentIdx) { }
     async postLike(userIdx, postIdx, commentIdx) {
-        const editcomment = await this.commentRepository.findOne({ where: { commentIdx }, });
-        editcomment.likeNum += 1;
-        await this.commentRepository.save(editcomment);
-        return {
-            isSuccess: true,
-            code: 1000,
-            result: editcomment
-        };
+        const queryRunner = this.postRepository.manager.connection.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            const editcomment = await queryRunner.manager.getRepository(Comment_1.Comment).findOne({ where: { commentIdx } });
+            editcomment.likeNum += 1;
+            await queryRunner.manager.getRepository(Comment_1.Comment).save(editcomment);
+            return {
+                isSuccess: true,
+                code: 1000,
+                result: editcomment
+            };
+        }
+        catch (err) {
+            await queryRunner.rollbackTransaction();
+            throw err;
+        }
+        finally {
+            await queryRunner.release();
+        }
     }
     async postLikeCancel(userIdx, postIdx, commentIdx) {
-        const editcomment = await this.commentRepository.findOne({ where: { commentIdx }, });
-        editcomment.likeNum -= 1;
-        await this.commentRepository.save(editcomment);
-        return {
-            isSuccess: true,
-            code: 1000,
-            result: editcomment
-        };
+        const queryRunner = this.postRepository.manager.connection.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            const editcomment = await queryRunner.manager.getRepository(Comment_1.Comment).findOne({ where: { commentIdx } });
+            editcomment.likeNum -= 1;
+            await queryRunner.manager.getRepository(Comment_1.Comment).save(editcomment);
+            return {
+                isSuccess: true,
+                code: 1000,
+                result: editcomment
+            };
+        }
+        catch (err) {
+            await queryRunner.rollbackTransaction();
+            throw err;
+        }
+        finally {
+            await queryRunner.release();
+        }
     }
 };
 CommentService = __decorate([
