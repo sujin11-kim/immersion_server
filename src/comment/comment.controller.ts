@@ -10,12 +10,13 @@ import {
 } from "@nestjs/common";
 import { CommentService } from "./comment.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
 import { SuccessInterceptor } from "src/common/interceptors/success.interceptor";
 import { HttpExceptionFilter } from "src/common/exception/http-exception.filter";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { UserLoginDto } from "src/users/dto/user-login.dto";
+import { LikeCommentDto } from "./dto/like-comment.dto";
 
 @UseInterceptors(SuccessInterceptor)
 @UseFilters(HttpExceptionFilter)
@@ -57,4 +58,33 @@ export class CommentController {
   removeComment(@Body() commentIdx: string) {
     return this.commentService.removeComment(commentIdx);
   }
+
+//////////////////////////////////////////////////////////////////////
+  @ApiOperation({ summary: "게시물 좋아요" })
+  //@UseGuards(JwtAuthGuard)
+  @Post("/likeComment")
+  commentLike(
+    @Body() Idx: LikeCommentDto) {
+      const {userIdx, postIdx,commentIdx}=Idx;
+    return this.commentService.postLike(userIdx, postIdx,commentIdx);
+  }
+
+  @ApiOperation({ summary: "게시물 좋아요 취소" })
+  //@UseGuards(JwtAuthGuard)
+  @Post("/likeCancelComment")
+  commentLikeCancel(
+    @Body() Idx: LikeCommentDto) {
+      const {userIdx, postIdx,commentIdx}=Idx;
+    return this.commentService.postLikeCancel(userIdx, postIdx,commentIdx);
+  }
+
+  //////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
 }

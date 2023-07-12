@@ -26,7 +26,8 @@ export class SuccessInterceptor implements NestInterceptor {
           return {
             isSuccess: true,
             code: 1000,
-            // kr_curr,
+            message:"요청에 성공했습니다."
+
             result: data,
           };
         } else {
