@@ -14,11 +14,12 @@ const comment_service_1 = require("./comment.service");
 const Comment_1 = require("../../mymodel/entities/Comment");
 const User_1 = require("../../mymodel/entities/User");
 const Post_1 = require("../../mymodel/entities/Post");
+const LikeComment_1 = require("../../mymodel/entities/LikeComment");
 let CommentModule = class CommentModule {
 };
 CommentModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([Comment_1.Comment, User_1.User, Post_1.Post])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([Comment_1.Comment, User_1.User, Post_1.Post, LikeComment_1.LikeComment])],
         controllers: [comment_controller_1.CommentController],
         providers: [comment_service_1.CommentService],
     })

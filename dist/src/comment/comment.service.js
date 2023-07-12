@@ -19,11 +19,13 @@ const typeorm_2 = require("typeorm");
 const Comment_1 = require("../../mymodel/entities/Comment");
 const User_1 = require("../../mymodel/entities/User");
 const Post_1 = require("../../mymodel/entities/Post");
+const LikeComment_1 = require("../../mymodel/entities/LikeComment");
 let CommentService = class CommentService {
-    constructor(commentRepository, userRepository, postRepository, dataSource) {
+    constructor(commentRepository, userRepository, postRepository, likeCommentRepository, dataSource) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.likeCommentRepository = likeCommentRepository;
         this.dataSource = dataSource;
     }
     async findAllComment(postIdx) {
@@ -79,6 +81,11 @@ let CommentService = class CommentService {
             const editcomment = await queryRunner.manager.getRepository(Comment_1.Comment).findOne({ where: { commentIdx } });
             editcomment.likeNum += 1;
             await queryRunner.manager.getRepository(Comment_1.Comment).save(editcomment);
+            const likeComment = new LikeComment_1.LikeComment();
+            likeComment.commentIdx = commentIdx;
+            likeComment.userIdx = userIdx;
+            likeComment.postIdx = postIdx;
+            await queryRunner.manager.getRepository(LikeComment_1.LikeComment).save(likeComment);
             return {
                 isSuccess: true,
                 code: 1000,
@@ -121,7 +128,9 @@ CommentService = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(Comment_1.Comment)),
     __param(1, (0, typeorm_1.InjectRepository)(User_1.User)),
     __param(2, (0, typeorm_1.InjectRepository)(Post_1.Post)),
+    __param(3, (0, typeorm_1.InjectRepository)(LikeComment_1.LikeComment)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.DataSource])

@@ -7,8 +7,9 @@ export declare class CommentService {
     private readonly commentRepository;
     private readonly userRepository;
     private readonly postRepository;
+    private readonly likeCommentRepository;
     private dataSource;
-    constructor(commentRepository: Repository<Comment>, userRepository: Repository<User>, postRepository: Repository<Post>, dataSource: DataSource);
+    constructor(commentRepository: Repository<Comment>, userRepository: Repository<User>, postRepository: Repository<Post>, likeCommentRepository: Repository<LikeComment>, dataSource: DataSource);
     findAllComment(postIdx: number): Promise<Comment[]>;
     createComment(PostIdx: number, CommentWriterIdx: number, parentCommentIdx: number, depth: number, commentContent: string): Promise<{
         nickName: string;

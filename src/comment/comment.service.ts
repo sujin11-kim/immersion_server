@@ -16,6 +16,9 @@ export class CommentService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
+    @InjectRepository(LikeComment)
+    private readonly likeCommentRepository: Repository<LikeComment>,
+
     private dataSource: DataSource
   ) {}
 
@@ -95,6 +98,12 @@ export class CommentService {
 
       editcomment.likeNum+=1;
       await queryRunner.manager.getRepository(Comment).save(editcomment);
+
+      const likeComment = new LikeComment();
+      likeComment.commentIdx=commentIdx;
+      likeComment.userIdx=userIdx;
+      likeComment.postIdx=postIdx;
+      await queryRunner.manager.getRepository(LikeComment).save(likeComment);
 
       return {
         isSuccess: true,

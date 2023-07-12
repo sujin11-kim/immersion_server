@@ -14,7 +14,6 @@ const typeorm_1 = require("typeorm");
 const Post_1 = require("./Post");
 const moment = require("moment");
 const LikeComment_1 = require("./LikeComment");
-
 let Comment = class Comment {
 };
 __decorate([
