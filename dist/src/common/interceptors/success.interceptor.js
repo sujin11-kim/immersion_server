@@ -22,6 +22,7 @@ let SuccessInterceptor = class SuccessInterceptor {
                 return {
                     isSuccess: true,
                     code: 1000,
+                    message: "요청에 성공했습니다.",
                     result: data,
                 };
             }
