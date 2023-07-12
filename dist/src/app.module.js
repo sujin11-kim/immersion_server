@@ -32,6 +32,7 @@ const aws_service_1 = require("./common/utils/aws.service");
 const Restaurant_1 = require("../mymodel/entities/Restaurant");
 const restaurants_module_1 = require("./restaurants/restaurants.module");
 const review_module_1 = require("./review/review.module");
+const LikeComment_1 = require("../mymodel/entities/LikeComment");
 let AppModule = class AppModule {
     constructor() {
         moment.locale("en");
@@ -61,6 +62,7 @@ AppModule = __decorate([
                     ChatRoom_1.ChatRoom,
                     Image_1.Image,
                     Restaurant_1.Restaurant,
+                    LikeComment_1.LikeComment
                 ],
                 autoLoadEntities: true,
                 keepConnectionAlive: true,

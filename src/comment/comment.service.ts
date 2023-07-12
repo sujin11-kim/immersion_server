@@ -4,6 +4,8 @@ import { Repository, DataSource, QueryRunner } from "typeorm";
 import { Comment } from "../../mymodel/entities/Comment";
 import { User } from "mymodel/entities/User";
 import { Post } from "mymodel/entities/Post";
+import { UserLoginDto } from "src/users/dto/user-login.dto";
+import { LikeComment } from "mymodel/entities/LikeComment";
 
 @Injectable()
 export class CommentService {
@@ -78,4 +80,86 @@ export class CommentService {
   async modifyComment(PostIdx: number, commentContent: string) {}
 
   async removeComment(commentIdx: string) {}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  async postLike(userIdx:number,postIdx:number,commentIdx:number) {
+
+    const queryRunner =
+    this.postRepository.manager.connection.createQueryRunner();
+  await queryRunner.connect();
+  await queryRunner.startTransaction();
+
+
+    try{
+      const editcomment = await queryRunner.manager.getRepository(Comment).findOne({where:{commentIdx}});
+
+      editcomment.likeNum+=1;
+      await queryRunner.manager.getRepository(Comment).save(editcomment);
+
+      return {
+        isSuccess: true,
+        code: 1000,
+        //kr_curr,
+        result: editcomment
+      };
+
+    }
+    catch(err){
+      await queryRunner.rollbackTransaction();
+      throw err;
+    }finally{
+      await queryRunner.release();
+    }
+
+
+
+
+    
+    
+   
+   
+  }
+
+  async postLikeCancel(userIdx:number,postIdx:number,commentIdx:number) {
+
+    const queryRunner =
+    this.postRepository.manager.connection.createQueryRunner();
+  await queryRunner.connect();
+  await queryRunner.startTransaction();
+
+
+    try{
+      const editcomment = await queryRunner.manager.getRepository(Comment).findOne({where:{commentIdx}});
+
+      editcomment.likeNum-=1;
+      await queryRunner.manager.getRepository(Comment).save(editcomment);
+
+      return {
+        isSuccess: true,
+        code: 1000,
+        //kr_curr,
+        result: editcomment
+      };
+
+    }
+    catch(err){
+      await queryRunner.rollbackTransaction();
+      throw err;
+    }finally{
+      await queryRunner.release();
+    }
+
+
+
+
+    
+    
+   
+   
+  }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 }
