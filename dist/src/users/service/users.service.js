@@ -16,39 +16,16 @@ exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const bcrypt = require("bcrypt");
-const User_1 = require("../../mymodel/entities/User");
+const User_1 = require("../../../mymodel/entities/User");
+const user_implement_1 = require("../interface/user.implement");
 let UsersService = class UsersService {
-    constructor(userRepository, dataSource) {
+    constructor(userRepository, dataSource, userInterface) {
         this.userRepository = userRepository;
         this.dataSource = dataSource;
+        this.userInterface = userInterface;
     }
-    async create(email, nickname, phone, password, fcmToken) {
-        const queryRunner = this.dataSource.createQueryRunner();
-        try {
-            await queryRunner.startTransaction();
-            const hashedPassword = await bcrypt.hash(password, 12);
-            const userEmail = await this.userRepository.findOne({ where: { email } });
-            if (userEmail) {
-                throw new common_1.HttpException({ message: "이미 존재하는 이메일 입니다." }, 201);
-            }
-            const user = new User_1.User();
-            (user.email = email),
-                (user.nickName = nickname),
-                (user.phone = phone),
-                (user.password = hashedPassword),
-                (user.fcmtoken = fcmToken);
-            await queryRunner.manager.save(user);
-            await queryRunner.commitTransaction();
-            return { userIdx: user.userIdx };
-        }
-        catch (error) {
-            await queryRunner.rollbackTransaction();
-            throw error;
-        }
-        finally {
-            await queryRunner.release();
-        }
+    async create(userInfo) {
+        return await this.userInterface.createUser(userInfo);
     }
     async saveFCMToken(loginUser, fcmToken) {
         const queryRunner = this.dataSource.createQueryRunner();
@@ -90,7 +67,8 @@ UsersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.DataSource])
+        typeorm_2.DataSource,
+        user_implement_1.UserImplement])
 ], UsersService);
 exports.UsersService = UsersService;
 //# sourceMappingURL=users.service.js.map

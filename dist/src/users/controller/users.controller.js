@@ -15,25 +15,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
-const create_user_dto_1 = require("./dto/create-user.dto");
-const users_service_1 = require("./users.service");
-const auth_service_1 = require("../auth/auth.service");
-const login_request_dto_1 = require("../auth/dto/login.request.dto");
-const jwt_guard_1 = require("../auth/jwt/jwt.guard");
-const user_decorator_1 = require("../common/decorators/user.decorator");
+const create_user_dto_1 = require("../dto/create-user.dto");
+const users_service_1 = require("../service/users.service");
+const auth_service_1 = require("../../auth/auth.service");
+const login_request_dto_1 = require("../../auth/dto/login.request.dto");
+const jwt_guard_1 = require("../../auth/jwt/jwt.guard");
+const user_decorator_1 = require("../../common/decorators/user.decorator");
 const use_interceptors_decorator_1 = require("@nestjs/common/decorators/core/use-interceptors.decorator");
-const success_interceptor_1 = require("../common/interceptors/success.interceptor");
+const success_interceptor_1 = require("../../common/interceptors/success.interceptor");
 const exception_filters_decorator_1 = require("@nestjs/common/decorators/core/exception-filters.decorator");
-const http_exception_filter_1 = require("../common/exception/http-exception.filter");
-const user_login_dto_1 = require("./dto/user-login.dto");
+const http_exception_filter_1 = require("../../common/exception/http-exception.filter");
+const user_login_dto_1 = require("../dto/user-login.dto");
 let UsersController = class UsersController {
     constructor(usersService, authService) {
         this.usersService = usersService;
         this.authService = authService;
     }
     async create(dto) {
-        const { email, nickName, phone, password, fcmToken } = dto;
-        return await this.usersService.create(email, nickName, phone, password, fcmToken);
+        return await this.usersService.create(dto);
     }
     login(data) {
         return this.authService.jwtLogIn(data);

@@ -1,7 +1,7 @@
 export declare class CreateUserDto {
-    readonly email: string;
-    readonly nickName: string;
-    readonly phone: string;
-    readonly password: string;
-    readonly fcmToken: string;
+    email: string;
+    nickName: string;
+    phone: string;
+    password: string;
+    fcmToken: string;
 }

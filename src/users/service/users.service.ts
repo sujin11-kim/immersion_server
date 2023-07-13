@@ -1,59 +1,25 @@
-import { HttpException, Injectable } from "@nestjs/common";
+import { BadRequestException, HttpException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
-import * as bcrypt from "bcrypt";
-import { User } from "../../mymodel/entities/User";
-import { UserLoginDto } from "./dto/user-login.dto";
+import { User } from "../../../mymodel/entities/User";
+import { UserLoginDto } from "../dto/user-login.dto";
+import { CreateUserDto } from "../dto/create-user.dto";
+import { UserImplement } from "../interface/user.implement";
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    private dataSource: DataSource
+    private dataSource: DataSource,
+    private userInterface: UserImplement
   ) {}
 
-  async create(
-    email: string,
-    nickname: string,
-    phone: string,
-    password: string,
-    fcmToken: string
-  ) {
-    const queryRunner = this.dataSource.createQueryRunner();
-
-    try {
-      await queryRunner.startTransaction();
-
-      const hashedPassword = await bcrypt.hash(password, 12);
-
-      const userEmail = await this.userRepository.findOne({ where: { email } });
-
-      if (userEmail) {
-        throw new HttpException(
-          { message: "이미 존재하는 이메일 입니다." },
-          201
-        );
-      }
-
-      const user = new User();
-      (user.email = email),
-        (user.nickName = nickname),
-        (user.phone = phone),
-        (user.password = hashedPassword),
-        (user.fcmtoken = fcmToken);
-      await queryRunner.manager.save(user);
-
-      await queryRunner.commitTransaction();
-
-      return { userIdx: user.userIdx };
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw error;
-    } finally {
-      await queryRunner.release();
-    }
+  //회원가입
+  async create(userInfo: CreateUserDto) {
+    return await this.userInterface.createUser(userInfo);
   }
 
+  //FCMtoken 저장
   async saveFCMToken(loginUser: UserLoginDto, fcmToken: string) {
     const queryRunner = this.dataSource.createQueryRunner();
 
