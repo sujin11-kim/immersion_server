@@ -18,9 +18,9 @@ const comment_service_1 = require("./comment.service");
 const create_comment_dto_1 = require("./dto/create-comment.dto");
 const swagger_1 = require("@nestjs/swagger");
 const jwt_guard_1 = require("../auth/jwt/jwt.guard");
-const success_interceptor_1 = require("../common/interceptors/success.interceptor");
-const http_exception_filter_1 = require("../common/exception/http-exception.filter");
-const user_decorator_1 = require("../common/decorators/user.decorator");
+const success_interceptor_1 = require("../../src/aop/interceptors/success.interceptor");
+const http_exception_filter_1 = require("../../src/aop/exception/http-exception.filter");
+const user_decorator_1 = require("../../src/aop/decorators/user.decorator");
 const user_login_dto_1 = require("../users/dto/user-login.dto");
 const like_comment_dto_1 = require("./dto/like-comment.dto");
 let CommentController = class CommentController {
@@ -52,7 +52,7 @@ let CommentController = class CommentController {
     }
 };
 __decorate([
-    (0, common_1.Get)(":postIdx"),
+    (0, common_1.Get)("/get/:postIdx"),
     __param(0, (0, common_1.Param)("postIdx")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),

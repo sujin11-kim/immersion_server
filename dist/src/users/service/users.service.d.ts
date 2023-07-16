@@ -1,21 +1,16 @@
 import { DataSource, Repository } from "typeorm";
-import { User } from "../../../mymodel/entities/User";
-import { UserLoginDto } from "../dto/user-login.dto";
+import { User } from "../../../resource/db/entities/User";
 import { CreateUserDto } from "../dto/create-user.dto";
-import { UserImplement } from "../interface/user.implement";
+import { UserImpl } from "../interface/user.implement";
 export declare class UsersService {
     private userRepository;
     private dataSource;
     private userInterface;
-    constructor(userRepository: Repository<User>, dataSource: DataSource, userInterface: UserImplement);
+    constructor(userRepository: Repository<User>, dataSource: DataSource, userInterface: UserImpl);
     create(userInfo: CreateUserDto): Promise<{
         userIdx: number;
     }>;
-    saveFCMToken(loginUser: UserLoginDto, fcmToken: string): Promise<{
-        message: string;
-    }>;
-    findFCM(): Promise<{
-        fcmTokens: {};
-    }>;
+    getAllFCM(): Promise<Record<"fcmTokens", object>>;
+    getFcmByUserIdx(userIdx: number): Promise<Record<"fcmToken", string>>;
     login(_id: string, _password: string): Promise<string>;
 }

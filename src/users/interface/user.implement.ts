@@ -1,22 +1,21 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { HttpException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
-import { User } from "../../../mymodel/entities/User";
+import { User } from "../../../resource/db/entities/User";
 import { Repository } from "typeorm";
 import { UserInterface } from "./user.interface";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { CustomUserRepository } from "../repository/user.repository";
 
 @Injectable()
-export class UserImplement implements UserInterface {
+export class UserImpl implements UserInterface {
   constructor(
-    private readonly userRepository: CustomUserRepository,
+    private readonly customUserRepository: CustomUserRepository,
     @InjectRepository(User)
     private userEntityRepository: Repository<User>
   ) {}
 
-  //회원가입
+  // 1-1 회원가입
   async createUser(userInfo: CreateUserDto): Promise<{ userIdx: number }> {
     const queryRunner =
       this.userEntityRepository.manager.connection.createQueryRunner();
@@ -25,9 +24,9 @@ export class UserImplement implements UserInterface {
 
     try {
       const hashedPassword = await bcrypt.hash(userInfo.password, 12);
-      await this.userRepository.checkDuplicate(userInfo);
+      await this.customUserRepository.checkDuplicate(userInfo);
 
-      const newUser = await this.userRepository.saveUser({
+      const newUser = await this.customUserRepository.saveUser({
         ...userInfo,
         password: hashedPassword,
       });
@@ -40,5 +39,18 @@ export class UserImplement implements UserInterface {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  // 1-5 모든 FCM 토큰 조회
+  async getAllFCM(): Promise<Record<"fcmTokens", object>> {
+    const allFcmtoken = await this.customUserRepository.findAllFcm();
+    return allFcmtoken;
+  }
+
+  // 1-6 개인 FCM 토큰 조회
+  async getFCMByUserIdx(userIdx: number): Promise<Record<"fcmToken", string>> {
+    await this.customUserRepository.isUserExistsByUserIdx(userIdx);
+    const fcmToken = await this.customUserRepository.getFCMByUserIdx(userIdx);
+    return { fcmToken };
   }
 }

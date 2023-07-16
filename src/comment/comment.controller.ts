@@ -12,9 +12,9 @@ import { CommentService } from "./comment.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
-import { SuccessInterceptor } from "src/common/interceptors/success.interceptor";
-import { HttpExceptionFilter } from "src/common/exception/http-exception.filter";
-import { CurrentUser } from "src/common/decorators/user.decorator";
+import { SuccessInterceptor } from "../../src/aop/interceptors/success.interceptor";
+import { HttpExceptionFilter } from "../../src/aop/exception/http-exception.filter";
+import { CurrentUser } from "../../src/aop/decorators/user.decorator";
 import { UserLoginDto } from "src/users/dto/user-login.dto";
 import { LikeCommentDto } from "./dto/like-comment.dto";
 
@@ -25,7 +25,7 @@ import { LikeCommentDto } from "./dto/like-comment.dto";
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Get(":postIdx")
+  @Get("/get/:postIdx")
   findAllComment(@Param("postIdx") postIdx: number) {
     console.log(postIdx);
     return this.commentService.findAllComment(postIdx);
@@ -59,32 +59,22 @@ export class CommentController {
     return this.commentService.removeComment(commentIdx);
   }
 
-//////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////
   @ApiOperation({ summary: "게시물 좋아요" })
   //@UseGuards(JwtAuthGuard)
   @Post("/likeComment")
-  commentLike(
-    @Body() Idx: LikeCommentDto) {
-      const {userIdx, postIdx,commentIdx}=Idx;
-    return this.commentService.postLike(userIdx, postIdx,commentIdx);
+  commentLike(@Body() Idx: LikeCommentDto) {
+    const { userIdx, postIdx, commentIdx } = Idx;
+    return this.commentService.postLike(userIdx, postIdx, commentIdx);
   }
 
   @ApiOperation({ summary: "게시물 좋아요 취소" })
   //@UseGuards(JwtAuthGuard)
   @Post("/likeCancelComment")
-  commentLikeCancel(
-    @Body() Idx: LikeCommentDto) {
-      const {userIdx, postIdx,commentIdx}=Idx;
-    return this.commentService.postLikeCancel(userIdx, postIdx,commentIdx);
+  commentLikeCancel(@Body() Idx: LikeCommentDto) {
+    const { userIdx, postIdx, commentIdx } = Idx;
+    return this.commentService.postLikeCancel(userIdx, postIdx, commentIdx);
   }
 
   //////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
 }

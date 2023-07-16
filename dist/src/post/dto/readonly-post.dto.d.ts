@@ -1,5 +1,5 @@
-import { Post } from "mymodel/entities/Post";
-import { Comment } from "mymodel/entities/Comment";
+import { Post } from "../../../resource/db/entities/Post";
+import { Comment } from "../../../resource/db/entities/Comment";
 export declare class readonlyPostDto extends Post {
     nickName: string;
     imagePath: string[];

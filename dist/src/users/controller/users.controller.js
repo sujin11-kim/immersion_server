@@ -20,12 +20,11 @@ const users_service_1 = require("../service/users.service");
 const auth_service_1 = require("../../auth/auth.service");
 const login_request_dto_1 = require("../../auth/dto/login.request.dto");
 const jwt_guard_1 = require("../../auth/jwt/jwt.guard");
-const user_decorator_1 = require("../../common/decorators/user.decorator");
+const user_decorator_1 = require("../../aop/decorators/user.decorator");
 const use_interceptors_decorator_1 = require("@nestjs/common/decorators/core/use-interceptors.decorator");
-const success_interceptor_1 = require("../../common/interceptors/success.interceptor");
+const success_interceptor_1 = require("../../aop/interceptors/success.interceptor");
 const exception_filters_decorator_1 = require("@nestjs/common/decorators/core/exception-filters.decorator");
-const http_exception_filter_1 = require("../../common/exception/http-exception.filter");
-const user_login_dto_1 = require("../dto/user-login.dto");
+const http_exception_filter_1 = require("../../aop/exception/http-exception.filter");
 let UsersController = class UsersController {
     constructor(usersService, authService) {
         this.usersService = usersService;
@@ -37,11 +36,11 @@ let UsersController = class UsersController {
     login(data) {
         return this.authService.jwtLogIn(data);
     }
-    saveFCMToken(user, fcmToken) {
-        return this.usersService.saveFCMToken(user, fcmToken);
+    findAllFCM() {
+        return this.usersService.getAllFCM();
     }
-    findFCM() {
-        return this.usersService.findFCM();
+    findFCM(userIdx) {
+        return this.usersService.getFcmByUserIdx(userIdx);
     }
     kakaoLogin(customHeader) {
         return this.authService.kakaoTokenToLocalToken(customHeader);
@@ -71,24 +70,22 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "login", null);
 __decorate([
-    (0, swagger_1.ApiOperation)({ summary: "FCM 토큰 추가" }),
-    (0, use_interceptors_decorator_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
-    (0, exception_filters_decorator_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),
-    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Post)("save/fcm"),
-    __param(0, (0, user_decorator_1.CurrentUser)()),
-    __param(1, (0, common_1.Body)("fcmToken")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [user_login_dto_1.UserLoginDto, String]),
-    __metadata("design:returntype", void 0)
-], UsersController.prototype, "saveFCMToken", null);
-__decorate([
     (0, swagger_1.ApiOperation)({ summary: "모든 FCM 토큰 조회" }),
     (0, use_interceptors_decorator_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
     (0, exception_filters_decorator_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),
-    (0, common_1.Get)("get/fcm"),
+    (0, common_1.Get)("get/allFcm"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "findAllFCM", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: "개인 FCM 토큰 조회" }),
+    (0, use_interceptors_decorator_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
+    (0, exception_filters_decorator_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),
+    (0, common_1.Get)("get/fcm/:userIdx"),
+    __param(0, (0, common_1.Param)("userIdx", common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "findFCM", null);
 __decorate([

@@ -16,23 +16,23 @@ const config_1 = require("@nestjs/config");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const users_module_1 = require("./users/users.module");
-const User_1 = require("../mymodel/entities/User");
+const User_1 = require("../resource/db/entities/User");
 const auth_module_1 = require("./auth/auth.module");
 const moment = require("moment");
-const Message_1 = require("../mymodel/entities/Message");
-const Post_1 = require("../mymodel/entities/Post");
-const LikePost_1 = require("../mymodel/entities/LikePost");
-const Comment_1 = require("../mymodel/entities/Comment");
-const ChatUser_1 = require("../mymodel/entities/ChatUser");
-const ChatRoom_1 = require("../mymodel/entities/ChatRoom");
+const Message_1 = require("../resource/db/entities/Message");
+const Post_1 = require("../resource/db/entities/Post");
+const LikePost_1 = require("../resource/db/entities/LikePost");
+const Comment_1 = require("../resource/db/entities/Comment");
+const ChatUser_1 = require("../resource/db/entities/ChatUser");
+const ChatRoom_1 = require("../resource/db/entities/ChatRoom");
 const post_module_1 = require("./post/post.module");
 const comment_module_1 = require("./comment/comment.module");
-const Image_1 = require("../mymodel/entities/Image");
-const aws_service_1 = require("./common/utils/aws.service");
-const Restaurant_1 = require("../mymodel/entities/Restaurant");
+const Image_1 = require("../resource/db/entities/Image");
+const aws_service_1 = require("./aop/utils/aws.service");
+const Restaurant_1 = require("../resource/db/entities/Restaurant");
 const restaurants_module_1 = require("./restaurants/restaurants.module");
 const review_module_1 = require("./review/review.module");
-const LikeComment_1 = require("../mymodel/entities/LikeComment");
+const LikeComment_1 = require("../resource/db/entities/LikeComment");
 let AppModule = class AppModule {
     constructor() {
         moment.locale("en");
@@ -62,7 +62,7 @@ AppModule = __decorate([
                     ChatRoom_1.ChatRoom,
                     Image_1.Image,
                     Restaurant_1.Restaurant,
-                    LikeComment_1.LikeComment
+                    LikeComment_1.LikeComment,
                 ],
                 autoLoadEntities: true,
                 keepConnectionAlive: true,

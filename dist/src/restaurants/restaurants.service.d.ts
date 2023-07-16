@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
-import { User } from "mymodel/entities/User";
-import { Restaurant } from "mymodel/entities/Restaurant";
+import { User } from "../../resource/db/entities/User";
+import { Restaurant } from "../../resource/db/entities/Restaurant";
 export declare class RestaurantsService {
     private readonly userRepository;
     private readonly restaurantRepository;

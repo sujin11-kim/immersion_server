@@ -1,16 +1,14 @@
 import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
-import { User } from "./mymodel/entities/User";
+import { User } from "./resource/db/entities/User";
 
-import { ChatRoom } from "./mymodel/entities/ChatRoom";
-import { ChatUser } from "./mymodel/entities/ChatUser";
-import { Comment } from "./mymodel/entities/Comment";
-import { LikePost } from "./mymodel/entities/LikePost";
-import { Post } from "./mymodel/entities/Post";
-import { Message } from "./mymodel/entities/Message";
+import { ChatRoom } from "./resource/db/entities/ChatRoom";
+import { ChatUser } from "./resource/db/entities/ChatUser";
+import { Comment } from "./resource/db/entities/Comment";
+import { LikePost } from "./resource/db/entities/LikePost";
+import { Post } from "./resource/db/entities/Post";
+import { Message } from "./resource/db/entities/Message";
 // import { Post } from "@nestjs/common";
-
-
 
 dotenv.config();
 

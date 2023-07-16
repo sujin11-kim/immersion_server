@@ -11,8 +11,8 @@ const typeorm_1 = require("@nestjs/typeorm");
 const common_1 = require("@nestjs/common");
 const restaurants_controller_1 = require("./restaurants.controller");
 const restaurants_service_1 = require("./restaurants.service");
-const Restaurant_1 = require("../../mymodel/entities/Restaurant");
-const User_1 = require("../../mymodel/entities/User");
+const Restaurant_1 = require("../../resource/db/entities/Restaurant");
+const User_1 = require("../../resource/db/entities/User");
 let RestaurantsModule = class RestaurantsModule {
 };
 RestaurantsModule = __decorate([

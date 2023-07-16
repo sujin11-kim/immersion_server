@@ -9,14 +9,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const Post_1 = require("../../mymodel/entities/Post");
-const post_controller_1 = require("./post.controller");
-const post_service_1 = require("./post.service");
-const Image_1 = require("../../mymodel/entities/Image");
-const aws_service_1 = require("../common/utils/aws.service");
-const User_1 = require("../../mymodel/entities/User");
-const Comment_1 = require("../../mymodel/entities/Comment");
-const LikePost_1 = require("../../mymodel/entities/LikePost");
+const Post_1 = require("../../resource/db/entities/Post");
+const post_controller_1 = require("./controller/post.controller");
+const post_service_1 = require("./service/post.service");
+const Image_1 = require("../../resource/db/entities/Image");
+const aws_service_1 = require("../aop/utils/aws.service");
+const User_1 = require("../../resource/db/entities/User");
+const Comment_1 = require("../../resource/db/entities/Comment");
+const LikePost_1 = require("../../resource/db/entities/LikePost");
 let PostModule = class PostModule {
 };
 PostModule = __decorate([

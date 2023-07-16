@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomUserRepository = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const User_1 = require("../../../mymodel/entities/User");
+const User_1 = require("../../../resource/db/entities/User");
 const typeorm_2 = require("typeorm");
 let CustomUserRepository = class CustomUserRepository {
     constructor(userRepository) {
@@ -60,6 +60,34 @@ let CustomUserRepository = class CustomUserRepository {
             (user.fcmtoken = fcmToken);
         const newUser = await this.userRepository.save(user);
         return newUser;
+    }
+    async findAllFcm() {
+        const users = await this.userRepository.find();
+        const fcmTokens = users.reduce((result, user) => {
+            result[user.userIdx] = user.fcmtoken;
+            return result;
+        }, {});
+        if (!fcmTokens)
+            throw new common_1.BadRequestException({
+                statusCode: 4001,
+                message: "fcmToken이 존재하지 않습니다.",
+                result: { fcmTokens: {} },
+            });
+        return { fcmTokens };
+    }
+    async isUserExistsByUserIdx(userIdx) {
+        const user = await this.userRepository.findOne({ where: { userIdx } });
+        if (!user)
+            throw new common_1.NotFoundException({
+                statusCode: 4002,
+                message: "존재하지 않는 유저입니다.",
+                result: { fcmTokens: "" },
+            });
+    }
+    async getFCMByUserIdx(userIdx) {
+        const user = await this.userRepository.findOne({ where: { userIdx } });
+        const fcmToken = (user === null || user === void 0 ? void 0 : user.fcmtoken) || null;
+        return fcmToken;
     }
 };
 CustomUserRepository = __decorate([

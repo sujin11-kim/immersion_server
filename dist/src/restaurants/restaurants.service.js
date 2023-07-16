@@ -17,8 +17,8 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("typeorm");
 const typeorm_2 = require("@nestjs/typeorm");
 const common_2 = require("@nestjs/common");
-const User_1 = require("../../mymodel/entities/User");
-const Restaurant_1 = require("../../mymodel/entities/Restaurant");
+const User_1 = require("../../resource/db/entities/User");
+const Restaurant_1 = require("../../resource/db/entities/Restaurant");
 function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 6371e3;
     const phi1 = (lat1 * Math.PI) / 180;
