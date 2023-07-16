@@ -14,10 +14,10 @@ import { ReviewService } from "./review.service";
 import { CreateReviewDto } from "./dto/create-review.dto";
 import { UpdateReviewDto } from "./dto/update-review.dto";
 import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
-import { CurrentUser } from "src/common/decorators/user.decorator";
+import { CurrentUser } from "../../src/aop/decorators/user.decorator";
 import { UserLoginDto } from "src/users/dto/user-login.dto";
-import { HttpExceptionFilter } from "src/common/exception/http-exception.filter";
-import { SuccessInterceptor } from "src/common/interceptors/success.interceptor";
+import { HttpExceptionFilter } from "../../src/aop/exception/http-exception.filter";
+import { SuccessInterceptor } from "../../src/aop/interceptors/success.interceptor";
 import { ApiOperation } from "@nestjs/swagger";
 
 @UseInterceptors(SuccessInterceptor)

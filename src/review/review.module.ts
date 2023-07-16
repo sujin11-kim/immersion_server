@@ -2,10 +2,10 @@ import { Module } from "@nestjs/common";
 import { ReviewController } from "./review.controller";
 import { ReviewService } from "./review.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Review } from "mymodel/entities/Review";
+import { Review } from "../../resource/db/entities/Review";
 import { AuthModule } from "src/auth/auth.module";
-import { User } from "mymodel/entities/User";
-import { Post } from "mymodel/entities/Post";
+import { User } from "../../resource/db/entities/User";
+import { Post } from "../../resource/db/entities/Post";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Review, User, Post]), AuthModule],

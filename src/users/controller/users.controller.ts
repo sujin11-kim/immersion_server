@@ -5,6 +5,8 @@ import {
   UseGuards,
   Get,
   Headers,
+  Param,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "../dto/create-user.dto";
@@ -12,11 +14,11 @@ import { UsersService } from "../service/users.service";
 import { AuthService } from "src/auth/auth.service";
 import { LoginRequestDto } from "src/auth/dto/login.request.dto";
 import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
-import { CurrentUser } from "src/common/decorators/user.decorator";
+import { CurrentUser } from "../../aop/decorators/user.decorator";
 import { UseInterceptors } from "@nestjs/common/decorators/core/use-interceptors.decorator";
-import { SuccessInterceptor } from "src/common/interceptors/success.interceptor";
+import { SuccessInterceptor } from "../../aop/interceptors/success.interceptor";
 import { UseFilters } from "@nestjs/common/decorators/core/exception-filters.decorator";
-import { HttpExceptionFilter } from "src/common/exception/http-exception.filter";
+import { HttpExceptionFilter } from "../../aop/exception/http-exception.filter";
 import { UserLoginDto } from "../dto/user-login.dto";
 
 @ApiTags("USERS")
@@ -43,24 +45,20 @@ export class UsersController {
     return this.authService.jwtLogIn(data);
   }
 
-  @ApiOperation({ summary: "FCM 토큰 추가" })
-  @UseInterceptors(SuccessInterceptor)
-  @UseFilters(HttpExceptionFilter)
-  @UseGuards(JwtAuthGuard)
-  @Post("save/fcm")
-  saveFCMToken(
-    @CurrentUser() user: UserLoginDto,
-    @Body("fcmToken") fcmToken: string
-  ) {
-    return this.usersService.saveFCMToken(user, fcmToken);
-  }
-
   @ApiOperation({ summary: "모든 FCM 토큰 조회" })
   @UseInterceptors(SuccessInterceptor)
   @UseFilters(HttpExceptionFilter)
-  @Get("get/fcm")
-  findFCM() {
-    return this.usersService.findFCM();
+  @Get("get/allFcm")
+  findAllFCM() {
+    return this.usersService.getAllFCM();
+  }
+
+  @ApiOperation({ summary: "개인 FCM 토큰 조회" })
+  @UseInterceptors(SuccessInterceptor)
+  @UseFilters(HttpExceptionFilter)
+  @Get("get/fcm/:userIdx")
+  findFCM(@Param("userIdx", ParseIntPipe) userIdx: number) {
+    return this.usersService.getFcmByUserIdx(userIdx);
   }
 
   @ApiOperation({ summary: "카카오로그인" })

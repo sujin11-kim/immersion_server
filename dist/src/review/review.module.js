@@ -11,10 +11,10 @@ const common_1 = require("@nestjs/common");
 const review_controller_1 = require("./review.controller");
 const review_service_1 = require("./review.service");
 const typeorm_1 = require("@nestjs/typeorm");
-const Review_1 = require("../../mymodel/entities/Review");
+const Review_1 = require("../../resource/db/entities/Review");
 const auth_module_1 = require("../auth/auth.module");
-const User_1 = require("../../mymodel/entities/User");
-const Post_1 = require("../../mymodel/entities/Post");
+const User_1 = require("../../resource/db/entities/User");
+const Post_1 = require("../../resource/db/entities/Post");
 let ReviewModule = class ReviewModule {
 };
 ReviewModule = __decorate([

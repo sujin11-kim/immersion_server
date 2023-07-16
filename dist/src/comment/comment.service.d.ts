@@ -1,8 +1,8 @@
 import { Repository, DataSource } from "typeorm";
-import { Comment } from "../../mymodel/entities/Comment";
-import { User } from "mymodel/entities/User";
-import { Post } from "mymodel/entities/Post";
-import { LikeComment } from "mymodel/entities/LikeComment";
+import { Comment } from "../../resource/db/entities/Comment";
+import { User } from "../../resource/db/entities/User";
+import { Post } from "../../resource/db/entities/Post";
+import { LikeComment } from "../../resource/db/entities/LikeComment";
 export declare class CommentService {
     private readonly commentRepository;
     private readonly userRepository;

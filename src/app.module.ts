@@ -4,24 +4,24 @@ import { ConfigModule } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { UsersModule } from "./users/users.module";
-import { User } from "mymodel/entities/User";
+import { User } from "../resource/db/entities/User";
 import { AuthModule } from "./auth/auth.module";
 
 import * as moment from "moment";
-import { Message } from "mymodel/entities/Message";
-import { Post } from "mymodel/entities/Post";
-import { LikePost } from "mymodel/entities/LikePost";
-import { Comment } from "mymodel/entities/Comment";
-import { ChatUser } from "mymodel/entities/ChatUser";
-import { ChatRoom } from "mymodel/entities/ChatRoom";
+import { Message } from "../resource/db/entities/Message";
+import { Post } from "../resource/db/entities/Post";
+import { LikePost } from "../resource/db/entities/LikePost";
+import { Comment } from "../resource/db/entities/Comment";
+import { ChatUser } from "../resource/db/entities/ChatUser";
+import { ChatRoom } from "../resource/db/entities/ChatRoom";
 import { PostModule } from "./post/post.module";
 import { CommentModule } from "./comment/comment.module";
-import { Image } from "mymodel/entities/Image";
-import { AwsService } from "./common/utils/aws.service";
-import { Restaurant } from "mymodel/entities/Restaurant";
+import { Image } from "../resource/db/entities/Image";
+import { AwsService } from "./aop/utils/aws.service";
+import { Restaurant } from "../resource/db/entities/Restaurant";
 import { RestaurantsModule } from "./restaurants/restaurants.module";
 import { ReviewModule } from "./review/review.module";
-import { LikeComment } from "mymodel/entities/LikeComment";
+import { LikeComment } from "../resource/db/entities/LikeComment";
 
 @Module({
   imports: [
@@ -52,7 +52,7 @@ import { LikeComment } from "mymodel/entities/LikeComment";
         ChatRoom,
         Image,
         Restaurant,
-        LikeComment
+        LikeComment,
       ],
       autoLoadEntities: true,
       keepConnectionAlive: true,
@@ -67,7 +67,6 @@ import { LikeComment } from "mymodel/entities/LikeComment";
     CommentModule,
     RestaurantsModule,
     ReviewModule,
-    
   ],
   controllers: [AppController],
   providers: [AppService, AwsService],

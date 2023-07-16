@@ -15,10 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewService = void 0;
 const typeorm_1 = require("@nestjs/typeorm");
 const common_1 = require("@nestjs/common");
-const Review_1 = require("../../mymodel/entities/Review");
+const Review_1 = require("../../resource/db/entities/Review");
 const typeorm_2 = require("typeorm");
-const Post_1 = require("../../mymodel/entities/Post");
-const User_1 = require("../../mymodel/entities/User");
+const Post_1 = require("../../resource/db/entities/Post");
+const User_1 = require("../../resource/db/entities/User");
 let ReviewService = class ReviewService {
     constructor(reviewRepostitory, postRepository, userRepository, dataSource) {
         this.reviewRepostitory = reviewRepostitory;

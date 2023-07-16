@@ -16,7 +16,7 @@ exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const User_1 = require("../../../mymodel/entities/User");
+const User_1 = require("../../../resource/db/entities/User");
 const user_implement_1 = require("../interface/user.implement");
 let UsersService = class UsersService {
     constructor(userRepository, dataSource, userInterface) {
@@ -27,37 +27,11 @@ let UsersService = class UsersService {
     async create(userInfo) {
         return await this.userInterface.createUser(userInfo);
     }
-    async saveFCMToken(loginUser, fcmToken) {
-        const queryRunner = this.dataSource.createQueryRunner();
-        try {
-            await queryRunner.startTransaction();
-            const user = await this.userRepository.findOne({
-                where: { email: loginUser.email },
-            });
-            if (!user) {
-                throw new Error("User not found");
-            }
-            user.fcmtoken = fcmToken;
-            const updateUser = await this.userRepository.save(user);
-            console.log(user);
-            await queryRunner.commitTransaction();
-            return { message: "FCM 토큰이 저장되었습니다." };
-        }
-        catch (error) {
-            await queryRunner.rollbackTransaction();
-            throw error;
-        }
-        finally {
-            await queryRunner.release();
-        }
+    async getAllFCM() {
+        return await this.userInterface.getAllFCM();
     }
-    async findFCM() {
-        const users = await this.userRepository.find();
-        const fcmTokens = users.reduce((result, user) => {
-            result[user.userIdx] = user.fcmtoken;
-            return result;
-        }, {});
-        return { fcmTokens };
+    async getFcmByUserIdx(userIdx) {
+        return await this.userInterface.getFCMByUserIdx(userIdx);
     }
     async login(_id, _password) {
         throw new Error("Method not implemented");
@@ -68,7 +42,7 @@ UsersService = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.DataSource,
-        user_implement_1.UserImplement])
+        user_implement_1.UserImpl])
 ], UsersService);
 exports.UsersService = UsersService;
 //# sourceMappingURL=users.service.js.map

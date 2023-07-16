@@ -16,10 +16,10 @@ exports.CommentService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const Comment_1 = require("../../mymodel/entities/Comment");
-const User_1 = require("../../mymodel/entities/User");
-const Post_1 = require("../../mymodel/entities/Post");
-const LikeComment_1 = require("../../mymodel/entities/LikeComment");
+const Comment_1 = require("../../resource/db/entities/Comment");
+const User_1 = require("../../resource/db/entities/User");
+const Post_1 = require("../../resource/db/entities/Post");
+const LikeComment_1 = require("../../resource/db/entities/LikeComment");
 let CommentService = class CommentService {
     constructor(commentRepository, userRepository, postRepository, likeCommentRepository, dataSource) {
         this.commentRepository = commentRepository;
@@ -78,7 +78,9 @@ let CommentService = class CommentService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const editcomment = await queryRunner.manager.getRepository(Comment_1.Comment).findOne({ where: { commentIdx } });
+            const editcomment = await queryRunner.manager
+                .getRepository(Comment_1.Comment)
+                .findOne({ where: { commentIdx } });
             editcomment.likeNum += 1;
             await queryRunner.manager.getRepository(Comment_1.Comment).save(editcomment);
             const likeComment = new LikeComment_1.LikeComment();
@@ -89,7 +91,7 @@ let CommentService = class CommentService {
             return {
                 isSuccess: true,
                 code: 1000,
-                result: editcomment
+                result: editcomment,
             };
         }
         catch (err) {
@@ -105,13 +107,15 @@ let CommentService = class CommentService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const editcomment = await queryRunner.manager.getRepository(Comment_1.Comment).findOne({ where: { commentIdx } });
+            const editcomment = await queryRunner.manager
+                .getRepository(Comment_1.Comment)
+                .findOne({ where: { commentIdx } });
             editcomment.likeNum -= 1;
             await queryRunner.manager.getRepository(Comment_1.Comment).save(editcomment);
             return {
                 isSuccess: true,
                 code: 1000,
-                result: editcomment
+                result: editcomment,
             };
         }
         catch (err) {

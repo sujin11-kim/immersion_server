@@ -1,13 +1,13 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Review } from "mymodel/entities/Review";
+import { Review } from "../../resource/db/entities/Review";
 import { DataSource, Repository } from "typeorm";
 import { CreateReviewDto } from "./dto/create-review.dto";
 import { UpdateReviewDto } from "./dto/update-review.dto";
 import { number } from "joi";
 import { UserLoginDto } from "src/users/dto/user-login.dto";
-import { Post } from "mymodel/entities/Post";
-import { User } from "mymodel/entities/User";
+import { Post } from "../../resource/db/entities/Post";
+import { User } from "../../resource/db/entities/User";
 
 @Injectable()
 export class ReviewService {
@@ -59,7 +59,7 @@ export class ReviewService {
 
     return review;
   }
-////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////
   async update(reviewIdx: number, updateReviewDto: UpdateReviewDto) {
     const queryRunner =
       this.postRepository.manager.connection.createQueryRunner();
@@ -87,7 +87,7 @@ export class ReviewService {
       await queryRunner.release();
     }
   }
-////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////
   async delete(reviewIdx: number) {
     const queryRunner =
       this.postRepository.manager.connection.createQueryRunner();

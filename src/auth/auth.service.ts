@@ -1,7 +1,7 @@
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { HttpException, Injectable } from "@nestjs/common";
-import { User } from "mymodel/entities/User";
+import { User } from "resource/db/entities/User";
 import { Repository } from "typeorm";
 import { LoginRequestDto } from "./dto/login.request.dto";
 import { InjectRepository } from "@nestjs/typeorm";

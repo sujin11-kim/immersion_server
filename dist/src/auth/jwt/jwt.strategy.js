@@ -17,7 +17,7 @@ const passport_jwt_1 = require("passport-jwt");
 const passport_1 = require("@nestjs/passport");
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("typeorm");
-const User_1 = require("../../../mymodel/entities/User");
+const User_1 = require("../../../resource/db/entities/User");
 const typeorm_2 = require("@nestjs/typeorm");
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
     constructor(userRepository) {

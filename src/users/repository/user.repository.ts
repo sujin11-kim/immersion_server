@@ -1,6 +1,11 @@
-import { BadRequestException, HttpException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  HttpException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "mymodel/entities/User";
+import { User } from "../../../resource/db/entities/User";
 import { Repository } from "typeorm";
 import { CreateUserDto } from "../dto/create-user.dto";
 
@@ -11,6 +16,7 @@ export class CustomUserRepository {
     private readonly userRepository: Repository<User>
   ) {}
 
+  //user 정보 중복 체크
   async checkDuplicate(userInfo: CreateUserDto) {
     const userByEmail = await this.userRepository.findOne({
       where: { email: userInfo.email },
@@ -43,6 +49,7 @@ export class CustomUserRepository {
       });
   }
 
+  //새로운 user 저장
   async saveUser(userInfo: CreateUserDto) {
     const { email, nickName, phone, password, fcmToken } = userInfo;
 
@@ -55,5 +62,43 @@ export class CustomUserRepository {
     const newUser = await this.userRepository.save(user);
 
     return newUser;
+  }
+
+  //모든 fcmtoken 반환
+  async findAllFcm() {
+    const users = await this.userRepository.find();
+    const fcmTokens = users.reduce((result, user) => {
+      result[user.userIdx] = user.fcmtoken;
+      return result;
+    }, {});
+
+    if (!fcmTokens)
+      throw new BadRequestException({
+        statusCode: 4001,
+        message: "fcmToken이 존재하지 않습니다.",
+        result: { fcmTokens: {} },
+      });
+
+    return { fcmTokens };
+  }
+
+  //유저 존재 확인 By userIdx
+  async isUserExistsByUserIdx(userIdx: number) {
+    const user = await this.userRepository.findOne({ where: { userIdx } });
+
+    if (!user)
+      throw new NotFoundException({
+        statusCode: 4002,
+        message: "존재하지 않는 유저입니다.",
+        result: { fcmTokens: "" },
+      });
+  }
+
+  //개인 fcmtoken 반환 By userIdx
+  async getFCMByUserIdx(userIdx: number) {
+    const user = await this.userRepository.findOne({ where: { userIdx } });
+    const fcmToken = user?.fcmtoken || null;
+
+    return fcmToken;
   }
 }
