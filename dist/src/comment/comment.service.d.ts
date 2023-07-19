@@ -27,14 +27,6 @@ export declare class CommentService {
     }>;
     modifyComment(PostIdx: number, commentContent: string): Promise<void>;
     removeComment(commentIdx: string): Promise<void>;
-    postLike(userIdx: number, postIdx: number, commentIdx: number): Promise<{
-        isSuccess: boolean;
-        code: number;
-        result: Comment;
-    }>;
-    postLikeCancel(userIdx: number, postIdx: number, commentIdx: number): Promise<{
-        isSuccess: boolean;
-        code: number;
-        result: Comment;
-    }>;
+    commentLike(userIdx: number, postIdx: number, commentIdx: number): Promise<Comment>;
+    postLikeCancel(userIdx: number, postIdx: number, commentIdx: number): Promise<Comment>;
 }

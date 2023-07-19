@@ -5,19 +5,7 @@ export declare class RestaurantsService {
     private readonly userRepository;
     private readonly restaurantRepository;
     constructor(userRepository: Repository<User>, restaurantRepository: Repository<Restaurant>);
-    createUserLocation(userIdx: number, latitude: number, longitude: number): Promise<{
-        isSuccess: boolean;
-        code: number;
-        result: number[];
-    }>;
-    updateUserLocation(userIdx: number, latitude: number, longitude: number): Promise<{
-        isSuccess: boolean;
-        code: number;
-        result: number[];
-    }>;
-    getrestaurantlist(userIdx: number): Promise<{
-        isSuccess: boolean;
-        code: number;
-        result: Restaurant[];
-    }>;
+    createUserLocation(userIdx: number, latitude: number, longitude: number): Promise<User>;
+    updateUserLocation(userIdx: number, latitude: number, longitude: number): Promise<User>;
+    getrestaurantlist(userIdx: number): Promise<Restaurant[]>;
 }

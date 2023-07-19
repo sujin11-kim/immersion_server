@@ -5,10 +5,12 @@ import * as path from "path";
 import { ValidationPipe } from "@nestjs/common";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import * as expressBasicAuth from "express-basic-auth";
+import { HttpExceptionFilter } from "./aop/exception/http-exception.filter";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   app.use(
     ["/api-docs", "/api-docs-json"],

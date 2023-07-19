@@ -44,7 +44,7 @@ let CommentController = class CommentController {
     }
     commentLike(Idx) {
         const { userIdx, postIdx, commentIdx } = Idx;
-        return this.commentService.postLike(userIdx, postIdx, commentIdx);
+        return this.commentService.commentLike(userIdx, postIdx, commentIdx);
     }
     commentLikeCancel(Idx) {
         const { userIdx, postIdx, commentIdx } = Idx;

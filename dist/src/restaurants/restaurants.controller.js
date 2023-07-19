@@ -20,6 +20,8 @@ const restaurants_service_1 = require("./restaurants.service");
 const swagger_2 = require("@nestjs/swagger");
 const common_3 = require("@nestjs/common");
 const location_dto_1 = require("./dto/location.dto");
+const http_exception_filter_1 = require("../aop/exception/http-exception.filter");
+const success_interceptor_1 = require("../aop/interceptors/success.interceptor");
 let RestaurantsController = class RestaurantsController {
     constructor(restaurantsService) {
         this.restaurantsService = restaurantsService;
@@ -62,6 +64,8 @@ __decorate([
 ], RestaurantsController.prototype, "getrestaurantlist", null);
 RestaurantsController = __decorate([
     (0, swagger_2.ApiTags)("Restaurants"),
+    (0, common_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
+    (0, common_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),
     (0, common_3.Controller)("restaurants"),
     __metadata("design:paramtypes", [restaurants_service_1.RestaurantsService])
 ], RestaurantsController);

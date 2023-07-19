@@ -1,4 +1,4 @@
-import { HttpException } from "@nestjs/common";
+import { BadRequestException, HttpException } from "@nestjs/common";
 import { Repository, In } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
@@ -51,13 +51,7 @@ export class RestaurantsService {
     user.latitude = latitude;
     user.longitude = longitude;
 
-    await this.userRepository.save(user);
-    return {
-      isSuccess: true,
-      code: 1000,
-      //kr_curr,
-      result: [user.userIdx, user.latitude, user.longitude],
-    };
+    return await this.userRepository.save(user);
   }
 
   async updateUserLocation(
@@ -69,18 +63,18 @@ export class RestaurantsService {
 
     user.latitude = latitude;
     user.longitude = longitude;
-    await this.userRepository.save(user);
-    return {
-      isSuccess: true,
-      code: 1000,
-      //kr_curr,
-      result: [user.userIdx, user.latitude, user.longitude],
-    };
+    return await this.userRepository.save(user);
   }
 
   async getrestaurantlist(userIdx: number) {
     const user = await this.userRepository.findOne({ where: { userIdx } });
     const restaurants = await this.restaurantRepository.find();
+    if (!user) {
+      throw new BadRequestException({
+        statusCode: 2100,
+        message: "존재하지 않는 사용자 입니다.",
+      });
+    }
 
     const nearbyRestaurantIdxs: number[] = [];
     for (const restaurant of restaurants) {
@@ -101,10 +95,6 @@ export class RestaurantsService {
       },
     });
 
-    return {
-      isSuccess: true,
-      code: 1000,
-      result: nearbyrestaurant,
-    };
+    return nearbyrestaurant;
   }
 }

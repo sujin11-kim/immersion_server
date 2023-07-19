@@ -67,6 +67,12 @@ let ReviewService = class ReviewService {
             const review = await queryRunner.manager
                 .getRepository(Review_1.Review)
                 .findOne({ where: { reviewIdx } });
+            if (!review) {
+                throw new common_1.BadRequestException({
+                    statusCode: 2100,
+                    message: "존재하지 않는 리뷰 입니다.",
+                });
+            }
             const { content, score } = updateReviewDto;
             review.content = content;
             review.score = score;

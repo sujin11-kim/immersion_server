@@ -73,8 +73,8 @@ let CommentService = class CommentService {
     }
     async modifyComment(PostIdx, commentContent) { }
     async removeComment(commentIdx) { }
-    async postLike(userIdx, postIdx, commentIdx) {
-        const queryRunner = this.postRepository.manager.connection.createQueryRunner();
+    async commentLike(userIdx, postIdx, commentIdx) {
+        const queryRunner = this.commentRepository.manager.connection.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
@@ -88,11 +88,7 @@ let CommentService = class CommentService {
             likeComment.userIdx = userIdx;
             likeComment.postIdx = postIdx;
             await queryRunner.manager.getRepository(LikeComment_1.LikeComment).save(likeComment);
-            return {
-                isSuccess: true,
-                code: 1000,
-                result: editcomment,
-            };
+            return editcomment;
         }
         catch (err) {
             await queryRunner.rollbackTransaction();
@@ -103,20 +99,18 @@ let CommentService = class CommentService {
         }
     }
     async postLikeCancel(userIdx, postIdx, commentIdx) {
-        const queryRunner = this.postRepository.manager.connection.createQueryRunner();
+        const queryRunner = this.commentRepository.manager.connection.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
             const editcomment = await queryRunner.manager
                 .getRepository(Comment_1.Comment)
                 .findOne({ where: { commentIdx } });
-            editcomment.likeNum -= 1;
+            if (editcomment.likeNum > 0) {
+                editcomment.likeNum -= 1;
+            }
             await queryRunner.manager.getRepository(Comment_1.Comment).save(editcomment);
-            return {
-                isSuccess: true,
-                code: 1000,
-                result: editcomment,
-            };
+            return editcomment;
         }
         catch (err) {
             await queryRunner.rollbackTransaction();

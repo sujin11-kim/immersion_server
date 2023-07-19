@@ -1,14 +1,16 @@
-import { Get, Param } from "@nestjs/common";
+import { Get, Param, UseFilters, UseInterceptors } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
 import { Post, Patch } from "@nestjs/common";
 import { RestaurantsService } from "./restaurants.service";
 import { ApiTags } from "@nestjs/swagger";
 import { Controller, Body } from "@nestjs/common";
 import { LocationDto } from "./dto/location.dto";
+import { HttpExceptionFilter } from "src/aop/exception/http-exception.filter";
+import { SuccessInterceptor } from "src/aop/interceptors/success.interceptor";
 
 @ApiTags("Restaurants")
-// @UseInterceptors(SuccessInterceptor)
-// @UseFilters(HttpExceptionFilter)
+@UseInterceptors(SuccessInterceptor)
+@UseFilters(HttpExceptionFilter)
 @Controller("restaurants")
 export class RestaurantsController {
   constructor(private restaurantsService: RestaurantsService) {}

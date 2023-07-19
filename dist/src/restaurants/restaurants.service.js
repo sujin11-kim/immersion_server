@@ -46,27 +46,23 @@ let RestaurantsService = class RestaurantsService {
         }
         user.latitude = latitude;
         user.longitude = longitude;
-        await this.userRepository.save(user);
-        return {
-            isSuccess: true,
-            code: 1000,
-            result: [user.userIdx, user.latitude, user.longitude],
-        };
+        return await this.userRepository.save(user);
     }
     async updateUserLocation(userIdx, latitude, longitude) {
         const user = await this.userRepository.findOne({ where: { userIdx } });
         user.latitude = latitude;
         user.longitude = longitude;
-        await this.userRepository.save(user);
-        return {
-            isSuccess: true,
-            code: 1000,
-            result: [user.userIdx, user.latitude, user.longitude],
-        };
+        return await this.userRepository.save(user);
     }
     async getrestaurantlist(userIdx) {
         const user = await this.userRepository.findOne({ where: { userIdx } });
         const restaurants = await this.restaurantRepository.find();
+        if (!user) {
+            throw new common_1.BadRequestException({
+                statusCode: 2100,
+                message: "존재하지 않는 사용자 입니다.",
+            });
+        }
         const nearbyRestaurantIdxs = [];
         for (const restaurant of restaurants) {
             const distance = calculateDistance(user.latitude, user.longitude, restaurant.latitude, restaurant.longitude);
@@ -79,11 +75,7 @@ let RestaurantsService = class RestaurantsService {
                 restaurantIdx: (0, typeorm_1.In)(nearbyRestaurantIdxs),
             },
         });
-        return {
-            isSuccess: true,
-            code: 1000,
-            result: nearbyrestaurant,
-        };
+        return nearbyrestaurant;
     }
 };
 RestaurantsService = __decorate([

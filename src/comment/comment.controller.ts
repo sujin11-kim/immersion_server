@@ -59,13 +59,12 @@ export class CommentController {
     return this.commentService.removeComment(commentIdx);
   }
 
-  //////////////////////////////////////////////////////////////////////
   @ApiOperation({ summary: "게시물 좋아요" })
   //@UseGuards(JwtAuthGuard)
   @Post("/likeComment")
   commentLike(@Body() Idx: LikeCommentDto) {
     const { userIdx, postIdx, commentIdx } = Idx;
-    return this.commentService.postLike(userIdx, postIdx, commentIdx);
+    return this.commentService.commentLike(userIdx, postIdx, commentIdx);
   }
 
   @ApiOperation({ summary: "게시물 좋아요 취소" })
@@ -75,6 +74,4 @@ export class CommentController {
     const { userIdx, postIdx, commentIdx } = Idx;
     return this.commentService.postLikeCancel(userIdx, postIdx, commentIdx);
   }
-
-  //////////////////////////////////////////////////////////////
 }

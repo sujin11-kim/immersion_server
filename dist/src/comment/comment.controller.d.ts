@@ -22,14 +22,6 @@ export declare class CommentController {
     }>;
     modifyComment(createCommentDto: CreateCommentDto): Promise<void>;
     removeComment(commentIdx: string): Promise<void>;
-    commentLike(Idx: LikeCommentDto): Promise<{
-        isSuccess: boolean;
-        code: number;
-        result: import("../../resource/db/entities/Comment").Comment;
-    }>;
-    commentLikeCancel(Idx: LikeCommentDto): Promise<{
-        isSuccess: boolean;
-        code: number;
-        result: import("../../resource/db/entities/Comment").Comment;
-    }>;
+    commentLike(Idx: LikeCommentDto): Promise<import("../../resource/db/entities/Comment").Comment>;
+    commentLikeCancel(Idx: LikeCommentDto): Promise<import("../../resource/db/entities/Comment").Comment>;
 }
