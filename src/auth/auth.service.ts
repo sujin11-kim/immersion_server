@@ -1,6 +1,6 @@
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import { HttpException, Injectable } from "@nestjs/common";
+import { BadRequestException, HttpException, Injectable } from "@nestjs/common";
 import { User } from "resource/db/entities/User";
 import { Repository } from "typeorm";
 import { LoginRequestDto } from "./dto/login.request.dto";
@@ -25,8 +25,12 @@ export class AuthService {
     const user = await this.userRepository.findOneBy({ email });
 
     if (!user) {
-      throw new HttpException({ token: "" }, 201);
+      throw new BadRequestException({
+        statusCode: 2100,
+        message: "존재하지 않는 사용자 입니다.",
+      });
     }
+
     const isPasswordValidated: boolean = await bcrypt.compare(
       password,
       user.password
@@ -37,7 +41,10 @@ export class AuthService {
     if (user && (await bcrypt.compare(password, user.password))) {
       return { token: this.jwtService.sign(payload) };
     } else {
-      throw new HttpException({ token: "" }, 201);
+      throw new BadRequestException({
+        statusCode: 2101,
+        message: "이메일과 비밀번호를 다시 확인해 주세요.",
+      });
     }
   }
 

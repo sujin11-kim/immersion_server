@@ -32,7 +32,10 @@ let AuthService = class AuthService {
         const { email, password } = data;
         const user = await this.userRepository.findOneBy({ email });
         if (!user) {
-            throw new common_1.HttpException({ token: "" }, 201);
+            throw new common_1.BadRequestException({
+                statusCode: 2100,
+                message: "존재하지 않는 사용자 입니다.",
+            });
         }
         const isPasswordValidated = await bcrypt.compare(password, user.password);
         const payload = { email };
@@ -40,7 +43,10 @@ let AuthService = class AuthService {
             return { token: this.jwtService.sign(payload) };
         }
         else {
-            throw new common_1.HttpException({ token: "" }, 201);
+            throw new common_1.BadRequestException({
+                statusCode: 2101,
+                message: "이메일과 비밀번호를 다시 확인해 주세요.",
+            });
         }
     }
     async kakaoTokenToLocalToken(token) {
