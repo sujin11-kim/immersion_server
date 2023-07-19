@@ -85,9 +85,9 @@ export class CommentService {
   async removeComment(commentIdx: string) {}
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  async postLike(userIdx: number, postIdx: number, commentIdx: number) {
+  async commentLike(userIdx: number, postIdx: number, commentIdx: number) {
     const queryRunner =
-      this.postRepository.manager.connection.createQueryRunner();
+      this.commentRepository.manager.connection.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
@@ -105,12 +105,7 @@ export class CommentService {
       likeComment.postIdx = postIdx;
       await queryRunner.manager.getRepository(LikeComment).save(likeComment);
 
-      return {
-        isSuccess: true,
-        code: 1000,
-        //kr_curr,
-        result: editcomment,
-      };
+      return editcomment;
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw err;
@@ -121,7 +116,7 @@ export class CommentService {
 
   async postLikeCancel(userIdx: number, postIdx: number, commentIdx: number) {
     const queryRunner =
-      this.postRepository.manager.connection.createQueryRunner();
+      this.commentRepository.manager.connection.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
@@ -130,15 +125,13 @@ export class CommentService {
         .getRepository(Comment)
         .findOne({ where: { commentIdx } });
 
-      editcomment.likeNum -= 1;
+      if (editcomment.likeNum > 0) {
+        editcomment.likeNum -= 1;
+      }
+
       await queryRunner.manager.getRepository(Comment).save(editcomment);
 
-      return {
-        isSuccess: true,
-        code: 1000,
-        //kr_curr,
-        result: editcomment,
-      };
+      return editcomment;
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw err;
@@ -146,6 +139,4 @@ export class CommentService {
       await queryRunner.release();
     }
   }
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

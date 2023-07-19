@@ -25,6 +25,11 @@ let HttpExceptionFilter = class HttpExceptionFilter {
                 message = errorResponse.message;
             if (errorResponse.result)
                 result = errorResponse.result;
+            if ((errorResponse.message =
+                "latitude must be a number conforming to the specified constraints" ||
+                    "longitude must be a number conforming to the specified constraints")) {
+                code = 2200;
+            }
         }
         response.status(status).json({
             isSuccess: false,

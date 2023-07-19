@@ -51,13 +51,7 @@ export class RestaurantsService {
     user.latitude = latitude;
     user.longitude = longitude;
 
-    await this.userRepository.save(user);
-    return {
-      isSuccess: true,
-      code: 1000,
-      //kr_curr,
-      result: [user.userIdx, user.latitude, user.longitude],
-    };
+    return await this.userRepository.save(user);
   }
 
   async updateUserLocation(
@@ -69,13 +63,7 @@ export class RestaurantsService {
 
     user.latitude = latitude;
     user.longitude = longitude;
-    await this.userRepository.save(user);
-    return {
-      isSuccess: true,
-      code: 1000,
-      //kr_curr,
-      result: [user.userIdx, user.latitude, user.longitude],
-    };
+    return await this.userRepository.save(user);
   }
 
   async getrestaurantlist(userIdx: number) {
@@ -101,10 +89,6 @@ export class RestaurantsService {
       },
     });
 
-    return {
-      isSuccess: true,
-      code: 1000,
-      result: nearbyrestaurant,
-    };
+    return nearbyrestaurant;
   }
 }

@@ -46,23 +46,13 @@ let RestaurantsService = class RestaurantsService {
         }
         user.latitude = latitude;
         user.longitude = longitude;
-        await this.userRepository.save(user);
-        return {
-            isSuccess: true,
-            code: 1000,
-            result: [user.userIdx, user.latitude, user.longitude],
-        };
+        return await this.userRepository.save(user);
     }
     async updateUserLocation(userIdx, latitude, longitude) {
         const user = await this.userRepository.findOne({ where: { userIdx } });
         user.latitude = latitude;
         user.longitude = longitude;
-        await this.userRepository.save(user);
-        return {
-            isSuccess: true,
-            code: 1000,
-            result: [user.userIdx, user.latitude, user.longitude],
-        };
+        return await this.userRepository.save(user);
     }
     async getrestaurantlist(userIdx) {
         const user = await this.userRepository.findOne({ where: { userIdx } });
@@ -79,11 +69,7 @@ let RestaurantsService = class RestaurantsService {
                 restaurantIdx: (0, typeorm_1.In)(nearbyRestaurantIdxs),
             },
         });
-        return {
-            isSuccess: true,
-            code: 1000,
-            result: nearbyrestaurant,
-        };
+        return nearbyrestaurant;
     }
 };
 RestaurantsService = __decorate([
