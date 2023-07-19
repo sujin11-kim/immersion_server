@@ -14,13 +14,19 @@ const users_service_1 = require("./service/users.service");
 const users_controller_1 = require("./controller/users.controller");
 const auth_module_1 = require("../auth/auth.module");
 const user_implement_1 = require("./interface/user.implement");
-const user_repository_1 = require("./repository/user.repository");
+const user_command_repository_1 = require("./repository/user-command.repository");
+const user_query_repository_1 = require("./repository/user-query.repository");
 let UsersModule = class UsersModule {
 };
 UsersModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([User_1.User]), (0, common_1.forwardRef)(() => auth_module_1.AuthModule)],
-        providers: [users_service_1.UsersService, user_implement_1.UserImpl, user_repository_1.CustomUserRepository],
+        providers: [
+            users_service_1.UsersService,
+            user_implement_1.UserImpl,
+            user_command_repository_1.CustomUserCommandRepository,
+            user_query_repository_1.CustomUserQueryRepository,
+        ],
         exports: [users_service_1.UsersService],
         controllers: [users_controller_1.UsersController],
     })

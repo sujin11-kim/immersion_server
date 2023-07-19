@@ -1,15 +1,16 @@
 import { HttpException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, DataSource, QueryRunner } from "typeorm";
+import { Repository, DataSource } from "typeorm";
 import { Post } from "../../../resource/db/entities/Post";
 import { UserLoginDto } from "src/users/dto/user-login.dto";
 import { Image } from "../../../resource/db/entities/Image";
 import { readonlyPostDto } from "../dto/readonly-post.dto";
-import * as multerS3 from "multer-s3";
 import { AwsService } from "src/aop/utils/aws.service";
 import { User } from "../../../resource/db/entities/User";
 import { Comment } from "../../../resource/db/entities/Comment";
 import { LikePost } from "../../../resource/db/entities/LikePost";
+import { CreatePostDto } from "../dto/create-post.dto";
+import { PostImpl } from "../interface/post.implement";
 
 @Injectable()
 export class PostService {
@@ -25,106 +26,21 @@ export class PostService {
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
     private readonly awsService: AwsService,
-    private dataSource: DataSource
+    private dataSource: DataSource,
+    private postInterface: PostImpl
   ) {}
 
+  // 2-1 로그인한 user로 게시물 작성
   async createPost(
     user: UserLoginDto,
-    category: string,
-    title: string,
-    content: string,
-    files: multerS3.File[]
+    postInfo: CreatePostDto
   ): Promise<readonlyPostDto> {
-    const queryRunner =
-      this.postRepository.manager.connection.createQueryRunner();
-    await queryRunner.connect();
-
-    await queryRunner.startTransaction();
-
-    try {
-      const loginUser = await this.userRepository.findOne({
-        where: { userIdx: user.userIdx },
-      });
-
-      const post = new Post();
-      post.userIdx = user.userIdx;
-      post.category = category;
-      post.title = title;
-      post.content = this.validateContent(content);
-      const savedPost = await queryRunner.manager.save(post);
-
-      const pathArray = [];
-
-      const imagePromise = files.map(async (file) => {
-        const s3Object = await this.awsService.uploadFileToS3("post", file);
-        const image = new Image();
-        image.postIdx = savedPost.postIdx;
-        image.path = this.awsService.getAwsS3FileUrl(s3Object.key);
-        pathArray.push(image.path);
-        image.imageName = file.originalname;
-        image.size = file.size;
-        image.Type = file.mimetype;
-        image.imageKey = s3Object.key;
-        return queryRunner.manager.save(image);
-      });
-      await Promise.all(imagePromise);
-
-      await queryRunner.commitTransaction();
-      return {
-        ...savedPost,
-        nickName: loginUser.nickName,
-        imagePath: pathArray,
-        commentList: [],
-      };
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw err;
-    } finally {
-      await queryRunner.release();
-    }
+    return await this.postInterface.createPost(user, postInfo);
   }
 
+  // 2-4 게시물 전체 조회
   async findAll(page: number, pageSize: number): Promise<readonlyPostDto[]> {
-    if (page <= 0 || pageSize <= 0) {
-      throw new HttpException(
-        { message: "Page and pageSize must be greater than 0." },
-        201
-      );
-    }
-
-    const manager = this.dataSource.manager;
-    const offset = (page - 1) * pageSize;
-    const posts = await manager.find(Post, {
-      skip: offset,
-      take: pageSize,
-    });
-    const result: readonlyPostDto[] = await Promise.all(
-      posts.map(async (post) => {
-        const user = await manager.findOne(User, {
-          where: { userIdx: post.userIdx },
-        });
-
-        const nickName = user ? user.nickName : "";
-
-        const images = await manager.find(Image, {
-          where: { postIdx: post.postIdx },
-        });
-        const imagePath = images.map((image) => image.path);
-
-        const comments = await manager.find(Comment, {
-          where: { postIdx: post.postIdx },
-        });
-        const commentList = comments.map((comment) => comment);
-
-        return {
-          ...post,
-          nickName,
-          imagePath,
-          commentList,
-        };
-      })
-    );
-    return result;
+    return await this.postInterface.findAll(page, pageSize);
   }
 
   async findIdPost(userIdx: number): Promise<readonlyPostDto[]> {
@@ -289,25 +205,5 @@ export class PostService {
     } finally {
       await queryRunner.release();
     }
-  }
-
-  validateContent(content: string) {
-    const maxContentLength = 5;
-    const contentWithoutEmojis = content.replace(/[\u{1F600}-\u{1F6FF}]/gu, ""); // 이모지 제거
-    const contentWithoutSpecialChars = contentWithoutEmojis.replace(
-      /[^\w\s]/gi,
-      ""
-    ); // 특수문자 제거
-    const contentWithoutSpecialCharsAndSpaces =
-      contentWithoutSpecialChars.replace(/\s/g, ""); // 공백 제거
-
-    if (contentWithoutSpecialCharsAndSpaces.length > maxContentLength) {
-      throw new HttpException(
-        { message: "Content length exceeds the maximum allowed limit." },
-        201
-      );
-    }
-
-    return contentWithoutSpecialChars;
   }
 }

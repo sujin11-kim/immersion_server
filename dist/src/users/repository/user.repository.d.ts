@@ -5,7 +5,9 @@ export declare class CustomUserRepository {
     private readonly userRepository;
     constructor(userRepository: Repository<User>);
     checkDuplicate(userInfo: CreateUserDto): Promise<void>;
-    saveUser(userInfo: CreateUserDto): Promise<User>;
+    saveUser(userInfo: CreateUserDto): Promise<{
+        userIdx: number;
+    }>;
     findAllFcm(): Promise<{
         fcmTokens: {};
     }>;

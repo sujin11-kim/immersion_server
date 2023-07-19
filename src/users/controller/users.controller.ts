@@ -20,6 +20,7 @@ import { SuccessInterceptor } from "../../aop/interceptors/success.interceptor";
 import { UseFilters } from "@nestjs/common/decorators/core/exception-filters.decorator";
 import { HttpExceptionFilter } from "../../aop/exception/http-exception.filter";
 import { UserLoginDto } from "../dto/user-login.dto";
+import { PositiveIntPipe } from "src/aop/pipes/positiveInt.pipe";
 
 @ApiTags("USERS")
 @Controller("user")
@@ -57,7 +58,7 @@ export class UsersController {
   @UseInterceptors(SuccessInterceptor)
   @UseFilters(HttpExceptionFilter)
   @Get("get/fcm/:userIdx")
-  findFCM(@Param("userIdx", ParseIntPipe) userIdx: number) {
+  findFCM(@Param("userIdx", ParseIntPipe, PositiveIntPipe) userIdx: number) {
     return this.usersService.getFcmByUserIdx(userIdx);
   }
 

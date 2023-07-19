@@ -8,7 +8,7 @@ export declare class UsersService {
     private userInterface;
     constructor(userRepository: Repository<User>, dataSource: DataSource, userInterface: UserImpl);
     create(userInfo: CreateUserDto): Promise<{
-        userIdx: number;
+        userIdx: string;
     }>;
     getAllFCM(): Promise<Record<"fcmTokens", object>>;
     getFcmByUserIdx(userIdx: number): Promise<Record<"fcmToken", string>>;

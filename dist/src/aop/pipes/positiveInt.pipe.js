@@ -10,10 +10,10 @@ exports.PositiveIntPipe = void 0;
 const common_1 = require("@nestjs/common");
 let PositiveIntPipe = class PositiveIntPipe {
     transform(value) {
-        if (value < 0) {
+        if (value <= 0) {
             throw new common_1.BadRequestException({
-                statusCode: 400,
-                message: "value > .",
+                statusCode: 3001,
+                message: "값이 0보다 커야 합니다.",
                 result: { fcmTokens: {} },
             });
         }

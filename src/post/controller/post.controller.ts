@@ -4,20 +4,20 @@ import {
   Get,
   Post,
   UseGuards,
-  UploadedFiles,
   UseInterceptors,
   UseFilters,
   Query,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { PostService } from "../service/post.service";
 import { CreatePostDto } from "../dto/create-post.dto";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { FilesInterceptor } from "@nestjs/platform-express";
 import { JwtAuthGuard } from "../../auth/jwt/jwt.guard";
 import { CurrentUser } from "../../../src/aop/decorators/user.decorator";
 import { UserLoginDto } from "../../users/dto/user-login.dto";
 import { SuccessInterceptor } from "../../../src/aop/interceptors/success.interceptor";
 import { HttpExceptionFilter } from "../../../src/aop/exception/http-exception.filter";
+import { PositiveIntPipe } from "src/aop/pipes/positiveInt.pipe";
 
 @ApiTags("POST")
 @UseInterceptors(SuccessInterceptor)
@@ -26,42 +26,44 @@ import { HttpExceptionFilter } from "../../../src/aop/exception/http-exception.f
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @ApiOperation({ summary: "모든 게시물 조회" })
-  @Get("/get/all")
-  findAll(@Query("page") page: number, @Query("pageSize") pageSize: number) {
-    return this.postService.findAll(page, pageSize);
+  // 2-1
+  @ApiOperation({ summary: "로그인한 user로 게시물 작성" })
+  @UseGuards(JwtAuthGuard)
+  @Post("/create")
+  create(
+    @Body() createPostDto: CreatePostDto,
+    @CurrentUser() user: UserLoginDto
+  ) {
+    return this.postService.createPost(user, createPostDto);
   }
 
-  @ApiOperation({ summary: "현재 user의 게시물 조회" })
+  // 2-2
+  @ApiOperation({ summary: "로그인한 user의 게시물 조회" })
   @UseGuards(JwtAuthGuard)
   @Get("/get/userIdx")
   findIdPost(@CurrentUser() user: UserLoginDto) {
     return this.postService.findIdPost(user.userIdx);
   }
 
-  @ApiOperation({ summary: "카테고리 게시물 조회" })
+  // 2-3
+  @ApiOperation({ summary: "카테고리로 게시물 조회" })
   @Get("/get/category")
   findCategoryPost(@Query("category") category: string) {
     console.log(category);
     return this.postService.findCategoryPost(category);
   }
 
-  @ApiOperation({ summary: "게시물 생성" })
-  @UseInterceptors(FilesInterceptor("image", 10))
-  @UseGuards(JwtAuthGuard)
-  @Post("/create")
-  create(
-    @Body() createPostDto: CreatePostDto,
-    @UploadedFiles() files: Express.Multer.File[],
-    @CurrentUser() user: UserLoginDto
+  // 2-4
+  @ApiOperation({ summary: "게시물 전체 조회" })
+  @Get("/get/all")
+  findAll(
+    @Query("page", ParseIntPipe, PositiveIntPipe) page: number,
+    @Query("pageSize", ParseIntPipe, PositiveIntPipe) pageSize: number
   ) {
-    const { category, title, content } = createPostDto;
-    console.log("파일 이름");
-    console.log(files);
-    //return this.awsService.uploadFileToS3("cats", files[0]);
-    return this.postService.createPost(user, category, title, content, files);
+    return this.postService.findAll(page, pageSize);
   }
 
+  // 2-5
   @ApiOperation({ summary: "게시물 좋아요" })
   @UseGuards(JwtAuthGuard)
   @Post("/like")
@@ -72,6 +74,7 @@ export class PostController {
     return this.postService.postLike(user, postIdx);
   }
 
+  //2-6
   @ApiOperation({ summary: "게시물 좋아요 취소" })
   @UseGuards(JwtAuthGuard)
   @Post("/like/cancel")

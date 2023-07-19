@@ -5,11 +5,17 @@ import { UsersService } from "./service/users.service";
 import { UsersController } from "./controller/users.controller";
 import { AuthModule } from "src/auth/auth.module";
 import { UserImpl } from "./interface/user.implement";
-import { CustomUserRepository } from "./repository/user.repository";
+import { CustomUserCommandRepository } from "./repository/user-command.repository";
+import { CustomUserQueryRepository } from "./repository/user-query.repository";
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), forwardRef(() => AuthModule)],
-  providers: [UsersService, UserImpl, CustomUserRepository],
+  providers: [
+    UsersService,
+    UserImpl,
+    CustomUserCommandRepository,
+    CustomUserQueryRepository,
+  ],
   exports: [UsersService],
   controllers: [UsersController],
 })

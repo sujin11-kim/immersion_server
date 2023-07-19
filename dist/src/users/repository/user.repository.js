@@ -51,35 +51,49 @@ let CustomUserRepository = class CustomUserRepository {
             });
     }
     async saveUser(userInfo) {
-        const { email, nickName, phone, password, fcmToken } = userInfo;
-        const user = new User_1.User();
-        (user.email = email),
-            (user.nickName = nickName),
-            (user.phone = phone),
-            (user.password = password),
-            (user.fcmtoken = fcmToken);
-        const newUser = await this.userRepository.save(user);
-        return newUser;
+        const queryRunner = this.userRepository.manager.connection.createQueryRunner();
+        await queryRunner.connect();
+        try {
+            await queryRunner.startTransaction();
+            const { email, nickName, phone, password, fcmToken } = userInfo;
+            const user = queryRunner.manager.getRepository(User_1.User).create();
+            (user.email = email),
+                (user.nickName = nickName),
+                (user.phone = phone),
+                (user.password = password),
+                (user.fcmtoken = fcmToken);
+            const newUser = await queryRunner.manager.getRepository(User_1.User).save(user);
+            await queryRunner.commitTransaction();
+            return { userIdx: newUser.userIdx };
+        }
+        catch (error) {
+            await queryRunner.rollbackTransaction();
+            throw error;
+        }
+        finally {
+            await queryRunner.release();
+        }
     }
     async findAllFcm() {
         const users = await this.userRepository.find();
+        if (users.length === 0) {
+            throw new common_1.BadRequestException({
+                statusCode: 2004,
+                message: "fcmToken이 존재하지 않습니다.",
+                result: { fcmTokens: {} },
+            });
+        }
         const fcmTokens = users.reduce((result, user) => {
             result[user.userIdx] = user.fcmtoken;
             return result;
         }, {});
-        if (!fcmTokens)
-            throw new common_1.BadRequestException({
-                statusCode: 4001,
-                message: "fcmToken이 존재하지 않습니다.",
-                result: { fcmTokens: {} },
-            });
         return { fcmTokens };
     }
     async isUserExistsByUserIdx(userIdx) {
         const user = await this.userRepository.findOne({ where: { userIdx } });
         if (!user)
             throw new common_1.NotFoundException({
-                statusCode: 4002,
+                statusCode: 2000,
                 message: "존재하지 않는 유저입니다.",
                 result: { fcmTokens: "" },
             });

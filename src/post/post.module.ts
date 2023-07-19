@@ -8,10 +8,19 @@ import { AwsService } from "src/aop/utils/aws.service";
 import { User } from "../../resource/db/entities/User";
 import { Comment } from "../../resource/db/entities/Comment";
 import { LikePost } from "../../resource/db/entities/LikePost";
+import { PostImpl } from "./interface/post.implement";
+import { CustomPostCommandRepository } from "./repository/post-command.repository";
+import { CustomPostQueryRepository } from "./repository/post-query.repository";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, Image, User, Comment, LikePost])],
   controllers: [PostController],
-  providers: [PostService, AwsService],
+  providers: [
+    PostService,
+    AwsService,
+    PostImpl,
+    CustomPostCommandRepository,
+    CustomPostQueryRepository,
+  ],
 })
 export class PostModule {}

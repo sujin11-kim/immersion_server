@@ -22,8 +22,9 @@ const aws_service_1 = require("../../aop/utils/aws.service");
 const User_1 = require("../../../resource/db/entities/User");
 const Comment_1 = require("../../../resource/db/entities/Comment");
 const LikePost_1 = require("../../../resource/db/entities/LikePost");
+const post_implement_1 = require("../interface/post.implement");
 let PostService = class PostService {
-    constructor(postRepository, imageRepository, userRepository, likePostRepository, commentRepository, awsService, dataSource) {
+    constructor(postRepository, imageRepository, userRepository, likePostRepository, commentRepository, awsService, dataSource, postInterface) {
         this.postRepository = postRepository;
         this.imageRepository = imageRepository;
         this.userRepository = userRepository;
@@ -31,74 +32,13 @@ let PostService = class PostService {
         this.commentRepository = commentRepository;
         this.awsService = awsService;
         this.dataSource = dataSource;
+        this.postInterface = postInterface;
     }
-    async createPost(user, category, title, content, files) {
-        const queryRunner = this.postRepository.manager.connection.createQueryRunner();
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
-        try {
-            const loginUser = await this.userRepository.findOne({
-                where: { userIdx: user.userIdx },
-            });
-            const post = new Post_1.Post();
-            post.userIdx = user.userIdx;
-            post.category = category;
-            post.title = title;
-            post.content = this.validateContent(content);
-            const savedPost = await queryRunner.manager.save(post);
-            const pathArray = [];
-            const imagePromise = files.map(async (file) => {
-                const s3Object = await this.awsService.uploadFileToS3("post", file);
-                const image = new Image_1.Image();
-                image.postIdx = savedPost.postIdx;
-                image.path = this.awsService.getAwsS3FileUrl(s3Object.key);
-                pathArray.push(image.path);
-                image.imageName = file.originalname;
-                image.size = file.size;
-                image.Type = file.mimetype;
-                image.imageKey = s3Object.key;
-                return queryRunner.manager.save(image);
-            });
-            await Promise.all(imagePromise);
-            await queryRunner.commitTransaction();
-            return Object.assign(Object.assign({}, savedPost), { nickName: loginUser.nickName, imagePath: pathArray, commentList: [] });
-        }
-        catch (err) {
-            await queryRunner.rollbackTransaction();
-            throw err;
-        }
-        finally {
-            await queryRunner.release();
-        }
+    async createPost(user, postInfo) {
+        return await this.postInterface.createPost(user, postInfo);
     }
     async findAll(page, pageSize) {
-        if (page <= 0 || pageSize <= 0) {
-            throw new common_1.HttpException({ message: "Page and pageSize must be greater than 0." }, 201);
-        }
-        const manager = this.dataSource.manager;
-        const offset = (page - 1) * pageSize;
-        const posts = await manager.find(Post_1.Post, {
-            skip: offset,
-            take: pageSize,
-        });
-        const result = await Promise.all(posts.map(async (post) => {
-            const user = await manager.findOne(User_1.User, {
-                where: { userIdx: post.userIdx },
-            });
-            const nickName = user ? user.nickName : "";
-            const images = await manager.find(Image_1.Image, {
-                where: { postIdx: post.postIdx },
-            });
-            const imagePath = images.map((image) => image.path);
-            const comments = await manager.find(Comment_1.Comment, {
-                where: { postIdx: post.postIdx },
-            });
-            const commentList = comments.map((comment) => comment);
-            return Object.assign(Object.assign({}, post), { nickName,
-                imagePath,
-                commentList });
-        }));
-        return result;
+        return await this.postInterface.findAll(page, pageSize);
     }
     async findIdPost(userIdx) {
         const posts = await this.postRepository.find({
@@ -221,16 +161,6 @@ let PostService = class PostService {
             await queryRunner.release();
         }
     }
-    validateContent(content) {
-        const maxContentLength = 5;
-        const contentWithoutEmojis = content.replace(/[\u{1F600}-\u{1F6FF}]/gu, "");
-        const contentWithoutSpecialChars = contentWithoutEmojis.replace(/[^\w\s]/gi, "");
-        const contentWithoutSpecialCharsAndSpaces = contentWithoutSpecialChars.replace(/\s/g, "");
-        if (contentWithoutSpecialCharsAndSpaces.length > maxContentLength) {
-            throw new common_1.HttpException({ message: "Content length exceeds the maximum allowed limit." }, 201);
-        }
-        return contentWithoutSpecialChars;
-    }
 };
 PostService = __decorate([
     (0, common_1.Injectable)(),
@@ -245,7 +175,8 @@ PostService = __decorate([
         typeorm_2.Repository,
         typeorm_2.Repository,
         aws_service_1.AwsService,
-        typeorm_2.DataSource])
+        typeorm_2.DataSource,
+        post_implement_1.PostImpl])
 ], PostService);
 exports.PostService = PostService;
 //# sourceMappingURL=post.service.js.map
