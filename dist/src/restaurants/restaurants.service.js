@@ -57,6 +57,12 @@ let RestaurantsService = class RestaurantsService {
     async getrestaurantlist(userIdx) {
         const user = await this.userRepository.findOne({ where: { userIdx } });
         const restaurants = await this.restaurantRepository.find();
+        if (!user) {
+            throw new common_1.BadRequestException({
+                statusCode: 2100,
+                message: "존재하지 않는 사용자 입니다.",
+            });
+        }
         const nearbyRestaurantIdxs = [];
         for (const restaurant of restaurants) {
             const distance = calculateDistance(user.latitude, user.longitude, restaurant.latitude, restaurant.longitude);

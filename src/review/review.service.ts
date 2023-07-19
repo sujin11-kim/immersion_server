@@ -1,5 +1,9 @@
 import { InjectRepository } from "@nestjs/typeorm";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { Review } from "../../resource/db/entities/Review";
 import { DataSource, Repository } from "typeorm";
 import { CreateReviewDto } from "./dto/create-review.dto";
@@ -70,6 +74,13 @@ export class ReviewService {
       const review = await queryRunner.manager
         .getRepository(Review)
         .findOne({ where: { reviewIdx } });
+
+      if (!review) {
+        throw new BadRequestException({
+          statusCode: 2100,
+          message: "존재하지 않는 리뷰 입니다.",
+        });
+      }
 
       const { content, score } = updateReviewDto;
 
