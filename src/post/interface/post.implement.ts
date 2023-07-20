@@ -32,6 +32,20 @@ export class PostImpl implements PostInterface {
     return await this.customPostCommandRrepository.savePost(postInfo, user);
   }
 
+  // 2-2 로그인한 user의 게시물 조회
+  async findIdPost(userIdx: number): Promise<readonlyPostDto[]> {
+    const posts = await this.customPostQueryRrepository.findPostsById(userIdx);
+    return await this.customPostQueryRrepository.getPostWithImageComment(posts);
+  }
+
+  // 2-3 카테고리로 게시물 조회
+  async findCategoryPost(category: string): Promise<readonlyPostDto[]> {
+    const posts = await this.customPostQueryRrepository.findPostsByCategory(
+      category
+    );
+    return await this.customPostQueryRrepository.getPostWithImageComment(posts);
+  }
+
   // 2-4 게시물 전체 조회
   async findAll(page: number, pageSize: number): Promise<readonlyPostDto[]> {
     // 조회하려는 게시물 수가 전체 개시물 수 초과하는지 확인
@@ -39,18 +53,55 @@ export class PostImpl implements PostInterface {
       page,
       pageSize
     );
-    console.log("1");
     // offset부터 pageSize 만큼 게시물 조회
     const offset = (page - 1) * pageSize;
     const posts = await this.customPostQueryRrepository.findPosts(
       offset,
       pageSize
     );
-    console.log("2");
     // 게시물에 해당하는 이미지, 댓글 가져오기
     const postWithImageComment =
       await this.customPostQueryRrepository.getPostWithImageComment(posts);
-    console.log("3");
+
     return postWithImageComment;
+  }
+
+  // 2-5 게시물 좋아요
+  async postLike(
+    user: UserLoginDto,
+    postIdx: number
+  ): Promise<readonlyPostDto> {
+    const post = await this.customPostQueryRrepository.findPostByPostIdx(
+      postIdx
+    );
+    const editpost = await this.customPostCommandRrepository.increaseLikeNum(
+      post,
+      user
+    );
+    const result =
+      await this.customPostQueryRrepository.getPostWithImageComment([editpost]);
+
+    return result[0];
+  }
+
+  //2-6 게시물 좋아요 취소
+  async postLikeCancel(
+    user: UserLoginDto,
+    postIdx: number
+  ): Promise<readonlyPostDto> {
+    const post = await this.customPostQueryRrepository.findPostByPostIdx(
+      postIdx
+    );
+    await this.customPostQueryRrepository.checkUserLikedPost(
+      post,
+      user.userIdx
+    );
+    const editpost = await this.customPostCommandRrepository.decreaseLikeNum(
+      post,
+      user
+    );
+    const result =
+      await this.customPostQueryRrepository.getPostWithImageComment([editpost]);
+    return result[0];
   }
 }

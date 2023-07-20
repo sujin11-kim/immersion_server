@@ -1,16 +1,23 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { CommentController } from "./comment.controller";
-import { CommentService } from "./comment.service";
+import { CommentController } from "./controller/comment.controller";
+import { CommentService } from "./service/comment.service";
 import { Comment } from "resource/db/entities/Comment";
-import { UsersModule } from "src/users/users.module";
 import { User } from "resource/db/entities/User";
 import { Post } from "resource/db/entities/Post";
 import { LikeComment } from "resource/db/entities/LikeComment";
+import { CustomCommentCommandRepository } from "./repository/comment-command.repository";
+import { CustomCommentQueryRepository } from "./repository/comment-query.repository";
+import { CommentImpl } from "./interface/comment.implement";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Comment, User, Post, LikeComment])],
   controllers: [CommentController],
-  providers: [CommentService],
+  providers: [
+    CommentService,
+    CustomCommentCommandRepository,
+    CustomCommentQueryRepository,
+    CommentImpl,
+  ],
 })
 export class CommentModule {}

@@ -34,7 +34,6 @@ let PostController = class PostController {
         return this.postService.findIdPost(user.userIdx);
     }
     findCategoryPost(category) {
-        console.log(category);
         return this.postService.findCategoryPost(category);
     }
     findAll(page, pageSize) {
@@ -70,7 +69,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "카테고리로 게시물 조회" }),
     (0, common_1.Get)("/get/category"),
-    __param(0, (0, common_1.Query)("category")),
+    __param(0, (0, common_1.Body)("category")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
@@ -88,7 +87,7 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: "게시물 좋아요" }),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Post)("/like"),
-    __param(0, (0, common_1.Body)("postIdx")),
+    __param(0, (0, common_1.Body)("postIdx", common_1.ParseIntPipe, positiveInt_pipe_1.PositiveIntPipe)),
     __param(1, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, user_login_dto_1.UserLoginDto]),

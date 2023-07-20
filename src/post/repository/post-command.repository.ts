@@ -7,6 +7,7 @@ import { Image } from "resource/db/entities/Image";
 import { CreatePostDto } from "../dto/create-post.dto";
 import { UserLoginDto } from "src/users/dto/user-login.dto";
 import { readonlyPostDto } from "../dto/readonly-post.dto";
+import { LikePost } from "resource/db/entities/LikePost";
 
 @Injectable()
 export class CustomPostCommandRepository {
@@ -37,7 +38,7 @@ export class CustomPostCommandRepository {
       post.title = postInfo.title;
       post.content = postInfo.content;
 
-      // 공백 제거 후 글자수 제한 -> pipe로 수정
+      // 공백 제거 후 글자수 제한
       const maxContentLength = 1000;
       const contentWithoutSpace = post.content.replace(/\s/g, "");
       if (contentWithoutSpace.length > maxContentLength) {
@@ -71,6 +72,59 @@ export class CustomPostCommandRepository {
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw err;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  // 좋아요 수 증가 & 좋아요 테이블에 추가
+  async increaseLikeNum(editPost: Post, user: UserLoginDto): Promise<Post> {
+    const queryRunner =
+      this.postRepository.manager.connection.createQueryRunner();
+    await queryRunner.connect();
+
+    try {
+      await queryRunner.startTransaction();
+
+      editPost.likeNum += 1;
+      const likeEditPost = await queryRunner.manager.save(editPost);
+
+      const likePost = queryRunner.manager.getRepository(LikePost).create();
+      likePost.postIdx = editPost.postIdx;
+      likePost.userIdx = user.userIdx;
+      await queryRunner.manager.getRepository(LikePost).save(likePost);
+
+      await queryRunner.commitTransaction();
+      return likeEditPost;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  // 좋아요 수 감소 & 좋아요 테이블에서 제거
+  async decreaseLikeNum(editPost: Post, user: UserLoginDto): Promise<Post> {
+    const queryRunner =
+      this.postRepository.manager.connection.createQueryRunner();
+    await queryRunner.connect();
+
+    try {
+      await queryRunner.startTransaction();
+
+      editPost.likeNum -= 1;
+      const likeEditPost = await queryRunner.manager.save(editPost);
+
+      await queryRunner.manager
+        .getRepository(LikePost)
+        .delete({ userIdx: user.userIdx });
+
+      await queryRunner.commitTransaction();
+      return likeEditPost;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
     } finally {
       await queryRunner.release();
     }

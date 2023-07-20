@@ -14,33 +14,24 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommentController = void 0;
 const common_1 = require("@nestjs/common");
-const comment_service_1 = require("./comment.service");
-const create_comment_dto_1 = require("./dto/create-comment.dto");
+const comment_service_1 = require("../service/comment.service");
+const create_comment_dto_1 = require("../dto/create-comment.dto");
 const swagger_1 = require("@nestjs/swagger");
-const jwt_guard_1 = require("../auth/jwt/jwt.guard");
-const success_interceptor_1 = require("../../src/aop/interceptors/success.interceptor");
-const http_exception_filter_1 = require("../../src/aop/exception/http-exception.filter");
-const user_decorator_1 = require("../../src/aop/decorators/user.decorator");
-const user_login_dto_1 = require("../users/dto/user-login.dto");
-const like_comment_dto_1 = require("./dto/like-comment.dto");
+const jwt_guard_1 = require("../../auth/jwt/jwt.guard");
+const success_interceptor_1 = require("../../../src/aop/interceptors/success.interceptor");
+const http_exception_filter_1 = require("../../../src/aop/exception/http-exception.filter");
+const user_decorator_1 = require("../../../src/aop/decorators/user.decorator");
+const user_login_dto_1 = require("../../users/dto/user-login.dto");
+const like_comment_dto_1 = require("../dto/like-comment.dto");
 let CommentController = class CommentController {
     constructor(commentService) {
         this.commentService = commentService;
     }
-    findAllComment(postIdx) {
-        console.log(postIdx);
-        return this.commentService.findAllComment(postIdx);
-    }
     createComment(createCommentDto, user) {
-        const { postIdx, parentCommentIdx, depth, commentContent } = createCommentDto;
-        return this.commentService.createComment(postIdx, user.userIdx, parentCommentIdx, depth, commentContent);
+        return this.commentService.createComment(user.userIdx, createCommentDto);
     }
-    modifyComment(createCommentDto) {
-        const { postIdx, commentContent } = createCommentDto;
-        return this.commentService.modifyComment(postIdx, commentContent);
-    }
-    removeComment(commentIdx) {
-        return this.commentService.removeComment(commentIdx);
+    findAllComment(postIdx) {
+        return this.commentService.findAllComment(postIdx);
     }
     commentLike(Idx) {
         const { userIdx, postIdx, commentIdx } = Idx;
@@ -52,13 +43,6 @@ let CommentController = class CommentController {
     }
 };
 __decorate([
-    (0, common_1.Get)("/get/:postIdx"),
-    __param(0, (0, common_1.Param)("postIdx")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
-], CommentController.prototype, "findAllComment", null);
-__decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Post)("/create"),
     __param(0, (0, common_1.Body)()),
@@ -69,19 +53,12 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], CommentController.prototype, "createComment", null);
 __decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Get)("/get/:postIdx"),
+    __param(0, (0, common_1.Param)("postIdx")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_comment_dto_1.CreateCommentDto]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
-], CommentController.prototype, "modifyComment", null);
-__decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], CommentController.prototype, "removeComment", null);
+], CommentController.prototype, "findAllComment", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "게시물 좋아요" }),
     (0, common_1.Post)("/likeComment"),

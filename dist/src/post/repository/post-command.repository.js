@@ -19,6 +19,7 @@ const Post_1 = require("../../../resource/db/entities/Post");
 const typeorm_2 = require("typeorm");
 const User_1 = require("../../../resource/db/entities/User");
 const Image_1 = require("../../../resource/db/entities/Image");
+const LikePost_1 = require("../../../resource/db/entities/LikePost");
 let CustomPostCommandRepository = class CustomPostCommandRepository {
     constructor(postRepository, userRepository, imageRepository) {
         this.postRepository = postRepository;
@@ -60,6 +61,49 @@ let CustomPostCommandRepository = class CustomPostCommandRepository {
         catch (err) {
             await queryRunner.rollbackTransaction();
             throw err;
+        }
+        finally {
+            await queryRunner.release();
+        }
+    }
+    async increaseLikeNum(editPost, user) {
+        const queryRunner = this.postRepository.manager.connection.createQueryRunner();
+        await queryRunner.connect();
+        try {
+            await queryRunner.startTransaction();
+            editPost.likeNum += 1;
+            const likeEditPost = await queryRunner.manager.save(editPost);
+            const likePost = queryRunner.manager.getRepository(LikePost_1.LikePost).create();
+            likePost.postIdx = editPost.postIdx;
+            likePost.userIdx = user.userIdx;
+            await queryRunner.manager.getRepository(LikePost_1.LikePost).save(likePost);
+            await queryRunner.commitTransaction();
+            return likeEditPost;
+        }
+        catch (error) {
+            await queryRunner.rollbackTransaction();
+            throw error;
+        }
+        finally {
+            await queryRunner.release();
+        }
+    }
+    async decreaseLikeNum(editPost, user) {
+        const queryRunner = this.postRepository.manager.connection.createQueryRunner();
+        await queryRunner.connect();
+        try {
+            await queryRunner.startTransaction();
+            editPost.likeNum -= 1;
+            const likeEditPost = await queryRunner.manager.save(editPost);
+            await queryRunner.manager
+                .getRepository(LikePost_1.LikePost)
+                .delete({ userIdx: user.userIdx });
+            await queryRunner.commitTransaction();
+            return likeEditPost;
+        }
+        catch (error) {
+            await queryRunner.rollbackTransaction();
+            throw error;
         }
         finally {
             await queryRunner.release();

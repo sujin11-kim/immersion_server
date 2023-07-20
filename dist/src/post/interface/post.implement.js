@@ -31,15 +31,33 @@ let PostImpl = class PostImpl {
         postInfo.content = postInfo.content.replace(/[\u{1F600}-\u{1F6FF}]/gu, "");
         return await this.customPostCommandRrepository.savePost(postInfo, user);
     }
+    async findIdPost(userIdx) {
+        const posts = await this.customPostQueryRrepository.findPostsById(userIdx);
+        return await this.customPostQueryRrepository.getPostWithImageComment(posts);
+    }
+    async findCategoryPost(category) {
+        const posts = await this.customPostQueryRrepository.findPostsByCategory(category);
+        return await this.customPostQueryRrepository.getPostWithImageComment(posts);
+    }
     async findAll(page, pageSize) {
         await this.customPostQueryRrepository.checkTotalPostCountExceeded(page, pageSize);
-        console.log("1");
         const offset = (page - 1) * pageSize;
         const posts = await this.customPostQueryRrepository.findPosts(offset, pageSize);
-        console.log("2");
         const postWithImageComment = await this.customPostQueryRrepository.getPostWithImageComment(posts);
-        console.log("3");
         return postWithImageComment;
+    }
+    async postLike(user, postIdx) {
+        const post = await this.customPostQueryRrepository.findPostByPostIdx(postIdx);
+        const editpost = await this.customPostCommandRrepository.increaseLikeNum(post, user);
+        const result = await this.customPostQueryRrepository.getPostWithImageComment([editpost]);
+        return result[0];
+    }
+    async postLikeCancel(user, postIdx) {
+        const post = await this.customPostQueryRrepository.findPostByPostIdx(postIdx);
+        await this.customPostQueryRrepository.checkUserLikedPost(post, user.userIdx);
+        const editpost = await this.customPostCommandRrepository.decreaseLikeNum(post, user);
+        const result = await this.customPostQueryRrepository.getPostWithImageComment([editpost]);
+        return result[0];
     }
 };
 PostImpl = __decorate([

@@ -16,63 +16,22 @@ exports.CommentService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const Comment_1 = require("../../resource/db/entities/Comment");
-const User_1 = require("../../resource/db/entities/User");
-const Post_1 = require("../../resource/db/entities/Post");
-const LikeComment_1 = require("../../resource/db/entities/LikeComment");
+const Comment_1 = require("../../../resource/db/entities/Comment");
+const User_1 = require("../../../resource/db/entities/User");
+const LikeComment_1 = require("../../../resource/db/entities/LikeComment");
+const comment_implement_1 = require("../interface/comment.implement");
 let CommentService = class CommentService {
-    constructor(commentRepository, userRepository, postRepository, likeCommentRepository, dataSource) {
+    constructor(commentRepository, dataSource, commentImpl) {
         this.commentRepository = commentRepository;
-        this.userRepository = userRepository;
-        this.postRepository = postRepository;
-        this.likeCommentRepository = likeCommentRepository;
         this.dataSource = dataSource;
+        this.commentImpl = commentImpl;
+    }
+    async createComment(userIdx, createCommentDto) {
+        return await this.commentImpl.createComment(userIdx, createCommentDto);
     }
     async findAllComment(postIdx) {
-        const queryRunner = this.dataSource.createQueryRunner();
-        try {
-            await queryRunner.connect();
-            return await this.commentRepository.find({ where: { postIdx } });
-        }
-        finally {
-            await queryRunner.release();
-        }
+        return await this.commentImpl.findAllComment(postIdx);
     }
-    async createComment(PostIdx, CommentWriterIdx, parentCommentIdx, depth, commentContent) {
-        const queryRunner = this.dataSource.createQueryRunner();
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
-        try {
-            const post = await this.postRepository.findOne({
-                where: { postIdx: PostIdx },
-            });
-            if (!post) {
-                throw new common_1.HttpException({ message: "존재하지 않는 게시물 입니다." }, 201);
-            }
-            const user = await this.userRepository.findOne({
-                where: { userIdx: CommentWriterIdx },
-            });
-            const nickName = user.nickName;
-            const comment = new Comment_1.Comment();
-            comment.postIdx = PostIdx;
-            comment.parentCommentIdx = parentCommentIdx;
-            comment.userIdx = CommentWriterIdx;
-            comment.commentContent = commentContent;
-            comment.depth = depth;
-            const savedComment = await queryRunner.manager.save(comment);
-            await queryRunner.commitTransaction();
-            return Object.assign(Object.assign({}, savedComment), { nickName: user.nickName });
-        }
-        catch (err) {
-            await queryRunner.rollbackTransaction();
-            throw err;
-        }
-        finally {
-            await queryRunner.release();
-        }
-    }
-    async modifyComment(PostIdx, commentContent) { }
-    async removeComment(commentIdx) { }
     async commentLike(userIdx, postIdx, commentIdx) {
         const queryRunner = this.commentRepository.manager.connection.createQueryRunner();
         await queryRunner.connect();
@@ -125,13 +84,9 @@ CommentService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(Comment_1.Comment)),
     __param(1, (0, typeorm_1.InjectRepository)(User_1.User)),
-    __param(2, (0, typeorm_1.InjectRepository)(Post_1.Post)),
-    __param(3, (0, typeorm_1.InjectRepository)(LikeComment_1.LikeComment)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository,
-        typeorm_2.Repository,
-        typeorm_2.Repository,
-        typeorm_2.DataSource])
+        typeorm_2.DataSource,
+        comment_implement_1.CommentImpl])
 ], CommentService);
 exports.CommentService = CommentService;
 //# sourceMappingURL=comment.service.js.map

@@ -48,8 +48,7 @@ export class PostController {
   // 2-3
   @ApiOperation({ summary: "카테고리로 게시물 조회" })
   @Get("/get/category")
-  findCategoryPost(@Query("category") category: string) {
-    console.log(category);
+  findCategoryPost(@Body("category") category: string) {
     return this.postService.findCategoryPost(category);
   }
 
@@ -68,7 +67,7 @@ export class PostController {
   @UseGuards(JwtAuthGuard)
   @Post("/like")
   postLike(
-    @Body("postIdx") postIdx: number,
+    @Body("postIdx", ParseIntPipe, PositiveIntPipe) postIdx: number,
     @CurrentUser() user: UserLoginDto
   ) {
     return this.postService.postLike(user, postIdx);

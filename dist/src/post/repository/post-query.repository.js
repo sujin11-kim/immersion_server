@@ -20,20 +20,46 @@ const typeorm_2 = require("typeorm");
 const User_1 = require("../../../resource/db/entities/User");
 const Image_1 = require("../../../resource/db/entities/Image");
 const Comment_1 = require("../../../resource/db/entities/Comment");
+const LikePost_1 = require("../../../resource/db/entities/LikePost");
 let CustomPostQueryRepository = class CustomPostQueryRepository {
-    constructor(postRepository, userRepository, imageRepository, commentRepository) {
+    constructor(postRepository, userRepository, imageRepository, commentRepository, likePostRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.imageRepository = imageRepository;
         this.commentRepository = commentRepository;
+        this.likePostRepository = likePostRepository;
+    }
+    async findPostsById(userIdx) {
+        const posts = await this.postRepository.find({
+            where: { userIdx },
+        });
+        if (posts.length === 0) {
+            throw new common_1.BadRequestException({
+                statusCode: 2102,
+                message: "해당 유저의 게시물이 존재하지 않습니다.",
+                result: [],
+            });
+        }
+        return posts;
+    }
+    async findPostsByCategory(category) {
+        const posts = await this.postRepository.find({
+            where: { category },
+        });
+        if (posts.length === 0) {
+            throw new common_1.BadRequestException({
+                statusCode: 2103,
+                message: "해당 카테고리의 게시물이 존재하지 않습니다.",
+                result: [],
+            });
+        }
+        return posts;
     }
     async checkTotalPostCountExceeded(page, pageSize) {
         const totalPosts = await this.postRepository.count();
-        console.log(page, pageSize, totalPosts);
         if (page + pageSize - 1 > 0) {
-            console.log("초과");
             throw new common_1.BadRequestException({
-                statusCode: 2102,
+                statusCode: 2103,
                 message: `전체 게시물 수 ${totalPosts}개를 초과하여 조회할 수 없습니다.`,
                 result: {},
             });
@@ -44,7 +70,6 @@ let CustomPostQueryRepository = class CustomPostQueryRepository {
             skip: offset,
             take: pageSize,
         });
-        console.log(posts);
         return posts;
     }
     async getPostWithImageComment(posts) {
@@ -52,13 +77,6 @@ let CustomPostQueryRepository = class CustomPostQueryRepository {
             const user = await this.userRepository.findOne({
                 where: { userIdx: post.userIdx },
             });
-            if (!user) {
-                throw new common_1.BadRequestException({
-                    statusCode: 2103,
-                    message: `postIdx : ${post.postIdx}의 유저가 존재하지 않습니다.`,
-                    result: {},
-                });
-            }
             const nickName = user ? user.nickName : "";
             const images = await this.imageRepository.find({
                 where: { postIdx: post.postIdx },
@@ -74,6 +92,31 @@ let CustomPostQueryRepository = class CustomPostQueryRepository {
         }));
         return result;
     }
+    async findPostByPostIdx(postIdx) {
+        const post = await this.postRepository.findOne({
+            where: { postIdx },
+        });
+        if (!post) {
+            throw new common_1.BadRequestException({
+                statusCode: 2104,
+                message: `postIdx:${postIdx} 에 해당하는 게시물이 없습니다.`,
+                result: {},
+            });
+        }
+        return post;
+    }
+    async checkUserLikedPost(post, userIdx) {
+        const likeCount = await this.likePostRepository.count({
+            where: { postIdx: post.postIdx, userIdx: userIdx },
+        });
+        if (likeCount === 0) {
+            throw new common_1.BadRequestException({
+                statusCode: 2105,
+                message: "해당 게시물에 좋아요를 누르지 않은 유저입니다.",
+                result: {},
+            });
+        }
+    }
 };
 CustomPostQueryRepository = __decorate([
     (0, common_1.Injectable)(),
@@ -81,7 +124,9 @@ CustomPostQueryRepository = __decorate([
     __param(1, (0, typeorm_1.InjectRepository)(User_1.User)),
     __param(2, (0, typeorm_1.InjectRepository)(Image_1.Image)),
     __param(3, (0, typeorm_1.InjectRepository)(Comment_1.Comment)),
+    __param(4, (0, typeorm_1.InjectRepository)(LikePost_1.LikePost)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository])

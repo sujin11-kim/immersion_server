@@ -11,4 +11,6 @@ export declare class CustomPostCommandRepository {
     private readonly imageRepository;
     constructor(postRepository: Repository<Post>, userRepository: Repository<User>, imageRepository: Repository<Image>);
     savePost(postInfo: CreatePostDto, user: UserLoginDto): Promise<readonlyPostDto>;
+    increaseLikeNum(editPost: Post, user: UserLoginDto): Promise<Post>;
+    decreaseLikeNum(editPost: Post, user: UserLoginDto): Promise<Post>;
 }
