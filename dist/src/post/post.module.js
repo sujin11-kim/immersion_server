@@ -17,13 +17,22 @@ const aws_service_1 = require("../aop/utils/aws.service");
 const User_1 = require("../../resource/db/entities/User");
 const Comment_1 = require("../../resource/db/entities/Comment");
 const LikePost_1 = require("../../resource/db/entities/LikePost");
+const post_implement_1 = require("./interface/post.implement");
+const post_command_repository_1 = require("./repository/post-command.repository");
+const post_query_repository_1 = require("./repository/post-query.repository");
 let PostModule = class PostModule {
 };
 PostModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([Post_1.Post, Image_1.Image, User_1.User, Comment_1.Comment, LikePost_1.LikePost])],
         controllers: [post_controller_1.PostController],
-        providers: [post_service_1.PostService, aws_service_1.AwsService],
+        providers: [
+            post_service_1.PostService,
+            aws_service_1.AwsService,
+            post_implement_1.PostImpl,
+            post_command_repository_1.CustomPostCommandRepository,
+            post_query_repository_1.CustomPostQueryRepository,
+        ],
     })
 ], PostModule);
 exports.PostModule = PostModule;

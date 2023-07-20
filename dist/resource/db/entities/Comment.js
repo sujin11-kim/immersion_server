@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const Post_1 = require("./Post");
 const moment = require("moment");
 const LikeComment_1 = require("./LikeComment");
+const User_1 = require("./User");
 let Comment = class Comment {
 };
 __decorate([
@@ -75,6 +76,11 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => LikeComment_1.LikeComment, (likeComment) => likeComment.commentIdx2),
     __metadata("design:type", Array)
 ], Comment.prototype, "likeComments", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => User_1.User),
+    (0, typeorm_1.JoinColumn)({ name: "userIdx" }),
+    __metadata("design:type", User_1.User)
+], Comment.prototype, "user", void 0);
 Comment = __decorate([
     (0, typeorm_1.Index)("Comment_commentIdx_uindex", ["commentIdx"], { unique: true }),
     (0, typeorm_1.Index)("FK_Post_TO_Comment_1", ["postIdx"], {}),

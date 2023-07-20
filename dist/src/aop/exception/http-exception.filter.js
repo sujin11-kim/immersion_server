@@ -21,11 +21,15 @@ let HttpExceptionFilter = class HttpExceptionFilter {
         if (typeof errorResponse === "object") {
             if (errorResponse.statusCode)
                 code = errorResponse.statusCode;
-            if (errorResponse.message)
+            if (Array.isArray(errorResponse.message)) {
+                message = errorResponse.message[0];
+            }
+            if (typeof errorResponse.message === "string")
                 message = errorResponse.message;
             if (errorResponse.result)
                 result = errorResponse.result;
-            if (errorResponse.message[0].includes("itude")) {
+            if (errorResponse.fmessage &&
+                errorResponse.fmessage[0].includes("itude")) {
                 code = 2200;
             }
             if (errorResponse.statusCode == 404) {

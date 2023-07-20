@@ -1,5 +1,6 @@
 import { Post } from "./Post";
 import { LikeComment } from "./LikeComment";
+import { User } from "./User";
 export declare class Comment {
     commentIdx: number;
     postIdx: number;
@@ -12,4 +13,5 @@ export declare class Comment {
     likeNum: number | null;
     postIdx2: Post;
     likeComments: LikeComment[];
+    user: User;
 }

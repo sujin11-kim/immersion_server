@@ -8,15 +8,15 @@ import {
   UseInterceptors,
   UseFilters,
 } from "@nestjs/common";
-import { CommentService } from "./comment.service";
-import { CreateCommentDto } from "./dto/create-comment.dto";
+import { CommentService } from "../service/comment.service";
+import { CreateCommentDto } from "../dto/create-comment.dto";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
-import { SuccessInterceptor } from "../../src/aop/interceptors/success.interceptor";
-import { HttpExceptionFilter } from "../../src/aop/exception/http-exception.filter";
-import { CurrentUser } from "../../src/aop/decorators/user.decorator";
+import { SuccessInterceptor } from "../../../src/aop/interceptors/success.interceptor";
+import { HttpExceptionFilter } from "../../../src/aop/exception/http-exception.filter";
+import { CurrentUser } from "../../../src/aop/decorators/user.decorator";
 import { UserLoginDto } from "src/users/dto/user-login.dto";
-import { LikeCommentDto } from "./dto/like-comment.dto";
+import { LikeCommentDto } from "../dto/like-comment.dto";
 
 @UseInterceptors(SuccessInterceptor)
 @UseFilters(HttpExceptionFilter)
@@ -25,38 +25,20 @@ import { LikeCommentDto } from "./dto/like-comment.dto";
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Get("/get/:postIdx")
-  findAllComment(@Param("postIdx") postIdx: number) {
-    console.log(postIdx);
-    return this.commentService.findAllComment(postIdx);
-  }
-
+  // 3-1 댓글 생성
   @UseGuards(JwtAuthGuard)
   @Post("/create")
   createComment(
     @Body() createCommentDto: CreateCommentDto,
     @CurrentUser() user: UserLoginDto
   ) {
-    const { postIdx, parentCommentIdx, depth, commentContent } =
-      createCommentDto;
-    return this.commentService.createComment(
-      postIdx,
-      user.userIdx,
-      parentCommentIdx,
-      depth,
-      commentContent
-    );
+    return this.commentService.createComment(user.userIdx, createCommentDto);
   }
 
-  @Post()
-  modifyComment(@Body() createCommentDto: CreateCommentDto) {
-    const { postIdx, commentContent } = createCommentDto;
-    return this.commentService.modifyComment(postIdx, commentContent);
-  }
-
-  @Post()
-  removeComment(@Body() commentIdx: string) {
-    return this.commentService.removeComment(commentIdx);
+  // 3-2 게시물 id로 댓글 조회
+  @Get("/get/:postIdx")
+  findAllComment(@Param("postIdx") postIdx: number) {
+    return this.commentService.findAllComment(postIdx);
   }
 
   @ApiOperation({ summary: "게시물 좋아요" })

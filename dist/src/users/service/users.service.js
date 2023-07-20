@@ -8,30 +8,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
-const typeorm_1 = require("@nestjs/typeorm");
-const typeorm_2 = require("typeorm");
-const User_1 = require("../../../resource/db/entities/User");
 const user_implement_1 = require("../interface/user.implement");
 let UsersService = class UsersService {
-    constructor(userRepository, dataSource, userInterface) {
-        this.userRepository = userRepository;
-        this.dataSource = dataSource;
-        this.userInterface = userInterface;
+    constructor(userImpl) {
+        this.userImpl = userImpl;
     }
     async create(userInfo) {
-        return await this.userInterface.createUser(userInfo);
+        return await this.userImpl.createUser(userInfo);
     }
     async getAllFCM() {
-        return await this.userInterface.getAllFCM();
+        return await this.userImpl.getAllFCM();
     }
     async getFcmByUserIdx(userIdx) {
-        return await this.userInterface.getFCMByUserIdx(userIdx);
+        return await this.userImpl.getFCMByUserIdx(userIdx);
     }
     async login(_id, _password) {
         throw new Error("Method not implemented");
@@ -39,10 +31,7 @@ let UsersService = class UsersService {
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.DataSource,
-        user_implement_1.UserImpl])
+    __metadata("design:paramtypes", [user_implement_1.UserImpl])
 ], UsersService);
 exports.UsersService = UsersService;
 //# sourceMappingURL=users.service.js.map

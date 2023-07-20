@@ -25,6 +25,7 @@ const use_interceptors_decorator_1 = require("@nestjs/common/decorators/core/use
 const success_interceptor_1 = require("../../aop/interceptors/success.interceptor");
 const exception_filters_decorator_1 = require("@nestjs/common/decorators/core/exception-filters.decorator");
 const http_exception_filter_1 = require("../../aop/exception/http-exception.filter");
+const positiveInt_pipe_1 = require("../../aop/pipes/positiveInt.pipe");
 let UsersController = class UsersController {
     constructor(usersService, authService) {
         this.usersService = usersService;
@@ -83,7 +84,7 @@ __decorate([
     (0, use_interceptors_decorator_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
     (0, exception_filters_decorator_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),
     (0, common_1.Get)("get/fcm/:userIdx"),
-    __param(0, (0, common_1.Param)("userIdx", common_1.ParseIntPipe)),
+    __param(0, (0, common_1.Param)("userIdx", common_1.ParseIntPipe, positiveInt_pipe_1.PositiveIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)

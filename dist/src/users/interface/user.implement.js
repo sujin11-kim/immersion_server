@@ -18,45 +18,35 @@ const typeorm_1 = require("@nestjs/typeorm");
 const bcrypt = require("bcrypt");
 const User_1 = require("../../../resource/db/entities/User");
 const typeorm_2 = require("typeorm");
-const user_repository_1 = require("../repository/user.repository");
+const user_command_repository_1 = require("../repository/user-command.repository");
+const user_query_repository_1 = require("../repository/user-query.repository");
 let UserImpl = class UserImpl {
-    constructor(customUserRepository, userEntityRepository) {
-        this.customUserRepository = customUserRepository;
+    constructor(customUserCommandRepository, customUserQueryRepository, userEntityRepository) {
+        this.customUserCommandRepository = customUserCommandRepository;
+        this.customUserQueryRepository = customUserQueryRepository;
         this.userEntityRepository = userEntityRepository;
     }
     async createUser(userInfo) {
-        const queryRunner = this.userEntityRepository.manager.connection.createQueryRunner();
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
-        try {
-            const hashedPassword = await bcrypt.hash(userInfo.password, 12);
-            await this.customUserRepository.checkDuplicate(userInfo);
-            const newUser = await this.customUserRepository.saveUser(Object.assign(Object.assign({}, userInfo), { password: hashedPassword }));
-            await queryRunner.commitTransaction();
-            return { userIdx: newUser.userIdx };
-        }
-        catch (error) {
-            await queryRunner.rollbackTransaction();
-            throw error;
-        }
-        finally {
-            await queryRunner.release();
-        }
+        const hashedPassword = await bcrypt.hash(userInfo.password, 12);
+        await this.customUserQueryRepository.checkDuplicate(userInfo);
+        const newUser = await this.customUserCommandRepository.saveUser(Object.assign(Object.assign({}, userInfo), { password: hashedPassword }));
+        return { userIdx: newUser.userIdx.toString() };
     }
     async getAllFCM() {
-        const allFcmtoken = await this.customUserRepository.findAllFcm();
+        const allFcmtoken = await this.customUserQueryRepository.findAllFcm();
         return allFcmtoken;
     }
     async getFCMByUserIdx(userIdx) {
-        await this.customUserRepository.isUserExistsByUserIdx(userIdx);
-        const fcmToken = await this.customUserRepository.getFCMByUserIdx(userIdx);
+        await this.customUserQueryRepository.isUserExistsByUserIdx(userIdx);
+        const fcmToken = await this.customUserQueryRepository.getFCMByUserIdx(userIdx);
         return { fcmToken };
     }
 };
 UserImpl = __decorate([
     (0, common_1.Injectable)(),
-    __param(1, (0, typeorm_1.InjectRepository)(User_1.User)),
-    __metadata("design:paramtypes", [user_repository_1.CustomUserRepository,
+    __param(2, (0, typeorm_1.InjectRepository)(User_1.User)),
+    __metadata("design:paramtypes", [user_command_repository_1.CustomUserCommandRepository,
+        user_query_repository_1.CustomUserQueryRepository,
         typeorm_2.Repository])
 ], UserImpl);
 exports.UserImpl = UserImpl;
