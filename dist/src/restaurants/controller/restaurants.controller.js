@@ -16,23 +16,21 @@ exports.RestaurantsController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const common_2 = require("@nestjs/common");
-const restaurants_service_1 = require("./restaurants.service");
+const restaurants_service_1 = require("../restaurants.service");
 const swagger_2 = require("@nestjs/swagger");
 const common_3 = require("@nestjs/common");
-const location_dto_1 = require("./dto/location.dto");
-const http_exception_filter_1 = require("../aop/exception/http-exception.filter");
-const success_interceptor_1 = require("../aop/interceptors/success.interceptor");
+const location_dto_1 = require("../dto/location.dto");
+const http_exception_filter_1 = require("../../aop/exception/http-exception.filter");
+const success_interceptor_1 = require("../../aop/interceptors/success.interceptor");
 let RestaurantsController = class RestaurantsController {
     constructor(restaurantsService) {
         this.restaurantsService = restaurantsService;
     }
-    createUserLocation(location) {
-        const { userIdx, latitude, longitude } = location;
-        return this.restaurantsService.createUserLocation(userIdx, latitude, longitude);
+    createUserLocation(locationdto) {
+        return this.restaurantsService.createUserLocation(locationdto);
     }
-    updateUserLocation(location) {
-        const { userIdx, latitude, longitude } = location;
-        return this.restaurantsService.updateUserLocation(userIdx, latitude, longitude);
+    updateUserLocation(locationdto) {
+        return this.restaurantsService.updateUserLocation(locationdto);
     }
     getrestaurantlist(userIdx) {
         return this.restaurantsService.getrestaurantlist(userIdx);
