@@ -1,10 +1,8 @@
 //read    find, find 관련
-
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "resource/db/entities/User";
 import { Restaurant } from "resource/db/entities/Restaurant";
-
 import { In, Repository } from "typeorm";
 import { calculateDistance } from "../utill/calculateDistance";
 @Injectable()

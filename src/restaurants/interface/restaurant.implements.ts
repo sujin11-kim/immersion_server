@@ -9,29 +9,39 @@ import { CustomRestaurantQueryRepository } from "../repository/restaurant-query.
 @Injectable()
 export class RestaurantIml implements RestaurantInterface {
   constructor(
-    private readonly customUserCommandRepository: CustomRestaurantCommandRepository,
-    private readonly customUserQueryRepository: CustomRestaurantQueryRepository
+    private readonly customRestaurantCommandRepository: CustomRestaurantCommandRepository,
+    private readonly customRestaurantQueryRepository: CustomRestaurantQueryRepository
   ) {}
 
   // 5-1 유저의 경도 위도 저장
   async createUserLocation(locationdto: LocationDto): Promise<User> {
-    const user = await this.customUserQueryRepository.checkExistUser(
+    const user = await this.customRestaurantQueryRepository.checkExistUser(
       locationdto.userIdx
     );
-    return await this.customUserCommandRepository.saveUser(user, locationdto);
+    return await this.customRestaurantCommandRepository.saveUser(
+      user,
+      locationdto
+    );
   }
 
   // 5-2 유저의 경도 위도 수정
   async updateUserLocation(locationdto: LocationDto): Promise<User> {
-    const user = await this.customUserQueryRepository.checkExistUser(
+    const user = await this.customRestaurantQueryRepository.checkExistUser(
       locationdto.userIdx
     );
-    return await this.customUserCommandRepository.saveUser(user, locationdto);
+    return await this.customRestaurantCommandRepository.saveUser(
+      user,
+      locationdto
+    );
   }
 
   // 5-3 3km 이내 음식점 정보 조회
   async getrestaurantlist(userIdx: number): Promise<Restaurant[]> {
-    const user = await this.customUserQueryRepository.checkExistUser(userIdx);
-    return await this.customUserQueryRepository.getrestaurantlist(userIdx);
+    const user = await this.customRestaurantQueryRepository.checkExistUser(
+      userIdx
+    );
+    return await this.customRestaurantQueryRepository.getrestaurantlist(
+      userIdx
+    );
   }
 }

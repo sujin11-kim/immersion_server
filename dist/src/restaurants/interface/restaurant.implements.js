@@ -14,21 +14,21 @@ const common_1 = require("@nestjs/common");
 const restaurant_command_repository_1 = require("../repository/restaurant-command.repository");
 const restaurant_query_repository_1 = require("../repository/restaurant-query.repository");
 let RestaurantIml = class RestaurantIml {
-    constructor(customUserCommandRepository, customUserQueryRepository) {
-        this.customUserCommandRepository = customUserCommandRepository;
-        this.customUserQueryRepository = customUserQueryRepository;
+    constructor(customRestaurantCommandRepository, customRestaurantQueryRepository) {
+        this.customRestaurantCommandRepository = customRestaurantCommandRepository;
+        this.customRestaurantQueryRepository = customRestaurantQueryRepository;
     }
     async createUserLocation(locationdto) {
-        const user = await this.customUserQueryRepository.checkExistUser(locationdto.userIdx);
-        return await this.customUserCommandRepository.saveUser(user, locationdto);
+        const user = await this.customRestaurantQueryRepository.checkExistUser(locationdto.userIdx);
+        return await this.customRestaurantCommandRepository.saveUser(user, locationdto);
     }
     async updateUserLocation(locationdto) {
-        const user = await this.customUserQueryRepository.checkExistUser(locationdto.userIdx);
-        return await this.customUserCommandRepository.saveUser(user, locationdto);
+        const user = await this.customRestaurantQueryRepository.checkExistUser(locationdto.userIdx);
+        return await this.customRestaurantCommandRepository.saveUser(user, locationdto);
     }
     async getrestaurantlist(userIdx) {
-        const user = await this.customUserQueryRepository.checkExistUser(userIdx);
-        return await this.customUserQueryRepository.getrestaurantlist(userIdx);
+        const user = await this.customRestaurantQueryRepository.checkExistUser(userIdx);
+        return await this.customRestaurantQueryRepository.getrestaurantlist(userIdx);
     }
 };
 RestaurantIml = __decorate([
