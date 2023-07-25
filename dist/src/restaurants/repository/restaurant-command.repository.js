@@ -15,31 +15,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomRestaurantCommandRepository = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const Restaurant_1 = require("../../../resource/db/entities/Restaurant");
 const User_1 = require("../../../resource/db/entities/User");
 const typeorm_2 = require("typeorm");
 let CustomRestaurantCommandRepository = class CustomRestaurantCommandRepository {
-    constructor(userRepository, restaurantRepository) {
+    constructor(userRepository) {
         this.userRepository = userRepository;
-        this.restaurantRepository = restaurantRepository;
     }
-    async checkExistUser(userIdx) {
-        const user = await this.userRepository.findOne({ where: { userIdx } });
-        if (!user) {
-            throw new common_1.BadRequestException({
-                statusCode: 2100,
-                message: "존재하지 않는 사용자 입니다.",
-            });
-        }
-        return user;
+    async saveUser(user, locationdto) {
+        user.latitude = locationdto.latitude;
+        user.longitude = locationdto.longitude;
+        return await this.userRepository.save(user);
     }
 };
 CustomRestaurantCommandRepository = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
-    __param(1, (0, typeorm_1.InjectRepository)(Restaurant_1.Restaurant)),
-    __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository])
 ], CustomRestaurantCommandRepository);
 exports.CustomRestaurantCommandRepository = CustomRestaurantCommandRepository;
 //# sourceMappingURL=restaurant-command.repository.js.map
