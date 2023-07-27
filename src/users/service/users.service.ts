@@ -20,9 +20,4 @@ export class UsersService {
   async getFcmByUserIdx(userIdx: number) {
     return await this.userImpl.getFCMByUserIdx(userIdx);
   }
-
-  async login(_id: string, _password: string): Promise<string> {
-    //TODO JWT발급
-    throw new Error("Method not implemented");
-  }
 }

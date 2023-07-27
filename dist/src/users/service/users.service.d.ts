@@ -8,5 +8,4 @@ export declare class UsersService {
     }>;
     getAllFCM(): Promise<Record<"fcmTokens", object>>;
     getFcmByUserIdx(userIdx: number): Promise<Record<"fcmToken", string>>;
-    login(_id: string, _password: string): Promise<string>;
 }

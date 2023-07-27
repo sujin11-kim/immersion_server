@@ -12,25 +12,38 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CustomRestaurantCommandRepository = void 0;
+exports.CustomReviewQueryRepository = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const User_1 = require("../../../resource/db/entities/User");
 const typeorm_2 = require("typeorm");
-let CustomRestaurantCommandRepository = class CustomRestaurantCommandRepository {
-    constructor(userRepository) {
+const Post_1 = require("../../../resource/db/entities/Post");
+const Review_1 = require("../../../resource/db/entities/Review");
+let CustomReviewQueryRepository = class CustomReviewQueryRepository {
+    constructor(userRepository, postRepository, reviewRepository) {
         this.userRepository = userRepository;
+        this.postRepository = postRepository;
+        this.reviewRepository = reviewRepository;
     }
-    async saveUser(user, locationdto) {
-        user.latitude = locationdto.latitude;
-        user.longitude = locationdto.longitude;
-        return await this.userRepository.save(user);
+    async reviewfind() {
+        return await this.reviewRepository.find();
+    }
+    async reviewonefind(reviewIdx) {
+        const review = await this.reviewRepository.findOneBy({ reviewIdx });
+        if (!review) {
+            throw new common_1.NotFoundException(`Review with ID ${reviewIdx} not found`);
+        }
+        return review;
     }
 };
-CustomRestaurantCommandRepository = __decorate([
+CustomReviewQueryRepository = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
-], CustomRestaurantCommandRepository);
-exports.CustomRestaurantCommandRepository = CustomRestaurantCommandRepository;
-//# sourceMappingURL=restaurant-command.repository.js.map
+    __param(1, (0, typeorm_1.InjectRepository)(Post_1.Post)),
+    __param(2, (0, typeorm_1.InjectRepository)(Review_1.Review)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository])
+], CustomReviewQueryRepository);
+exports.CustomReviewQueryRepository = CustomReviewQueryRepository;
+//# sourceMappingURL=review-query.repository.js.map

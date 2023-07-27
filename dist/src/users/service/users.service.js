@@ -25,9 +25,6 @@ let UsersService = class UsersService {
     async getFcmByUserIdx(userIdx) {
         return await this.userImpl.getFCMByUserIdx(userIdx);
     }
-    async login(_id, _password) {
-        throw new Error("Method not implemented");
-    }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),

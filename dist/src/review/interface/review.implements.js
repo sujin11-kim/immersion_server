@@ -9,33 +9,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ReviewService = void 0;
+exports.ReviewtIml = void 0;
 const common_1 = require("@nestjs/common");
-const review_implements_1 = require("./interface/review.implements");
-let ReviewService = class ReviewService {
-    constructor(reviewImpl) {
-        this.reviewImpl = reviewImpl;
+const review_command_repository_1 = require("../repository/review-command.repository");
+const review_query_repository_1 = require("../repository/review-query.repository");
+let ReviewtIml = class ReviewtIml {
+    constructor(customReviewCommandRepository, customReviewQueryRepository) {
+        this.customReviewCommandRepository = customReviewCommandRepository;
+        this.customReviewQueryRepository = customReviewQueryRepository;
     }
     async getAllReview() {
-        return await this.reviewImpl.getAllReview();
+        return await this.customReviewQueryRepository.reviewfind();
     }
     async getoneReview(reviewIdx) {
-        return await this.reviewImpl.getoneReview(reviewIdx);
+        return this.customReviewQueryRepository.reviewonefind(reviewIdx);
     }
     async create(user, createReviewDto) {
-        console.log("service");
-        return await this.reviewImpl.create(user, createReviewDto);
+        return this.customReviewCommandRepository.create(user, createReviewDto);
     }
     async update(reviewIdx, updateReviewDto) {
-        return await this.reviewImpl.update(reviewIdx, updateReviewDto);
+        return this.customReviewCommandRepository.update(reviewIdx, updateReviewDto);
     }
     async delete(reviewIdx) {
-        return this.reviewImpl.delete(reviewIdx);
+        return this.customReviewCommandRepository.delete(reviewIdx);
     }
 };
-ReviewService = __decorate([
+ReviewtIml = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [review_implements_1.ReviewtIml])
-], ReviewService);
-exports.ReviewService = ReviewService;
-//# sourceMappingURL=review.service.js.map
+    __metadata("design:paramtypes", [review_command_repository_1.CustomReviewCommandRepository,
+        review_query_repository_1.CustomReviewQueryRepository])
+], ReviewtIml);
+exports.ReviewtIml = ReviewtIml;
+//# sourceMappingURL=review.implements.js.map

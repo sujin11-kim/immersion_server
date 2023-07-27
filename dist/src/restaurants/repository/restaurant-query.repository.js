@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomRestaurantQueryRepository = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const Restaurant_1 = require("../../../resource/db/entities/Restaurant");
 const User_1 = require("../../../resource/db/entities/User");
+const Restaurant_1 = require("../../../resource/db/entities/Restaurant");
 const typeorm_2 = require("typeorm");
 const calculateDistance_1 = require("../utill/calculateDistance");
 let CustomRestaurantQueryRepository = class CustomRestaurantQueryRepository {
@@ -24,10 +24,15 @@ let CustomRestaurantQueryRepository = class CustomRestaurantQueryRepository {
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
     }
-    async saveUser(user, locationdto) {
-        user.latitude = locationdto.latitude;
-        user.longitude = locationdto.longitude;
-        return await this.userRepository.save(user);
+    async checkExistUser(userIdx) {
+        const user = await this.userRepository.findOne({ where: { userIdx } });
+        if (!user) {
+            throw new common_1.BadRequestException({
+                statusCode: 2100,
+                message: "존재하지 않는 사용자 입니다.",
+            });
+        }
+        return user;
     }
     async getrestaurantlist(userIdx) {
         const restaurants = await this.restaurantRepository.find();
