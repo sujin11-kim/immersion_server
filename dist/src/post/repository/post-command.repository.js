@@ -20,6 +20,7 @@ const typeorm_2 = require("typeorm");
 const User_1 = require("../../../resource/db/entities/User");
 const Image_1 = require("../../../resource/db/entities/Image");
 const LikePost_1 = require("../../../resource/db/entities/LikePost");
+const custom_exception_1 = require("../../aop/exception/custom-exception");
 let CustomPostCommandRepository = class CustomPostCommandRepository {
     constructor(postRepository, userRepository, imageRepository) {
         this.postRepository = postRepository;
@@ -36,14 +37,10 @@ let CustomPostCommandRepository = class CustomPostCommandRepository {
             post.category = postInfo.category;
             post.title = postInfo.title;
             post.content = postInfo.content;
-            const maxContentLength = 1000;
+            const maxContentLength = 1;
             const contentWithoutSpace = post.content.replace(/\s/g, "");
             if (contentWithoutSpace.length > maxContentLength) {
-                throw new common_1.BadRequestException({
-                    statusCode: 2101,
-                    message: "Content length exceeds the maximum allowed limit.",
-                    result: {},
-                });
+                throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.EXCEED_CONTENT_LENGTH);
             }
             const savedPost = await queryRunner.manager
                 .getRepository(Post_1.Post)

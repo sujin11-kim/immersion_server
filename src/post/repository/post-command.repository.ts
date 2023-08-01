@@ -8,6 +8,7 @@ import { CreatePostDto } from "../dto/create-post.dto";
 import { UserLoginDto } from "src/users/dto/user-login.dto";
 import { readonlyPostDto } from "../dto/readonly-post.dto";
 import { LikePost } from "resource/db/entities/LikePost";
+import { CustomExceptions } from "src/aop/exception/custom-exception";
 
 @Injectable()
 export class CustomPostCommandRepository {
@@ -39,14 +40,10 @@ export class CustomPostCommandRepository {
       post.content = postInfo.content;
 
       // 공백 제거 후 글자수 제한
-      const maxContentLength = 1000;
+      const maxContentLength = 1;
       const contentWithoutSpace = post.content.replace(/\s/g, "");
       if (contentWithoutSpace.length > maxContentLength) {
-        throw new BadRequestException({
-          statusCode: 2101,
-          message: "Content length exceeds the maximum allowed limit.",
-          result: {},
-        });
+        throw new BadRequestException(CustomExceptions.EXCEED_CONTENT_LENGTH);
       }
 
       const savedPost = await queryRunner.manager

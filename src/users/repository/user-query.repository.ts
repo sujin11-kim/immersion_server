@@ -7,6 +7,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "../../../resource/db/entities/User";
 import { Repository } from "typeorm";
 import { CreateUserDto } from "../dto/create-user.dto";
+import { CustomExceptions } from "src/aop/exception/custom-exception";
 
 @Injectable()
 export class CustomUserQueryRepository {
@@ -21,31 +22,19 @@ export class CustomUserQueryRepository {
       where: { email: userInfo.email },
     });
     if (userByEmail)
-      throw new BadRequestException({
-        statusCode: 2001,
-        message: "이미 존재하는 이메일입니다.",
-        result: { userIdx: "" },
-      });
+      throw new BadRequestException(CustomExceptions.EMAIL_ALREADY_EXISTS);
 
     const userBynickName = await this.userRepository.findOne({
       where: { nickName: userInfo.nickName },
     });
     if (userBynickName)
-      throw new BadRequestException({
-        statusCode: 2002,
-        message: "이미 존재하는 닉네임입니다.",
-        result: { userIdx: "" },
-      });
+      throw new BadRequestException(CustomExceptions.NICKNAME_ALREADY_EXISTS);
 
     const userByphone = await this.userRepository.findOne({
       where: { phone: userInfo.phone },
     });
     if (userByphone)
-      throw new BadRequestException({
-        statusCode: 2003,
-        message: "이미 존재하는 핸드폰 번호입니다.",
-        result: { userIdx: "" },
-      });
+      throw new BadRequestException(CustomExceptions.PHONE_ALREADY_EXISTS);
   }
 
   //모든 fcmtoken 반환
@@ -53,11 +42,7 @@ export class CustomUserQueryRepository {
     const users = await this.userRepository.find();
 
     if (users.length === 0) {
-      throw new BadRequestException({
-        statusCode: 2004,
-        message: "fcmToken이 존재하지 않습니다.",
-        result: { fcmTokens: {} },
-      });
+      throw new BadRequestException(CustomExceptions.FCMTOKEN_NOT_FOUND);
     }
 
     const fcmTokens = users.reduce((result, user) => {
@@ -72,12 +57,7 @@ export class CustomUserQueryRepository {
   async isUserExistsByUserIdx(userIdx: number) {
     const user = await this.userRepository.findOne({ where: { userIdx } });
 
-    if (!user)
-      throw new NotFoundException({
-        statusCode: 2000,
-        message: "존재하지 않는 유저입니다.",
-        result: { fcmTokens: "" },
-      });
+    if (!user) throw new NotFoundException(CustomExceptions.USER_NOT_FOUND);
   }
 
   //개인 fcmtoken 반환 By userIdx

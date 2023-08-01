@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const User_1 = require("../../../resource/db/entities/User");
 const typeorm_2 = require("typeorm");
+const custom_exception_1 = require("../../aop/exception/custom-exception");
 let CustomUserQueryRepository = class CustomUserQueryRepository {
     constructor(userRepository) {
         this.userRepository = userRepository;
@@ -26,38 +27,22 @@ let CustomUserQueryRepository = class CustomUserQueryRepository {
             where: { email: userInfo.email },
         });
         if (userByEmail)
-            throw new common_1.BadRequestException({
-                statusCode: 2001,
-                message: "이미 존재하는 이메일입니다.",
-                result: { userIdx: "" },
-            });
+            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.EMAIL_ALREADY_EXISTS);
         const userBynickName = await this.userRepository.findOne({
             where: { nickName: userInfo.nickName },
         });
         if (userBynickName)
-            throw new common_1.BadRequestException({
-                statusCode: 2002,
-                message: "이미 존재하는 닉네임입니다.",
-                result: { userIdx: "" },
-            });
+            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.NICKNAME_ALREADY_EXISTS);
         const userByphone = await this.userRepository.findOne({
             where: { phone: userInfo.phone },
         });
         if (userByphone)
-            throw new common_1.BadRequestException({
-                statusCode: 2003,
-                message: "이미 존재하는 핸드폰 번호입니다.",
-                result: { userIdx: "" },
-            });
+            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.PHONE_ALREADY_EXISTS);
     }
     async findAllFcm() {
         const users = await this.userRepository.find();
         if (users.length === 0) {
-            throw new common_1.BadRequestException({
-                statusCode: 2004,
-                message: "fcmToken이 존재하지 않습니다.",
-                result: { fcmTokens: {} },
-            });
+            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.FCMTOKEN_NOT_FOUND);
         }
         const fcmTokens = users.reduce((result, user) => {
             result[user.userIdx] = user.fcmtoken;
@@ -68,11 +53,7 @@ let CustomUserQueryRepository = class CustomUserQueryRepository {
     async isUserExistsByUserIdx(userIdx) {
         const user = await this.userRepository.findOne({ where: { userIdx } });
         if (!user)
-            throw new common_1.NotFoundException({
-                statusCode: 2000,
-                message: "존재하지 않는 유저입니다.",
-                result: { fcmTokens: "" },
-            });
+            throw new common_1.NotFoundException(custom_exception_1.CustomExceptions.USER_NOT_FOUND);
     }
     async getFCMByUserIdx(userIdx) {
         const user = await this.userRepository.findOne({ where: { userIdx } });
