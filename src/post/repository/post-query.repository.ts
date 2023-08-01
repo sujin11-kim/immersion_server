@@ -8,6 +8,7 @@ import { Comment } from "resource/db/entities/Comment";
 import { readonlyPostDto } from "../dto/readonly-post.dto";
 import { LikeComment } from "resource/db/entities/LikeComment";
 import { LikePost } from "resource/db/entities/LikePost";
+import { CustomExceptions } from "src/aop/exception/custom-exception";
 
 @Injectable()
 export class CustomPostQueryRepository {
@@ -31,11 +32,7 @@ export class CustomPostQueryRepository {
     });
 
     if (posts.length === 0) {
-      throw new BadRequestException({
-        statusCode: 2102,
-        message: "해당 유저의 게시물이 존재하지 않습니다.",
-        result: [],
-      });
+      throw new BadRequestException(CustomExceptions.USER_POSTS_NOT_FOUND);
     }
 
     return posts;
@@ -48,11 +45,7 @@ export class CustomPostQueryRepository {
     });
 
     if (posts.length === 0) {
-      throw new BadRequestException({
-        statusCode: 2103,
-        message: "해당 카테고리의 게시물이 존재하지 않습니다.",
-        result: [],
-      });
+      throw new BadRequestException(CustomExceptions.CATEGORY_POSTS_NOT_FOUND);
     }
     return posts;
   }
@@ -61,11 +54,7 @@ export class CustomPostQueryRepository {
   async checkTotalPostCountExceeded(page: number, pageSize: number) {
     const totalPosts = await this.postRepository.count();
     if (page + pageSize - 1 > 0) {
-      throw new BadRequestException({
-        statusCode: 2103,
-        message: `전체 게시물 수 ${totalPosts}개를 초과하여 조회할 수 없습니다.`,
-        result: {},
-      });
+      throw new BadRequestException(CustomExceptions.MAX_POSTS_EXCEEDED);
     }
   }
 
@@ -115,11 +104,7 @@ export class CustomPostQueryRepository {
       where: { postIdx },
     });
     if (!post) {
-      throw new BadRequestException({
-        statusCode: 2104,
-        message: `postIdx:${postIdx} 에 해당하는 게시물이 없습니다.`,
-        result: {},
-      });
+      throw new BadRequestException(CustomExceptions.POST_NOT_FOUND);
     }
     return post;
   }
@@ -130,11 +115,7 @@ export class CustomPostQueryRepository {
     });
 
     if (likeCount === 0) {
-      throw new BadRequestException({
-        statusCode: 2105,
-        message: "해당 게시물에 좋아요를 누르지 않은 유저입니다.",
-        result: {},
-      });
+      throw new BadRequestException(CustomExceptions.LIKE_NOT_FOUND);
     }
   }
 }

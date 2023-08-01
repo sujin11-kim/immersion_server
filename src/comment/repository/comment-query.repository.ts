@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { User } from "resource/db/entities/User";
 import { Comment } from "resource/db/entities/Comment";
 import { readonlyCommentDto } from "../dto/readonly-comment.dto";
+import { CustomExceptions } from "src/aop/exception/custom-exception";
 
 @Injectable()
 export class CustomCommentQueryRepository {
@@ -23,11 +24,7 @@ export class CustomCommentQueryRepository {
       where: { postIdx: postIdx },
     });
     if (!post) {
-      throw new BadRequestException({
-        statusCode: 2001,
-        message: "존재하지 않는 게시물입니다.",
-        result: { userIdx: "" },
-      });
+      throw new BadRequestException(CustomExceptions.NOT_FOUNT_POST);
     }
   }
 
@@ -59,11 +56,7 @@ export class CustomCommentQueryRepository {
       .getMany();
 
     if (comments.length === 0) {
-      throw new BadRequestException({
-        statusCode: 2201,
-        message: "해당 게시물의 댓글이 존재하지 않습니다.",
-        result: [],
-      });
+      throw new BadRequestException(CustomExceptions.NOT_FOUND_COMMENT);
     }
 
     const result: readonlyCommentDto[] = comments.map((comment) => ({

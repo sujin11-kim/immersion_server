@@ -21,6 +21,7 @@ const User_1 = require("../../../resource/db/entities/User");
 const Image_1 = require("../../../resource/db/entities/Image");
 const Comment_1 = require("../../../resource/db/entities/Comment");
 const LikePost_1 = require("../../../resource/db/entities/LikePost");
+const custom_exception_1 = require("../../aop/exception/custom-exception");
 let CustomPostQueryRepository = class CustomPostQueryRepository {
     constructor(postRepository, userRepository, imageRepository, commentRepository, likePostRepository) {
         this.postRepository = postRepository;
@@ -34,11 +35,7 @@ let CustomPostQueryRepository = class CustomPostQueryRepository {
             where: { userIdx },
         });
         if (posts.length === 0) {
-            throw new common_1.BadRequestException({
-                statusCode: 2102,
-                message: "해당 유저의 게시물이 존재하지 않습니다.",
-                result: [],
-            });
+            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.USER_POSTS_NOT_FOUND);
         }
         return posts;
     }
@@ -47,22 +44,14 @@ let CustomPostQueryRepository = class CustomPostQueryRepository {
             where: { category },
         });
         if (posts.length === 0) {
-            throw new common_1.BadRequestException({
-                statusCode: 2103,
-                message: "해당 카테고리의 게시물이 존재하지 않습니다.",
-                result: [],
-            });
+            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.CATEGORY_POSTS_NOT_FOUND);
         }
         return posts;
     }
     async checkTotalPostCountExceeded(page, pageSize) {
         const totalPosts = await this.postRepository.count();
         if (page + pageSize - 1 > 0) {
-            throw new common_1.BadRequestException({
-                statusCode: 2103,
-                message: `전체 게시물 수 ${totalPosts}개를 초과하여 조회할 수 없습니다.`,
-                result: {},
-            });
+            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.MAX_POSTS_EXCEEDED);
         }
     }
     async findPosts(offset, pageSize) {
@@ -97,11 +86,7 @@ let CustomPostQueryRepository = class CustomPostQueryRepository {
             where: { postIdx },
         });
         if (!post) {
-            throw new common_1.BadRequestException({
-                statusCode: 2104,
-                message: `postIdx:${postIdx} 에 해당하는 게시물이 없습니다.`,
-                result: {},
-            });
+            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.POST_NOT_FOUND);
         }
         return post;
     }
@@ -110,11 +95,7 @@ let CustomPostQueryRepository = class CustomPostQueryRepository {
             where: { postIdx: post.postIdx, userIdx: userIdx },
         });
         if (likeCount === 0) {
-            throw new common_1.BadRequestException({
-                statusCode: 2105,
-                message: "해당 게시물에 좋아요를 누르지 않은 유저입니다.",
-                result: {},
-            });
+            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.LIKE_NOT_FOUND);
         }
     }
 };

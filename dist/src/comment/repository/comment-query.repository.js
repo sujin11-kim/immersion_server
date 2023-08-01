@@ -19,6 +19,7 @@ const Post_1 = require("../../../resource/db/entities/Post");
 const typeorm_2 = require("typeorm");
 const User_1 = require("../../../resource/db/entities/User");
 const Comment_1 = require("../../../resource/db/entities/Comment");
+const custom_exception_1 = require("../../aop/exception/custom-exception");
 let CustomCommentQueryRepository = class CustomCommentQueryRepository {
     constructor(postRepository, userRepository, commentRepository) {
         this.postRepository = postRepository;
@@ -30,11 +31,7 @@ let CustomCommentQueryRepository = class CustomCommentQueryRepository {
             where: { postIdx: postIdx },
         });
         if (!post) {
-            throw new common_1.BadRequestException({
-                statusCode: 2001,
-                message: "존재하지 않는 게시물입니다.",
-                result: { userIdx: "" },
-            });
+            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.NOT_FOUNT_POST);
         }
     }
     async findNickName(userIdx) {
@@ -61,11 +58,7 @@ let CustomCommentQueryRepository = class CustomCommentQueryRepository {
         ])
             .getMany();
         if (comments.length === 0) {
-            throw new common_1.BadRequestException({
-                statusCode: 2201,
-                message: "해당 게시물의 댓글이 존재하지 않습니다.",
-                result: [],
-            });
+            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.NOT_FOUND_COMMENT);
         }
         const result = comments.map((comment) => ({
             commentIdx: comment.commentIdx,

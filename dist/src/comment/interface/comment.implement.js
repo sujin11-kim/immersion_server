@@ -25,6 +25,7 @@ let CommentImpl = class CommentImpl {
         return Object.assign(Object.assign({}, savedComment), { nickName });
     }
     async findAllComment(postIdx) {
+        await this.customCommentQueryRrepository.isPostExist(postIdx);
         return await this.customCommentQueryRrepository.findCommentByPostIdx(postIdx);
     }
 };

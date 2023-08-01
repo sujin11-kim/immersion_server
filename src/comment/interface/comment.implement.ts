@@ -30,7 +30,9 @@ export class CommentImpl implements CommentInterface {
     return { ...savedComment, nickName };
   }
 
+  // 3-2 게시물 id로 댓글 조회
   async findAllComment(postIdx: number): Promise<readonlyCommentDto[]> {
+    await this.customCommentQueryRrepository.isPostExist(postIdx);
     return await this.customCommentQueryRrepository.findCommentByPostIdx(
       postIdx
     );
