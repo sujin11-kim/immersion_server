@@ -12,7 +12,7 @@ import {
 import { PostService } from "../service/post.service";
 import { CreatePostDto } from "../dto/create-post.dto";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../../auth/jwt/jwt.guard";
+import { JwtAuthGuard } from "../../auth/utils/jwt/jwt.guard";
 import { CurrentUser } from "../../../src/aop/decorators/user.decorator";
 import { UserLoginDto } from "../../users/dto/user-login.dto";
 import { SuccessInterceptor } from "../../../src/aop/interceptors/success.interceptor";

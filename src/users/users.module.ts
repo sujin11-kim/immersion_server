@@ -7,6 +7,7 @@ import { AuthModule } from "src/auth/auth.module";
 import { UserImpl } from "./interface/user.implement";
 import { CustomUserCommandRepository } from "./repository/user-command.repository";
 import { CustomUserQueryRepository } from "./repository/user-query.repository";
+import { ErrorResponse } from "src/aop/exception/error-reponse";
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), forwardRef(() => AuthModule)],
@@ -15,6 +16,7 @@ import { CustomUserQueryRepository } from "./repository/user-query.repository";
     UserImpl,
     CustomUserCommandRepository,
     CustomUserQueryRepository,
+    ErrorResponse
   ],
   exports: [UsersService],
   controllers: [UsersController],

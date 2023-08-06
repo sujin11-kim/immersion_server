@@ -25,7 +25,7 @@ let CustomUserCommandRepository = class CustomUserCommandRepository {
         const queryRunner = this.userRepository.manager.connection.createQueryRunner();
         await queryRunner.connect();
         try {
-            await queryRunner.startTransaction();
+            await queryRunner.startTransaction("REPEATABLE READ");
             const { email, nickName, phone, password, fcmToken } = userInfo;
             const user = queryRunner.manager.getRepository(User_1.User).create();
             (user.email = email),

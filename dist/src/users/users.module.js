@@ -16,6 +16,7 @@ const auth_module_1 = require("../auth/auth.module");
 const user_implement_1 = require("./interface/user.implement");
 const user_command_repository_1 = require("./repository/user-command.repository");
 const user_query_repository_1 = require("./repository/user-query.repository");
+const error_reponse_1 = require("../aop/exception/error-reponse");
 let UsersModule = class UsersModule {
 };
 UsersModule = __decorate([
@@ -26,6 +27,7 @@ UsersModule = __decorate([
             user_implement_1.UserImpl,
             user_command_repository_1.CustomUserCommandRepository,
             user_query_repository_1.CustomUserQueryRepository,
+            error_reponse_1.ErrorResponse
         ],
         exports: [users_service_1.UsersService],
         controllers: [users_controller_1.UsersController],

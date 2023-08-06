@@ -11,7 +11,7 @@ import {
 import { CommentService } from "../service/comment.service";
 import { CreateCommentDto } from "../dto/create-comment.dto";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
+import { JwtAuthGuard } from "src/auth/utils/jwt/jwt.guard";
 import { SuccessInterceptor } from "../../../src/aop/interceptors/success.interceptor";
 import { HttpExceptionFilter } from "../../../src/aop/exception/http-exception.filter";
 import { CurrentUser } from "../../../src/aop/decorators/user.decorator";
