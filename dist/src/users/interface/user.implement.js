@@ -44,7 +44,7 @@ let UserImpl = class UserImpl {
         return allFcmtoken;
     }
     async getFCMByUserIdx(userIdx) {
-        await this.customUserQueryRepository.checkByUserIdx(userIdx);
+        await this.customUserQueryRepository.getByUserIdx(userIdx);
         const fcmToken = await this.customUserQueryRepository.getFCMByUserIdx(userIdx);
         return { fcmToken };
     }

@@ -5,8 +5,8 @@ export declare class CustomUserQueryRepository {
     private readonly userRepository;
     private errorResponse;
     constructor(userRepository: Repository<User>, errorResponse: ErrorResponse);
-    checkByUserIdx(userIdx: number): Promise<User>;
-    getUserByEmail(email: string): Promise<User>;
+    getByUserIdx(userIdx: number): Promise<User>;
+    getByEmail(email: string): Promise<User>;
     findAllFcm(): Promise<{
         fcmTokens: {};
     }>;

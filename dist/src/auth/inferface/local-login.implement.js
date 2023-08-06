@@ -26,7 +26,7 @@ let LocalLoginStrategy = class LocalLoginStrategy {
         this.password_ = password;
     }
     async getLocalToken() {
-        const user = await this.customUserQueryRepository.getUserByEmail(this.email_);
+        const user = await this.customUserQueryRepository.getByEmail(this.email_);
         if (!user)
             this.errorResponse.notExistUser();
         if (!await bcrypt.compare(this.password_, user.password)) {

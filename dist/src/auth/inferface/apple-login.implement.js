@@ -34,8 +34,8 @@ let AppleLoginStrategy = class AppleLoginStrategy {
         });
         try {
             this.appleUser.email = verifiedDecodedToken.email;
-            const user = await this.customUserQueryRepository.getUserByEmail(this.appleUser.email);
-            this.appleUser.userIdx = user ? (await this.customUserQueryRepository.getUserByEmail(this.appleUser.email)).userIdx : (await this.customUserCommandRepository.saveUser(this.appleUser)).userIdx;
+            const user = await this.customUserQueryRepository.getByEmail(this.appleUser.email);
+            this.appleUser.userIdx = user ? (await this.customUserQueryRepository.getByEmail(this.appleUser.email)).userIdx : (await this.customUserCommandRepository.saveUser(this.appleUser)).userIdx;
             const payload = { userIdx: this.appleUser.userIdx };
             return { token: this.jwtService.sign(payload) };
         }

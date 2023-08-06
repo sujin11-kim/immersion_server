@@ -31,8 +31,8 @@ let KakaoLoginStrategy = class KakaoLoginStrategy {
         try {
             this.kakaoUser.email = response.data.id;
             this.kakaoUser.nickName = response.data.properties.nickname;
-            const user = await this.customUserQueryRepository.getUserByEmail(this.kakaoUser.email);
-            this.kakaoUser.userIdx = user ? (await this.customUserQueryRepository.getUserByEmail(this.kakaoUser.email)).userIdx : (await this.customUserCommandRepository.saveUser(this.kakaoUser)).userIdx;
+            const user = await this.customUserQueryRepository.getByEmail(this.kakaoUser.email);
+            this.kakaoUser.userIdx = user ? (await this.customUserQueryRepository.getByEmail(this.kakaoUser.email)).userIdx : (await this.customUserCommandRepository.saveUser(this.kakaoUser)).userIdx;
             const payload = { userIdx: this.kakaoUser.userIdx };
             return { token: this.jwtService.sign(payload) };
         }

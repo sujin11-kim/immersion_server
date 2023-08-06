@@ -1,3 +1,3 @@
 export interface LoginInterface {
-    getTokenByCase(email: any, password: any, loginType: any, token: any): any;
+    getTokenByCase(email: string, password: string, loginType: any, token: string): any;
 }

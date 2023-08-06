@@ -22,7 +22,7 @@ export class UserImpl implements UserInterface {
   // 1-1 회원가입
   async createUser(userInfo: CreateUserDto): Promise<{ userIdx: string }> {
     const hashedPassword = await bcrypt.hash(userInfo.password, 12);
-    const existUser = await this.customUserQueryRepository.getUserByEmail(userInfo.email);
+    const existUser = await this.customUserQueryRepository.getByEmail(userInfo.email);
     if(!existUser){
       const newUser = await this.customUserCommandRepository.saveUser({
         ...userInfo,
@@ -43,7 +43,7 @@ export class UserImpl implements UserInterface {
 
   // 1-6 개인 FCM 토큰 조회
   async getFCMByUserIdx(userIdx: number): Promise<Record<"fcmToken", string>> {
-    await this.customUserQueryRepository.checkByUserIdx(userIdx);
+    await this.customUserQueryRepository.getByUserIdx(userIdx);
     const fcmToken = await this.customUserQueryRepository.getFCMByUserIdx(
       userIdx
     );
