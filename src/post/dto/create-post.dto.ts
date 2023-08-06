@@ -1,9 +1,23 @@
 import { PickType } from "@nestjs/swagger";
+import { Post } from "../../../resource/db/entities/Post";
 import { IsNotEmpty, IsString } from "class-validator";
-import { Post } from "mymodel/entities/Post";
 
 export class CreatePostDto extends PickType(Post, [
   "title",
   "content",
   "category",
-] as const) {}
+]) {
+  @IsNotEmpty()
+  @IsString()
+  title: string;
+
+  @IsNotEmpty()
+  @IsString()
+  content: string;
+
+  @IsNotEmpty()
+  @IsString()
+  category: string;
+
+  image: string[];
+}

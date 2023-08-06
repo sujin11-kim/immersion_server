@@ -9,18 +9,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommentModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const comment_controller_1 = require("./comment.controller");
-const comment_service_1 = require("./comment.service");
-const Comment_1 = require("../../mymodel/entities/Comment");
-const User_1 = require("../../mymodel/entities/User");
-const Post_1 = require("../../mymodel/entities/Post");
+const comment_controller_1 = require("./controller/comment.controller");
+const comment_service_1 = require("./service/comment.service");
+const Comment_1 = require("../../resource/db/entities/Comment");
+const User_1 = require("../../resource/db/entities/User");
+const Post_1 = require("../../resource/db/entities/Post");
+const LikeComment_1 = require("../../resource/db/entities/LikeComment");
+const comment_command_repository_1 = require("./repository/comment-command.repository");
+const comment_query_repository_1 = require("./repository/comment-query.repository");
+const comment_implement_1 = require("./interface/comment.implement");
 let CommentModule = class CommentModule {
 };
 CommentModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([Comment_1.Comment, User_1.User, Post_1.Post])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([Comment_1.Comment, User_1.User, Post_1.Post, LikeComment_1.LikeComment])],
         controllers: [comment_controller_1.CommentController],
-        providers: [comment_service_1.CommentService],
+        providers: [
+            comment_service_1.CommentService,
+            comment_command_repository_1.CustomCommentCommandRepository,
+            comment_query_repository_1.CustomCommentQueryRepository,
+            comment_implement_1.CommentImpl,
+        ],
     })
 ], CommentModule);
 exports.CommentModule = CommentModule;

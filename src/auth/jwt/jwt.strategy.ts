@@ -2,7 +2,7 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import { PassportStrategy } from "@nestjs/passport";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { Repository } from "typeorm";
-import { User } from "mymodel/entities/User";
+import { User } from "../../../resource/db/entities/User";
 import { Payload } from "./jwt.payloads";
 import { InjectRepository } from "@nestjs/typeorm";
 

@@ -1,23 +1,9 @@
-import { Repository } from "typeorm";
-import { User } from "mymodel/entities/User";
-import { Restaurant } from "mymodel/entities/Restaurant";
+import { LocationDto } from "./dto/location.dto";
+import { RestaurantIml } from "./interface/restaurant.implements";
 export declare class RestaurantsService {
-    private readonly userRepository;
-    private readonly restaurantRepository;
-    constructor(userRepository: Repository<User>, restaurantRepository: Repository<Restaurant>);
-    createUserLocation(userIdx: number, latitude: number, longitude: number): Promise<{
-        isSuccess: boolean;
-        code: number;
-        result: number[];
-    }>;
-    updateUserLocation(userIdx: number, latitude: number, longitude: number): Promise<{
-        isSuccess: boolean;
-        code: number;
-        result: number[];
-    }>;
-    getrestaurantlist(userIdx: number): Promise<{
-        isSuccess: boolean;
-        code: number;
-        result: Restaurant[];
-    }>;
+    private restaurantImpl;
+    constructor(restaurantImpl: RestaurantIml);
+    createUserLocation(locationdto: LocationDto): Promise<import("../../resource/db/entities/User").User>;
+    updateUserLocation(locationdto: LocationDto): Promise<import("../../resource/db/entities/User").User>;
+    getrestaurantlist(userIdx: number): Promise<import("../../resource/db/entities/Restaurant").Restaurant[]>;
 }

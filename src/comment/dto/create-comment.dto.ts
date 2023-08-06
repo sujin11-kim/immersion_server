@@ -1,11 +1,21 @@
+import { PickType } from "@nestjs/swagger";
+import { Comment } from "../../../resource/db/entities/Comment";
 import { IsNotEmpty, IsString } from "class-validator";
 
-export class CreateCommentDto {
-  readonly postIdx: number;
+export class CreateCommentDto extends PickType(Comment, [
+  "postIdx",
+  "parentCommentIdx",
+  "depth",
+  "commentContent",
+]) {
+  @IsNotEmpty()
+  postIdx: number;
 
-  readonly parentCommentIdx: number | null;
+  @IsNotEmpty()
+  @IsString()
+  commentContent: string;
 
-  readonly depth: number | null;
+  parentCommentIdx: number;
 
-  readonly commentContent: string | null;
+  depth: number;
 }

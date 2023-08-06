@@ -11,17 +11,25 @@ const common_1 = require("@nestjs/common");
 const review_controller_1 = require("./review.controller");
 const review_service_1 = require("./review.service");
 const typeorm_1 = require("@nestjs/typeorm");
-const Review_1 = require("../../mymodel/entities/Review");
+const Review_1 = require("../../resource/db/entities/Review");
 const auth_module_1 = require("../auth/auth.module");
-const User_1 = require("../../mymodel/entities/User");
-const Post_1 = require("../../mymodel/entities/Post");
+const User_1 = require("../../resource/db/entities/User");
+const Post_1 = require("../../resource/db/entities/Post");
+const review_command_repository_1 = require("./repository/review-command.repository");
+const review_query_repository_1 = require("./repository/review-query.repository");
+const review_implements_1 = require("./interface/review.implements");
 let ReviewModule = class ReviewModule {
 };
 ReviewModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([Review_1.Review, User_1.User, Post_1.Post]), auth_module_1.AuthModule],
         controllers: [review_controller_1.ReviewController],
-        providers: [review_service_1.ReviewService],
+        providers: [
+            review_service_1.ReviewService,
+            review_implements_1.ReviewtIml,
+            review_command_repository_1.CustomReviewCommandRepository,
+            review_query_repository_1.CustomReviewQueryRepository,
+        ],
     })
 ], ReviewModule);
 exports.ReviewModule = ReviewModule;

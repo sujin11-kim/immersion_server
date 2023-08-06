@@ -1,6 +1,25 @@
+import { IsString, IsEmail, IsNotEmpty, Matches } from "class-validator";
+
 export class CreateUserDto {
-  readonly email: string;
-  readonly nickName: string;
-  readonly phone: string;
-  readonly password: string;
+  @IsNotEmpty()
+  @IsEmail()
+  @IsString()
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  nickName: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Matches(/^\d{11}$/)
+  phone: string;
+
+  @IsNotEmpty()
+  @IsString()
+  password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  fcmToken: string;
 }

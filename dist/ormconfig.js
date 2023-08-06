@@ -2,13 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const dotenv = require("dotenv");
-const User_1 = require("./mymodel/entities/User");
-const ChatRoom_1 = require("./mymodel/entities/ChatRoom");
-const ChatUser_1 = require("./mymodel/entities/ChatUser");
-const Comment_1 = require("./mymodel/entities/Comment");
-const LikePost_1 = require("./mymodel/entities/LikePost");
-const Post_1 = require("./mymodel/entities/Post");
-const Message_1 = require("./mymodel/entities/Message");
+const User_1 = require("./resource/db/entities/User");
+const ChatRoom_1 = require("./resource/db/entities/ChatRoom");
+const ChatUser_1 = require("./resource/db/entities/ChatUser");
+const Comment_1 = require("./resource/db/entities/Comment");
+const LikePost_1 = require("./resource/db/entities/LikePost");
+const Post_1 = require("./resource/db/entities/Post");
+const Message_1 = require("./resource/db/entities/Message");
 dotenv.config();
 const dataSource = new typeorm_1.DataSource({
     type: "mysql",
