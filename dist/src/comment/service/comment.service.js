@@ -18,7 +18,6 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const Comment_1 = require("../../../resource/db/entities/Comment");
 const User_1 = require("../../../resource/db/entities/User");
-const LikeComment_1 = require("../../../resource/db/entities/LikeComment");
 const comment_implement_1 = require("../interface/comment.implement");
 let CommentService = class CommentService {
     constructor(commentRepository, dataSource, commentImpl) {
@@ -33,51 +32,10 @@ let CommentService = class CommentService {
         return await this.commentImpl.findAllComment(postIdx);
     }
     async commentLike(userIdx, postIdx, commentIdx) {
-        const queryRunner = this.commentRepository.manager.connection.createQueryRunner();
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
-        try {
-            const editcomment = await queryRunner.manager
-                .getRepository(Comment_1.Comment)
-                .findOne({ where: { commentIdx } });
-            editcomment.likeNum += 1;
-            await queryRunner.manager.getRepository(Comment_1.Comment).save(editcomment);
-            const likeComment = new LikeComment_1.LikeComment();
-            likeComment.commentIdx = commentIdx;
-            likeComment.userIdx = userIdx;
-            likeComment.postIdx = postIdx;
-            await queryRunner.manager.getRepository(LikeComment_1.LikeComment).save(likeComment);
-            return editcomment;
-        }
-        catch (err) {
-            await queryRunner.rollbackTransaction();
-            throw err;
-        }
-        finally {
-            await queryRunner.release();
-        }
+        return await this.commentImpl.commentLike(userIdx, postIdx, commentIdx);
     }
-    async postLikeCancel(userIdx, postIdx, commentIdx) {
-        const queryRunner = this.commentRepository.manager.connection.createQueryRunner();
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
-        try {
-            const editcomment = await queryRunner.manager
-                .getRepository(Comment_1.Comment)
-                .findOne({ where: { commentIdx } });
-            if (editcomment.likeNum > 0) {
-                editcomment.likeNum -= 1;
-            }
-            await queryRunner.manager.getRepository(Comment_1.Comment).save(editcomment);
-            return editcomment;
-        }
-        catch (err) {
-            await queryRunner.rollbackTransaction();
-            throw err;
-        }
-        finally {
-            await queryRunner.release();
-        }
+    async commentLikeCancel(userIdx, postIdx, commentIdx) {
+        return await this.commentImpl.commentLikeCancel(userIdx, postIdx, commentIdx);
     }
 };
 CommentService = __decorate([

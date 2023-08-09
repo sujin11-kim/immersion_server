@@ -11,4 +11,6 @@ export declare class CustomCommentQueryRepository {
     isPostExist(postIdx: number): Promise<void>;
     findNickName(userIdx: number): Promise<string>;
     findCommentByPostIdx(postIdx: number): Promise<readonlyCommentDto[]>;
+    commentonefind(commentIdx: number): Promise<Comment>;
+    postonefind(postIdx: number): Promise<Post>;
 }

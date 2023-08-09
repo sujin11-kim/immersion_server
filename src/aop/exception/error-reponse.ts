@@ -66,7 +66,7 @@ export class ErrorResponse {
   public notExistReview(existReviewId) {
     throw new BadRequestException({
       statusCode: 2007,
-      message: "존재하는 리뷰가 없습니다..",
+      message: "존재하는 리뷰가 없습니다.",
       result: { reviewIdx: ""  },
   })};
 
@@ -74,10 +74,18 @@ export class ErrorResponse {
 public notExistPost(existPostId) {
   throw new BadRequestException({
     statusCode: 2008,
-    message: "존재하는 게시물이 없습니다..",
+    message: "존재하는 게시물이 없습니다.",
     result: { postIdx: ""  },
 })};
 
+//Comment
+
+public notExistCommnet(existCommentId) {
+  throw new BadRequestException({
+    statusCode: 2009,
+    message: "존재하는 댓글이 없습니다.",
+    result: { commentIdx: ""  },
+})};
 
 
 

@@ -11,4 +11,5 @@ export declare class ErrorResponse {
     comparePassword(existPassword: any): void;
     notExistReview(existReviewId: any): void;
     notExistPost(existPostId: any): void;
+    notExistCommnet(existCommentId: any): void;
 }
