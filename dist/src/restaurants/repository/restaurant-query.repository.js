@@ -26,12 +26,6 @@ let CustomRestaurantQueryRepository = class CustomRestaurantQueryRepository {
     }
     async checkExistUser(userIdx) {
         const user = await this.userRepository.findOne({ where: { userIdx } });
-        if (!user) {
-            throw new common_1.BadRequestException({
-                statusCode: 2100,
-                message: "존재하지 않는 사용자 입니다.",
-            });
-        }
         return user;
     }
     async getrestaurantlist(userIdx) {
