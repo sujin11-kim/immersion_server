@@ -14,14 +14,14 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewController = void 0;
 const common_1 = require("@nestjs/common");
-const review_service_1 = require("./review.service");
-const create_review_dto_1 = require("./dto/create-review.dto");
-const update_review_dto_1 = require("./dto/update-review.dto");
-const jwt_guard_1 = require("../auth/utils/jwt/jwt.guard");
-const user_decorator_1 = require("../../src/aop/decorators/user.decorator");
-const user_login_dto_1 = require("../users/dto/user-login.dto");
-const http_exception_filter_1 = require("../../src/aop/exception/http-exception.filter");
-const success_interceptor_1 = require("../../src/aop/interceptors/success.interceptor");
+const review_service_1 = require("../service/review.service");
+const create_review_dto_1 = require("../dto/create-review.dto");
+const update_review_dto_1 = require("../dto/update-review.dto");
+const jwt_guard_1 = require("../../auth/utils/jwt/jwt.guard");
+const user_decorator_1 = require("../../aop/decorators/user.decorator");
+const user_login_dto_1 = require("../../users/dto/user-login.dto");
+const http_exception_filter_1 = require("../../aop/exception/http-exception.filter");
+const success_interceptor_1 = require("../../aop/interceptors/success.interceptor");
 const swagger_1 = require("@nestjs/swagger");
 let ReviewController = class ReviewController {
     constructor(reveiwservice) {
@@ -33,14 +33,14 @@ let ReviewController = class ReviewController {
     getoneReview(reviewIdx) {
         return this.reveiwservice.getoneReview(reviewIdx);
     }
-    create(createReviewDto, user) {
-        return this.reveiwservice.create(user, createReviewDto);
+    createReview(createReviewDto, user) {
+        return this.reveiwservice.createReview(user, createReviewDto);
     }
-    update(reviewIdx, updateReviewDto) {
-        return this.reveiwservice.update(reviewIdx, updateReviewDto);
+    updateReview(reviewIdx, updateReviewDto) {
+        return this.reveiwservice.updateReview(reviewIdx, updateReviewDto);
     }
-    delete(reviewIdx) {
-        return this.reveiwservice.delete(reviewIdx);
+    deleteReview(reviewIdx) {
+        return this.reveiwservice.deleteReview(reviewIdx);
     }
 };
 __decorate([
@@ -68,7 +68,7 @@ __decorate([
     __metadata("design:paramtypes", [create_review_dto_1.CreateReviewDto,
         user_login_dto_1.UserLoginDto]),
     __metadata("design:returntype", void 0)
-], ReviewController.prototype, "create", null);
+], ReviewController.prototype, "createReview", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "특정리뷰 수정" }),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
@@ -78,7 +78,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, update_review_dto_1.UpdateReviewDto]),
     __metadata("design:returntype", void 0)
-], ReviewController.prototype, "update", null);
+], ReviewController.prototype, "updateReview", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "특정리뷰 삭제" }),
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
@@ -87,7 +87,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
-], ReviewController.prototype, "delete", null);
+], ReviewController.prototype, "deleteReview", null);
 ReviewController = __decorate([
     (0, common_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
     (0, common_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),

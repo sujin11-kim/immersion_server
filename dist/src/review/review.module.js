@@ -8,8 +8,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewModule = void 0;
 const common_1 = require("@nestjs/common");
-const review_controller_1 = require("./review.controller");
-const review_service_1 = require("./review.service");
+const review_controller_1 = require("./controller/review.controller");
+const review_service_1 = require("./service/review.service");
 const typeorm_1 = require("@nestjs/typeorm");
 const Review_1 = require("../../resource/db/entities/Review");
 const auth_module_1 = require("../auth/auth.module");
@@ -18,6 +18,7 @@ const Post_1 = require("../../resource/db/entities/Post");
 const review_command_repository_1 = require("./repository/review-command.repository");
 const review_query_repository_1 = require("./repository/review-query.repository");
 const review_implements_1 = require("./interface/review.implements");
+const error_reponse_1 = require("../aop/exception/error-reponse");
 let ReviewModule = class ReviewModule {
 };
 ReviewModule = __decorate([
@@ -29,6 +30,7 @@ ReviewModule = __decorate([
             review_implements_1.ReviewtIml,
             review_command_repository_1.CustomReviewCommandRepository,
             review_query_repository_1.CustomReviewQueryRepository,
+            error_reponse_1.ErrorResponse
         ],
     })
 ], ReviewModule);

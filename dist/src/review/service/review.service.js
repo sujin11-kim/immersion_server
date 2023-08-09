@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewService = void 0;
 const common_1 = require("@nestjs/common");
-const review_implements_1 = require("./interface/review.implements");
+const review_implements_1 = require("../interface/review.implements");
 let ReviewService = class ReviewService {
     constructor(reviewImpl) {
         this.reviewImpl = reviewImpl;
@@ -22,15 +22,15 @@ let ReviewService = class ReviewService {
     async getoneReview(reviewIdx) {
         return await this.reviewImpl.getoneReview(reviewIdx);
     }
-    async create(user, createReviewDto) {
+    async createReview(user, createReviewDto) {
         console.log("service");
-        return await this.reviewImpl.create(user, createReviewDto);
+        return await this.reviewImpl.createReview(user, createReviewDto);
     }
-    async update(reviewIdx, updateReviewDto) {
-        return await this.reviewImpl.update(reviewIdx, updateReviewDto);
+    async updateReview(reviewIdx, updateReviewDto) {
+        return await this.reviewImpl.updateReview(reviewIdx, updateReviewDto);
     }
-    async delete(reviewIdx) {
-        return this.reviewImpl.delete(reviewIdx);
+    async deleteReview(reviewIdx) {
+        return this.reviewImpl.deleteReview(reviewIdx);
     }
 };
 ReviewService = __decorate([

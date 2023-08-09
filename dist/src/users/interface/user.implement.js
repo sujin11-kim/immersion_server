@@ -30,7 +30,7 @@ let UserImpl = class UserImpl {
     }
     async createUser(userInfo) {
         const hashedPassword = await bcrypt.hash(userInfo.password, 12);
-        const existUser = await this.customUserQueryRepository.getUserByEmail(userInfo.email);
+        const existUser = await this.customUserQueryRepository.getByEmail(userInfo.email);
         if (!existUser) {
             const newUser = await this.customUserCommandRepository.saveUser(Object.assign(Object.assign({}, userInfo), { password: hashedPassword }));
             return { userIdx: newUser.userIdx.toString() };

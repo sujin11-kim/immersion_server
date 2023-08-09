@@ -75,6 +75,22 @@ let ErrorResponse = class ErrorResponse {
         });
     }
     ;
+    notExistReview(existReviewId) {
+        throw new common_1.BadRequestException({
+            statusCode: 2007,
+            message: "존재하는 리뷰가 없습니다..",
+            result: { reviewIdx: "" },
+        });
+    }
+    ;
+    notExistPost(existPostId) {
+        throw new common_1.BadRequestException({
+            statusCode: 2008,
+            message: "존재하는 게시물이 없습니다..",
+            result: { postIdx: "" },
+        });
+    }
+    ;
 };
 ErrorResponse = __decorate([
     (0, common_1.Injectable)(),

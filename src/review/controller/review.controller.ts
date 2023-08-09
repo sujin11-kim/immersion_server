@@ -10,14 +10,14 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { ReviewService } from "./review.service";
-import { CreateReviewDto } from "./dto/create-review.dto";
-import { UpdateReviewDto } from "./dto/update-review.dto";
+import { ReviewService } from "../service/review.service";
+import { CreateReviewDto } from "../dto/create-review.dto";
+import { UpdateReviewDto } from "../dto/update-review.dto";
 import { JwtAuthGuard } from "src/auth/utils/jwt/jwt.guard";
-import { CurrentUser } from "../../src/aop/decorators/user.decorator";
+import { CurrentUser } from "../../aop/decorators/user.decorator";
 import { UserLoginDto } from "src/users/dto/user-login.dto";
-import { HttpExceptionFilter } from "../../src/aop/exception/http-exception.filter";
-import { SuccessInterceptor } from "../../src/aop/interceptors/success.interceptor";
+import { HttpExceptionFilter } from "../../aop/exception/http-exception.filter";
+import { SuccessInterceptor } from "../../aop/interceptors/success.interceptor";
 import { ApiOperation } from "@nestjs/swagger";
 
 @UseInterceptors(SuccessInterceptor)
@@ -41,27 +41,27 @@ export class ReviewController {
   @ApiOperation({ summary: "리뷰 작성" })
   @UseGuards(JwtAuthGuard)
   @Post("Newreview")
-  create(
+  createReview(
     @Body() createReviewDto: CreateReviewDto,
     @CurrentUser() user: UserLoginDto
   ) {
-    return this.reveiwservice.create(user, createReviewDto);
+    return this.reveiwservice.createReview(user, createReviewDto);
   }
 
   @ApiOperation({ summary: "특정리뷰 수정" })
   @UseGuards(JwtAuthGuard)
   @Patch("Onereviewupdate/:id")
-  update(
+  updateReview(
     @Param("id") reviewIdx: number,
     @Body() updateReviewDto: UpdateReviewDto
   ) {
-    return this.reveiwservice.update(reviewIdx, updateReviewDto);
+    return this.reveiwservice.updateReview(reviewIdx, updateReviewDto);
   }
 
   @ApiOperation({ summary: "특정리뷰 삭제" })
   @UseGuards(JwtAuthGuard)
   @Delete("delete/:id")
-  delete(@Param("id") reviewIdx: number) {
-    return this.reveiwservice.delete(reviewIdx);
+  deleteReview(@Param("id") reviewIdx: number) {
+    return this.reveiwservice.deleteReview(reviewIdx);
   }
 }
