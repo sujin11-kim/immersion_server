@@ -20,24 +20,31 @@ const User_1 = require("../../../resource/db/entities/User");
 const typeorm_2 = require("typeorm");
 const user_command_repository_1 = require("../repository/user-command.repository");
 const user_query_repository_1 = require("../repository/user-query.repository");
+const error_reponse_1 = require("../../aop/exception/error-reponse");
 let UserImpl = class UserImpl {
-    constructor(customUserCommandRepository, customUserQueryRepository, userEntityRepository) {
+    constructor(customUserCommandRepository, customUserQueryRepository, userEntityRepository, errorResponse) {
         this.customUserCommandRepository = customUserCommandRepository;
         this.customUserQueryRepository = customUserQueryRepository;
         this.userEntityRepository = userEntityRepository;
+        this.errorResponse = errorResponse;
     }
     async createUser(userInfo) {
         const hashedPassword = await bcrypt.hash(userInfo.password, 12);
-        await this.customUserQueryRepository.checkDuplicate(userInfo);
-        const newUser = await this.customUserCommandRepository.saveUser(Object.assign(Object.assign({}, userInfo), { password: hashedPassword }));
-        return { userIdx: newUser.userIdx.toString() };
+        const existUser = await this.customUserQueryRepository.getUserByEmail(userInfo.email);
+        if (!existUser) {
+            const newUser = await this.customUserCommandRepository.saveUser(Object.assign(Object.assign({}, userInfo), { password: hashedPassword }));
+            return { userIdx: newUser.userIdx.toString() };
+        }
+        else {
+            this.errorResponse.duplicateByEmail();
+        }
     }
     async getAllFCM() {
         const allFcmtoken = await this.customUserQueryRepository.findAllFcm();
         return allFcmtoken;
     }
     async getFCMByUserIdx(userIdx) {
-        await this.customUserQueryRepository.isUserExistsByUserIdx(userIdx);
+        await this.customUserQueryRepository.getByUserIdx(userIdx);
         const fcmToken = await this.customUserQueryRepository.getFCMByUserIdx(userIdx);
         return { fcmToken };
     }
@@ -47,7 +54,8 @@ UserImpl = __decorate([
     __param(2, (0, typeorm_1.InjectRepository)(User_1.User)),
     __metadata("design:paramtypes", [user_command_repository_1.CustomUserCommandRepository,
         user_query_repository_1.CustomUserQueryRepository,
-        typeorm_2.Repository])
+        typeorm_2.Repository,
+        error_reponse_1.ErrorResponse])
 ], UserImpl);
 exports.UserImpl = UserImpl;
 //# sourceMappingURL=user.implement.js.map

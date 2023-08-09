@@ -17,43 +17,30 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const User_1 = require("../../../resource/db/entities/User");
 const typeorm_2 = require("typeorm");
-const custom_exception_1 = require("../../aop/exception/custom-exception");
+const error_reponse_1 = require("../../aop/exception/error-reponse");
 let CustomUserQueryRepository = class CustomUserQueryRepository {
-    constructor(userRepository) {
+    constructor(userRepository, errorResponse) {
         this.userRepository = userRepository;
+        this.errorResponse = errorResponse;
     }
-    async checkDuplicate(userInfo) {
-        const userByEmail = await this.userRepository.findOne({
-            where: { email: userInfo.email },
-        });
-        if (userByEmail)
-            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.EMAIL_ALREADY_EXISTS);
-        const userBynickName = await this.userRepository.findOne({
-            where: { nickName: userInfo.nickName },
-        });
-        if (userBynickName)
-            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.NICKNAME_ALREADY_EXISTS);
-        const userByphone = await this.userRepository.findOne({
-            where: { phone: userInfo.phone },
-        });
-        if (userByphone)
-            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.PHONE_ALREADY_EXISTS);
+    async getByUserIdx(userIdx) {
+        const user = await this.userRepository.findOne({ where: { userIdx } });
+        return user;
+    }
+    async getByEmail(email) {
+        const user = await this.userRepository.findOne({ where: { email } });
+        return user;
     }
     async findAllFcm() {
         const users = await this.userRepository.find();
         if (users.length === 0) {
-            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.FCMTOKEN_NOT_FOUND);
+            throw this.errorResponse.notExistFCM;
         }
         const fcmTokens = users.reduce((result, user) => {
             result[user.userIdx] = user.fcmtoken;
             return result;
         }, {});
         return { fcmTokens };
-    }
-    async isUserExistsByUserIdx(userIdx) {
-        const user = await this.userRepository.findOne({ where: { userIdx } });
-        if (!user)
-            throw new common_1.NotFoundException(custom_exception_1.CustomExceptions.USER_NOT_FOUND);
     }
     async getFCMByUserIdx(userIdx) {
         const user = await this.userRepository.findOne({ where: { userIdx } });
@@ -64,7 +51,8 @@ let CustomUserQueryRepository = class CustomUserQueryRepository {
 CustomUserQueryRepository = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        error_reponse_1.ErrorResponse])
 ], CustomUserQueryRepository);
 exports.CustomUserQueryRepository = CustomUserQueryRepository;
 //# sourceMappingURL=user-query.repository.js.map

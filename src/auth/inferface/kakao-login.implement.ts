@@ -1,0 +1,45 @@
+import { Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { CustomUserCommandRepository } from "../../users/repository/user-command.repository";
+import { CustomUserQueryRepository } from "../../users/repository/user-query.repository";
+import axios, { AxiosInstance } from "axios";
+import { SocialUserDto } from "../dto/social-login.dto";
+import { ErrorResponse } from "src/aop/exception/error-reponse";
+import { Payload } from "../utils/jwt/jwt.payloads";
+
+@Injectable()
+export class KakaoLoginStrategy {
+  private readonly jwtService: JwtService;
+  private readonly axiosInstance: AxiosInstance;
+  private kakaoUser: SocialUserDto;
+  constructor(
+    private readonly customUserCommandRepository: CustomUserCommandRepository,
+    private readonly customUserQueryRepository: CustomUserQueryRepository,
+    private readonly errorResponse: ErrorResponse
+    
+  ) {
+    this.axiosInstance = axios.create({
+      baseURL: "https://kapi.kakao.com/v2/user/me",
+    });
+  }
+
+  public async kakaoToLocalToken(token: string): Promise<any>
+  {
+    const response = await this.axiosInstance.get("", {
+      headers: { Authorization: `Bearer ${token}` },
+    }); 
+    try {
+      this.kakaoUser.email = response.data.id;
+      this.kakaoUser.nickName = response.data.properties.nickname;
+      
+      const user = await this.customUserQueryRepository.getByEmail(this.kakaoUser.email);
+
+      this.kakaoUser.userIdx = user ? (await this.customUserQueryRepository.getByEmail(this.kakaoUser.email)).userIdx : (await this.customUserCommandRepository.saveUser(this.kakaoUser)).userIdx
+
+      const payload = { userIdx: this.kakaoUser.userIdx };
+      return { token: this.jwtService.sign(payload) };
+    } catch (error) {
+      this.errorResponse.notAuthorization()
+    }
+  }
+}
