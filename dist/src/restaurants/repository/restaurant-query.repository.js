@@ -18,26 +18,20 @@ const typeorm_1 = require("@nestjs/typeorm");
 const User_1 = require("../../../resource/db/entities/User");
 const Restaurant_1 = require("../../../resource/db/entities/Restaurant");
 const typeorm_2 = require("typeorm");
-const calculateDistance_1 = require("../utill/calculateDistance");
 let CustomRestaurantQueryRepository = class CustomRestaurantQueryRepository {
     constructor(userRepository, restaurantRepository) {
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
     }
+    async getAllResturant() {
+        const restaurants = await this.restaurantRepository.find();
+        return restaurants;
+    }
     async checkExistUser(userIdx) {
         const user = await this.userRepository.findOne({ where: { userIdx } });
         return user;
     }
-    async getrestaurantlist(userIdx) {
-        const restaurants = await this.restaurantRepository.find();
-        const user = await this.userRepository.findOne({ where: { userIdx } });
-        const nearbyRestaurantIdxs = [];
-        for (const restaurant of restaurants) {
-            const distance = (0, calculateDistance_1.calculateDistance)(user.latitude, user.longitude, restaurant.latitude, restaurant.longitude);
-            if (distance < 3000) {
-                nearbyRestaurantIdxs.push(restaurant.restaurantIdx);
-            }
-        }
+    async getNearByResturants(nearbyRestaurantIdxs) {
         const nearbyrestaurant = await this.restaurantRepository.find({
             where: {
                 restaurantIdx: (0, typeorm_2.In)(nearbyRestaurantIdxs),
