@@ -31,60 +31,36 @@ export class CommentService {
     return await this.commentImpl.findAllComment(postIdx);
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//3-3 게시물 좋아요
   async commentLike(userIdx: number, postIdx: number, commentIdx: number) {
-    const queryRunner =
-      this.commentRepository.manager.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
 
-    try {
-      const editcomment = await queryRunner.manager
-        .getRepository(Comment)
-        .findOne({ where: { commentIdx } });
 
-      editcomment.likeNum += 1;
-      await queryRunner.manager.getRepository(Comment).save(editcomment);
 
-      const likeComment = new LikeComment();
-      likeComment.commentIdx = commentIdx;
-      likeComment.userIdx = userIdx;
-      likeComment.postIdx = postIdx;
-      await queryRunner.manager.getRepository(LikeComment).save(likeComment);
 
-      return editcomment;
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw err;
-    } finally {
-      await queryRunner.release();
-    }
+    return await this.commentImpl.commentLike(userIdx,postIdx,commentIdx);
+
+
+
+
+
+
+
+
+
+
+
   }
+//3-4 댓글 좋아요 취소
+  async commentLikeCancel(userIdx: number, postIdx: number, commentIdx: number) {
 
-  async postLikeCancel(userIdx: number, postIdx: number, commentIdx: number) {
-    const queryRunner =
-      this.commentRepository.manager.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
 
-    try {
-      const editcomment = await queryRunner.manager
-        .getRepository(Comment)
-        .findOne({ where: { commentIdx } });
 
-      if (editcomment.likeNum > 0) {
-        editcomment.likeNum -= 1;
-      }
 
-      await queryRunner.manager.getRepository(Comment).save(editcomment);
+    return await this.commentImpl.commentLikeCancel(userIdx,postIdx,commentIdx);
 
-      return editcomment;
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw err;
-    } finally {
-      await queryRunner.release();
-    }
+
+
+   
   }
 }

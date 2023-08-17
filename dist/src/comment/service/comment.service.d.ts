@@ -11,5 +11,5 @@ export declare class CommentService {
     createComment(userIdx: number, createCommentDto: CreateCommentDto): Promise<readonlyCommentDto>;
     findAllComment(postIdx: number): Promise<readonlyCommentDto[]>;
     commentLike(userIdx: number, postIdx: number, commentIdx: number): Promise<Comment>;
-    postLikeCancel(userIdx: number, postIdx: number, commentIdx: number): Promise<Comment>;
+    commentLikeCancel(userIdx: number, postIdx: number, commentIdx: number): Promise<Comment>;
 }

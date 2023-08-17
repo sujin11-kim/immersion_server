@@ -15,18 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomReviewCommandRepository = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const User_1 = require("../../../resource/db/entities/User");
 const typeorm_2 = require("typeorm");
-const Post_1 = require("../../../resource/db/entities/Post");
 const Review_1 = require("../../../resource/db/entities/Review");
 let CustomReviewCommandRepository = class CustomReviewCommandRepository {
-    constructor(userRepository, postRepository, reviewRepository) {
-        this.userRepository = userRepository;
-        this.postRepository = postRepository;
+    constructor(reviewRepository) {
         this.reviewRepository = reviewRepository;
     }
-    async create(user, createReviewDto) {
-        const queryRunner = this.postRepository.manager.connection.createQueryRunner();
+    async createReview(user, createReviewDto) {
+        const queryRunner = this.reviewRepository.manager.connection.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
@@ -48,20 +44,14 @@ let CustomReviewCommandRepository = class CustomReviewCommandRepository {
             await queryRunner.release();
         }
     }
-    async update(reviewIdx, updateReviewDto) {
-        const queryRunner = this.postRepository.manager.connection.createQueryRunner();
+    async updateReview(reviewIdx, updateReviewDto) {
+        const queryRunner = this.reviewRepository.manager.connection.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
             const review = await queryRunner.manager
                 .getRepository(Review_1.Review)
                 .findOne({ where: { reviewIdx } });
-            if (!review) {
-                throw new common_1.BadRequestException({
-                    statusCode: 2100,
-                    message: "존재하지 않는 리뷰 입니다.",
-                });
-            }
             const { content, score } = updateReviewDto;
             review.content = content;
             review.score = score;
@@ -78,16 +68,13 @@ let CustomReviewCommandRepository = class CustomReviewCommandRepository {
         }
     }
     async delete(reviewIdx) {
-        const queryRunner = this.postRepository.manager.connection.createQueryRunner();
+        const queryRunner = this.reviewRepository.manager.connection.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
             const review = await queryRunner.manager
                 .getRepository(Review_1.Review)
                 .findOne({ where: { reviewIdx } });
-            if (!review) {
-                throw new common_1.NotFoundException(`Review with ID ${reviewIdx} not found`);
-            }
             await queryRunner.manager.getRepository(Review_1.Review).delete(reviewIdx);
             return review;
         }
@@ -102,12 +89,8 @@ let CustomReviewCommandRepository = class CustomReviewCommandRepository {
 };
 CustomReviewCommandRepository = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
-    __param(1, (0, typeorm_1.InjectRepository)(Post_1.Post)),
-    __param(2, (0, typeorm_1.InjectRepository)(User_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository,
-        typeorm_2.Repository])
+    __param(0, (0, typeorm_1.InjectRepository)(Review_1.Review)),
+    __metadata("design:paramtypes", [typeorm_2.Repository])
 ], CustomReviewCommandRepository);
 exports.CustomReviewCommandRepository = CustomReviewCommandRepository;
 //# sourceMappingURL=review-command.repository.js.map

@@ -1,20 +1,17 @@
 //read    find, find 관련
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "resource/db/entities/User";
 import { Repository } from "typeorm";
-import { Post } from "resource/db/entities/Post";
 import { Review } from "resource/db/entities/Review";
+import { Post } from "resource/db/entities/Post";
 
 @Injectable()
 export class CustomReviewQueryRepository {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    @InjectRepository(Post)
-    private readonly postRepository: Repository<Post>,
     @InjectRepository(Review)
-    private readonly reviewRepository: Repository<Review>
+    private readonly reviewRepository: Repository<Review>,
+    @InjectRepository(Post)
+    private readonly postRepository: Repository<Post>
   ) {}
 
   async reviewfind() {
@@ -23,10 +20,16 @@ export class CustomReviewQueryRepository {
 
   async reviewonefind(reviewIdx: number) {
     const review = await this.reviewRepository.findOneBy({ reviewIdx });
-    if (!review) {
-      throw new NotFoundException(`Review with ID ${reviewIdx} not found`);
-    }
-
     return review;
   }
+
+
+  async postonefind(postIdx: number) {
+    const review = await this.postRepository.findOneBy({ postIdx });
+    return review;
+  }
+
+
+
+
 }

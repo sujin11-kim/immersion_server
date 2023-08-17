@@ -13,17 +13,25 @@ exports.RestaurantIml = void 0;
 const common_1 = require("@nestjs/common");
 const restaurant_command_repository_1 = require("../repository/restaurant-command.repository");
 const restaurant_query_repository_1 = require("../repository/restaurant-query.repository");
+const error_reponse_1 = require("../../aop/exception/error-reponse");
 let RestaurantIml = class RestaurantIml {
-    constructor(customRestaurantCommandRepository, customRestaurantQueryRepository) {
+    constructor(customRestaurantCommandRepository, customRestaurantQueryRepository, errorResponse) {
         this.customRestaurantCommandRepository = customRestaurantCommandRepository;
         this.customRestaurantQueryRepository = customRestaurantQueryRepository;
+        this.errorResponse = errorResponse;
     }
     async createUserLocation(locationdto) {
         const user = await this.customRestaurantQueryRepository.checkExistUser(locationdto.userIdx);
+        if (!user) {
+            throw this.errorResponse.notExistUser();
+        }
         return await this.customRestaurantCommandRepository.saveUser(user, locationdto);
     }
     async updateUserLocation(locationdto) {
         const user = await this.customRestaurantQueryRepository.checkExistUser(locationdto.userIdx);
+        if (!user) {
+            throw this.errorResponse.notExistUser();
+        }
         return await this.customRestaurantCommandRepository.saveUser(user, locationdto);
     }
     async getrestaurantlist(userIdx) {
@@ -34,7 +42,8 @@ let RestaurantIml = class RestaurantIml {
 RestaurantIml = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [restaurant_command_repository_1.CustomRestaurantCommandRepository,
-        restaurant_query_repository_1.CustomRestaurantQueryRepository])
+        restaurant_query_repository_1.CustomRestaurantQueryRepository,
+        error_reponse_1.ErrorResponse])
 ], RestaurantIml);
 exports.RestaurantIml = RestaurantIml;
 //# sourceMappingURL=restaurant.implements.js.map
