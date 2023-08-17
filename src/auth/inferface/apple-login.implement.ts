@@ -6,6 +6,9 @@ import { SocialUserDto } from '../dto/social-login.dto';
 import { ErrorResponse } from "src/aop/exception/error-reponse";
 import { CustomUserCommandRepository } from 'src/users/repository/user-command.repository';
 import { CustomUserQueryRepository } from 'src/users/repository/user-query.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from 'resource/db/entities/User';
 
 export type AppleJwtTokenPayload = {
   iss: string;
@@ -29,7 +32,9 @@ export class AppleLoginStrategy {
   constructor(
     private readonly customUserCommandRepository: CustomUserCommandRepository,
     private readonly customUserQueryRepository: CustomUserQueryRepository,
-    private readonly errorResponse: ErrorResponse
+    private readonly errorResponse: ErrorResponse,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>
   ){}
 
   public async appleToLocalToken(appleIdToken: string) : Promise<any>{
@@ -46,17 +51,24 @@ export class AppleLoginStrategy {
       algorithms: [decodedToken.header.alg]
     }) as AppleJwtTokenPayload;
 
+    const queryRunner = this.userRepository.manager.connection.createQueryRunner();
+    await queryRunner.connect();
     try {
+      await queryRunner.startTransaction("REPEATABLE READ");
       this.appleUser.email = verifiedDecodedToken.email;
 
-      const user = await this.customUserQueryRepository.getByEmail(this.appleUser.email);
+      const user = await this.customUserQueryRepository.getByEmail(this.appleUser.email, queryRunner);
 
-      this.appleUser.userIdx = user ? (await this.customUserQueryRepository.getByEmail(this.appleUser.email)).userIdx : (await this.customUserCommandRepository.saveUser(this.appleUser)).userIdx 
+      this.appleUser.userIdx = user ? (await this.customUserQueryRepository.getByEmail(this.appleUser.email, queryRunner)).userIdx : (await this.customUserCommandRepository.signUp(this.appleUser, queryRunner)).userIdx 
 
       const payload = { userIdx: this.appleUser.userIdx };
       return { token: this.jwtService.sign(payload) };
     } catch (error) {
-      this.errorResponse.notAuthorization()
-  }}
+      await queryRunner.rollbackTransaction();
+      this.errorResponse.notAuthorizationApple()
+    }finally {
+      await queryRunner.release();
+    }
+  }
 }
 

@@ -6,6 +6,9 @@ import axios, { AxiosInstance } from "axios";
 import { SocialUserDto } from "../dto/social-login.dto";
 import { ErrorResponse } from "src/aop/exception/error-reponse";
 import { Payload } from "../utils/jwt/jwt.payloads";
+import { User } from "resource/db/entities/User";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class KakaoLoginStrategy {
@@ -15,8 +18,9 @@ export class KakaoLoginStrategy {
   constructor(
     private readonly customUserCommandRepository: CustomUserCommandRepository,
     private readonly customUserQueryRepository: CustomUserQueryRepository,
-    private readonly errorResponse: ErrorResponse
-    
+    private readonly errorResponse: ErrorResponse, 
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>
   ) {
     this.axiosInstance = axios.create({
       baseURL: "https://kapi.kakao.com/v2/user/me",
@@ -27,19 +31,25 @@ export class KakaoLoginStrategy {
   {
     const response = await this.axiosInstance.get("", {
       headers: { Authorization: `Bearer ${token}` },
-    }); 
-    try {
-      this.kakaoUser.email = response.data.id;
-      this.kakaoUser.nickName = response.data.properties.nickname;
-      
-      const user = await this.customUserQueryRepository.getByEmail(this.kakaoUser.email);
+    });
+    this.kakaoUser.email = response.data.id;
+    this.kakaoUser.nickName = response.data.properties.nickname;
 
-      this.kakaoUser.userIdx = user ? (await this.customUserQueryRepository.getByEmail(this.kakaoUser.email)).userIdx : (await this.customUserCommandRepository.saveUser(this.kakaoUser)).userIdx
+    const queryRunner = this.userRepository.manager.connection.createQueryRunner();
+    await queryRunner.connect();
+    try {
+      await queryRunner.startTransaction("REPEATABLE READ");
+      const user = await this.customUserQueryRepository.getByEmail(this.kakaoUser.email, queryRunner);
+
+      this.kakaoUser.userIdx = user ? (await this.customUserQueryRepository.getByEmail(this.kakaoUser.email)).userIdx : (await this.customUserCommandRepository.signUp(this.kakaoUser, queryRunner)).userIdx
 
       const payload = { userIdx: this.kakaoUser.userIdx };
       return { token: this.jwtService.sign(payload) };
     } catch (error) {
-      this.errorResponse.notAuthorization()
+      await queryRunner.rollbackTransaction();
+      this.errorResponse.notAuthorizationKakao();
+    }finally {
+      await queryRunner.release();
     }
   }
 }

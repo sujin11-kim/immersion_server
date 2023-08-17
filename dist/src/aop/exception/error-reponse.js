@@ -19,6 +19,12 @@ let ErrorResponse = class ErrorResponse {
     notAuthorizationLogin() {
         throw new common_1.HttpException({ token: "userIdx가 유효하지 않습니다." }, 402);
     }
+    notAuthorizationKakao() {
+        throw new common_1.HttpException({ token: "not authorization kakao login" }, 403);
+    }
+    notAuthorizationApple() {
+        throw new common_1.HttpException({ token: "not authorization apple login" }, 404);
+    }
     notExistUser() {
         throw new common_1.BadRequestException({
             statusCode: 2000,

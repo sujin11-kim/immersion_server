@@ -1,8 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "../../../resource/db/entities/User";
-import { Repository } from "typeorm";
-// import { CreateUserDto } from "../dto/create-user.dto";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, QueryRunner } from 'typeorm';
+import { User } from '../../../resource/db/entities/User';
 
 @Injectable()
 export class CustomUserCommandRepository {
@@ -11,31 +10,23 @@ export class CustomUserCommandRepository {
     private readonly userRepository: Repository<User>
   ) {}
 
-  //새로운 user 저장
-  async saveUser<T extends Record<string, any>>(userInfo: T) {
-    const queryRunner =
-      this.userRepository.manager.connection.createQueryRunner();
-    await queryRunner.connect();
+  // 새로운 user 저장
+  public async signUp<T extends Record<string, any>>(
+    userInfo: T,
+    queryRunner: QueryRunner | undefined = undefined
+  ) {
+    const { email, nickName, phone, password, fcmToken } = userInfo;
+    const user = new User();
+    user.email = email;
+    user.nickName = nickName;
+    user.phone = phone;
+    user.password = password;
+    user.fcmtoken = fcmToken;
 
-    try {
-      await queryRunner.startTransaction("REPEATABLE READ");
-      const { email, nickName, phone, password, fcmToken } = userInfo;
+    const repository = queryRunner ? queryRunner.manager.getRepository(User) : this.userRepository;
 
-      const user = queryRunner.manager.getRepository(User).create();
-      (user.email = email),
-        (user.nickName = nickName),
-        (user.phone = phone),
-        (user.password = password),
-        (user.fcmtoken = fcmToken);
-      const newUser = await queryRunner.manager.getRepository(User).save(user);
+    const newUser = await repository.save(user);
 
-      await queryRunner.commitTransaction();
-      return { userIdx: newUser.userIdx };
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw error;
-    } finally {
-      await queryRunner.release();
-    }
+    return newUser;
   }
 }
