@@ -41,7 +41,7 @@ export class KakaoLoginStrategy {
       await queryRunner.startTransaction("REPEATABLE READ");
       const user = await this.customUserQueryRepository.getByEmail(this.kakaoUser.email, queryRunner);
 
-      this.kakaoUser.userIdx = user ? (await this.customUserQueryRepository.getByEmail(this.kakaoUser.email)).userIdx : (await this.customUserCommandRepository.signUp(this.kakaoUser, queryRunner)).userIdx
+      this.kakaoUser.userIdx = user ? (await this.customUserQueryRepository.getByEmail(this.kakaoUser.email, queryRunner)).userIdx : (await this.customUserCommandRepository.signUp(this.kakaoUser, queryRunner)).userIdx
 
       const payload = { userIdx: this.kakaoUser.userIdx };
       return { token: this.jwtService.sign(payload) };
