@@ -33,6 +33,7 @@ const Restaurant_1 = require("../resource/db/entities/Restaurant");
 const restaurants_module_1 = require("./restaurants/restaurants.module");
 const review_module_1 = require("./review/review.module");
 const LikeComment_1 = require("../resource/db/entities/LikeComment");
+const Meun_1 = require("../resource/db/entities/Meun");
 let AppModule = class AppModule {
     constructor() {
         moment.locale("en");
@@ -63,6 +64,7 @@ AppModule = __decorate([
                     Image_1.Image,
                     Restaurant_1.Restaurant,
                     LikeComment_1.LikeComment,
+                    Meun_1.Meun,
                 ],
                 autoLoadEntities: true,
                 keepConnectionAlive: true,

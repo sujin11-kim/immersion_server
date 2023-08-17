@@ -1,3 +1,4 @@
+import { Meun } from "./Meun";
 import { User } from "./User";
 export declare class Restaurant {
     restaurantIdx: number;
@@ -9,6 +10,8 @@ export declare class Restaurant {
     isAuthorized: boolean | null;
     latitude: number | null;
     longitude: number | null;
+    restaurantIntro: string | null;
     isPostedToday: boolean | null;
     userIdx2: User;
+    meuns: Meun[];
 }
