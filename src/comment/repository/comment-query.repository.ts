@@ -73,4 +73,20 @@ export class CustomCommentQueryRepository {
 
     return result;
   }
+
+  //댓글 찾기
+  async commentonefind(commentIdx: number) {
+    const review = await this.commentRepository.findOneBy({ commentIdx });
+    return review;
+  }
+
+
+  //게시물 찾기
+   async postonefind(postIdx: number) {
+    const post = await this.postRepository.findOneBy({ postIdx });
+    return post;
+  }
+
+  
+
 }

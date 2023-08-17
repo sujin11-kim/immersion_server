@@ -16,6 +16,7 @@ const User_1 = require("../../resource/db/entities/User");
 const restaurant_implements_1 = require("./interface/restaurant.implements");
 const restaurant_command_repository_1 = require("./repository/restaurant-command.repository");
 const restaurant_query_repository_1 = require("./repository/restaurant-query.repository");
+const error_reponse_1 = require("../aop/exception/error-reponse");
 let RestaurantsModule = class RestaurantsModule {
 };
 RestaurantsModule = __decorate([
@@ -27,6 +28,7 @@ RestaurantsModule = __decorate([
             restaurant_implements_1.RestaurantIml,
             restaurant_command_repository_1.CustomRestaurantCommandRepository,
             restaurant_query_repository_1.CustomRestaurantQueryRepository,
+            error_reponse_1.ErrorResponse
         ],
     })
 ], RestaurantsModule);

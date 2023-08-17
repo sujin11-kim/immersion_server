@@ -73,6 +73,14 @@ let CustomCommentQueryRepository = class CustomCommentQueryRepository {
         }));
         return result;
     }
+    async commentonefind(commentIdx) {
+        const review = await this.commentRepository.findOneBy({ commentIdx });
+        return review;
+    }
+    async postonefind(postIdx) {
+        const post = await this.postRepository.findOneBy({ postIdx });
+        return post;
+    }
 };
 CustomCommentQueryRepository = __decorate([
     (0, common_1.Injectable)(),

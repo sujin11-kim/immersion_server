@@ -4,6 +4,9 @@ import { CreateCommentDto } from "../dto/create-comment.dto";
 import { Comment } from "resource/db/entities/Comment";
 export declare class CustomCommentCommandRepository {
     private readonly postRepository;
-    constructor(postRepository: Repository<Post>);
+    private readonly commentRepository;
+    constructor(postRepository: Repository<Post>, commentRepository: Repository<Comment>);
     saveComment(userIdx: number, createCommentDto: CreateCommentDto): Promise<Comment>;
+    increaseLikeNUm(userIdx: number, postIdx: number, commentIdx: number): Promise<Comment>;
+    decreaseLikeNUm(userIdx: number, postIdx: number, commentIdx: number): Promise<Comment>;
 }

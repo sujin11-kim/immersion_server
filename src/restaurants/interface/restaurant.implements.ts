@@ -5,19 +5,27 @@ import { Restaurant } from "resource/db/entities/Restaurant";
 import { LocationDto } from "../dto/location.dto";
 import { CustomRestaurantCommandRepository } from "../repository/restaurant-command.repository";
 import { CustomRestaurantQueryRepository } from "../repository/restaurant-query.repository";
-
+import { ErrorResponse } from "src/aop/exception/error-reponse";
 @Injectable()
 export class RestaurantIml implements RestaurantInterface {
   constructor(
     private readonly customRestaurantCommandRepository: CustomRestaurantCommandRepository,
-    private readonly customRestaurantQueryRepository: CustomRestaurantQueryRepository
-  ) {}
+    private readonly customRestaurantQueryRepository: CustomRestaurantQueryRepository,
+    private errorResponse : ErrorResponse
+    ) {}
 
   // 5-1 유저의 경도 위도 저장
   async createUserLocation(locationdto: LocationDto): Promise<User> {
+
+    //존재하는 User인지 확인
     const user = await this.customRestaurantQueryRepository.checkExistUser(
       locationdto.userIdx
     );
+
+    if (!user) {
+      throw this.errorResponse.notExistUser();
+    }
+
     return await this.customRestaurantCommandRepository.saveUser(
       user,
       locationdto
@@ -29,6 +37,13 @@ export class RestaurantIml implements RestaurantInterface {
     const user = await this.customRestaurantQueryRepository.checkExistUser(
       locationdto.userIdx
     );
+
+
+    if (!user) {
+      throw this.errorResponse.notExistUser();
+    }
+
+
     return await this.customRestaurantCommandRepository.saveUser(
       user,
       locationdto

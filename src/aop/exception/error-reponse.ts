@@ -68,4 +68,33 @@ export class ErrorResponse {
       message: "비밀번호가 일치하지 않습니다.",
       result: { existPassword: existPassword },
   })};
+
+
+//Review
+  public notExistReview(existReviewId) {
+    throw new BadRequestException({
+      statusCode: 2007,
+      message: "존재하는 리뷰가 없습니다.",
+      result: { reviewIdx: ""  },
+  })};
+
+//Post
+public notExistPost(existPostId) {
+  throw new BadRequestException({
+    statusCode: 2008,
+    message: "존재하는 게시물이 없습니다.",
+    result: { postIdx: ""  },
+})};
+
+//Comment
+
+public notExistCommnet(existCommentId) {
+  throw new BadRequestException({
+    statusCode: 2009,
+    message: "존재하는 댓글이 없습니다.",
+    result: { commentIdx: ""  },
+})};
+
+
+
 }

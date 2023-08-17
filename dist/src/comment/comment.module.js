@@ -18,6 +18,7 @@ const LikeComment_1 = require("../../resource/db/entities/LikeComment");
 const comment_command_repository_1 = require("./repository/comment-command.repository");
 const comment_query_repository_1 = require("./repository/comment-query.repository");
 const comment_implement_1 = require("./interface/comment.implement");
+const error_reponse_1 = require("../aop/exception/error-reponse");
 let CommentModule = class CommentModule {
 };
 CommentModule = __decorate([
@@ -29,6 +30,7 @@ CommentModule = __decorate([
             comment_command_repository_1.CustomCommentCommandRepository,
             comment_query_repository_1.CustomCommentQueryRepository,
             comment_implement_1.CommentImpl,
+            error_reponse_1.ErrorResponse
         ],
     })
 ], CommentModule);

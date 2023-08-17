@@ -9,6 +9,7 @@ import { LikeComment } from "resource/db/entities/LikeComment";
 import { CustomCommentCommandRepository } from "./repository/comment-command.repository";
 import { CustomCommentQueryRepository } from "./repository/comment-query.repository";
 import { CommentImpl } from "./interface/comment.implement";
+import { ErrorResponse } from "src/aop/exception/error-reponse";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Comment, User, Post, LikeComment])],
@@ -18,6 +19,8 @@ import { CommentImpl } from "./interface/comment.implement";
     CustomCommentCommandRepository,
     CustomCommentQueryRepository,
     CommentImpl,
+    ErrorResponse
+
   ],
 })
 export class CommentModule {}

@@ -7,6 +7,7 @@ import { User } from "../../resource/db/entities/User";
 import { RestaurantIml } from "./interface/restaurant.implements";
 import { CustomRestaurantCommandRepository } from "./repository/restaurant-command.repository";
 import { CustomRestaurantQueryRepository } from "./repository/restaurant-query.repository";
+import { ErrorResponse } from "src/aop/exception/error-reponse";
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Restaurant])],
@@ -16,6 +17,8 @@ import { CustomRestaurantQueryRepository } from "./repository/restaurant-query.r
     RestaurantIml,
     CustomRestaurantCommandRepository,
     CustomRestaurantQueryRepository,
+    ErrorResponse
+
   ],
 })
 export class RestaurantsModule {}
