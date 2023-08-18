@@ -40,7 +40,7 @@ let AppleLoginStrategy = class AppleLoginStrategy {
             return { token: this.jwtService.sign(payload) };
         }
         catch (error) {
-            this.errorResponse.notAuthorization();
+            this.errorResponse.notAuthorizationApple();
         }
     }
 };

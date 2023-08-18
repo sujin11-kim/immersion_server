@@ -37,7 +37,7 @@ let KakaoLoginStrategy = class KakaoLoginStrategy {
             return { token: this.jwtService.sign(payload) };
         }
         catch (error) {
-            this.errorResponse.notAuthorization();
+            this.errorResponse.notAuthorizationKakao();
         }
     }
 };
