@@ -11,7 +11,15 @@ export class ErrorResponse {
   public notAuthorizationLogin() {
     throw new HttpException({ token: "userIdx가 유효하지 않습니다." }, 402);
   }
-  
+
+  public notAuthorizationKakao() {
+    throw new HttpException({ token: "not authorization kakao login" }, 403);
+  }
+
+  public notAuthorizationApple() {
+    throw new HttpException({ token: "not authorization apple login" }, 404);
+  }
+
   public notExistUser() {
     throw new BadRequestException({
       statusCode: 2000,

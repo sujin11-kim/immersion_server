@@ -3,7 +3,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "../../../resource/db/entities/User";
-import { Repository } from "typeorm";
+import { Repository, QueryRunner } from "typeorm";
 import { ErrorResponse } from "src/aop/exception/error-reponse";
 
 @Injectable()
@@ -15,14 +15,18 @@ export class CustomUserQueryRepository {
     private errorResponse : ErrorResponse
   ) {} 
 
-  async getByUserIdx(userIdx: number) {
-    const user = await this.userRepository.findOne({ where: { userIdx } });
+  async getByUserIdx(userIdx: number, queryRunner: QueryRunner | undefined = undefined) {
+    const repository = queryRunner ? queryRunner.manager.getRepository(User) : this.userRepository;
+
+    const user = await repository.findOne({ where: { userIdx } });
     
     return user;
   }
 
-  async getByEmail(email: string) {
-    const user = await this.userRepository.findOne({ where: { email }});
+  async getByEmail(email: string, queryRunner: QueryRunner | undefined = undefined) {
+    const repository = queryRunner ? queryRunner.manager.getRepository(User) : this.userRepository;
+
+    const user = await repository.findOne({ where: { email }});
     
     return user;
   }

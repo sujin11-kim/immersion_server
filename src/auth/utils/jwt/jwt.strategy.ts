@@ -1,8 +1,10 @@
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { PassportStrategy } from "@nestjs/passport";
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { CustomUserQueryRepository } from 'src/users/repository/user-query.repository';
 import { Payload } from "./jwt.payloads";
+import * as jwt from 'jsonwebtoken';
+import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { ErrorResponse } from "src/aop/exception/error-reponse";
 
 @Injectable()
@@ -13,18 +15,17 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: "secretKey",
+      secretOrKey: process.env.JWT_SECRET,
       ignoreExpiration: true,
     });
   }
 
-  async validate(payload: Payload) {
+  async validate(payload) {
     const { userIdx } = payload;
     const user = await this.customUserQueryRepository.getByUserIdx(userIdx);
-
-    if (!user) {
-      this.errorResponse.notAuthorizationLogin();
-    }
-    else return user;
+    
+    if (!user) this.errorResponse.notAuthorizationLogin();
+    
+    return user;
   }
 }
