@@ -6,17 +6,17 @@ import { LocationDto } from "../dto/location.dto";
 import { CustomRestaurantCommandRepository } from "../repository/restaurant-command.repository";
 import { CustomRestaurantQueryRepository } from "../repository/restaurant-query.repository";
 import { ErrorResponse } from "src/aop/exception/error-reponse";
+import { calculateDistance } from "../utill/calculateDistance";
 @Injectable()
 export class RestaurantIml implements RestaurantInterface {
   constructor(
     private readonly customRestaurantCommandRepository: CustomRestaurantCommandRepository,
     private readonly customRestaurantQueryRepository: CustomRestaurantQueryRepository,
-    private errorResponse : ErrorResponse
-    ) {}
+    private errorResponse: ErrorResponse
+  ) {}
 
   // 5-1 유저의 경도 위도 저장
   async createUserLocation(locationdto: LocationDto): Promise<User> {
-
     //존재하는 User인지 확인
     const user = await this.customRestaurantQueryRepository.checkExistUser(
       locationdto.userIdx
@@ -38,11 +38,9 @@ export class RestaurantIml implements RestaurantInterface {
       locationdto.userIdx
     );
 
-
     if (!user) {
       throw this.errorResponse.notExistUser();
     }
-
 
     return await this.customRestaurantCommandRepository.saveUser(
       user,
@@ -52,11 +50,33 @@ export class RestaurantIml implements RestaurantInterface {
 
   // 5-3 3km 이내 음식점 정보 조회
   async getrestaurantlist(userIdx: number): Promise<Restaurant[]> {
+    // 1. 전체 가게 배열로 받아오기                    쿼리파일 작성
+    // 2. useridx 를 가진 유저 한명 가져오기            쿼리파일 작성
+    // 3. 조건을 만족하는 가게들의 idx 구하기
+    // 4. 조건은 만족한 가게 idx 로 가게전체 데이터 가져오기      쿼리파일 작성하기
+
+    const restaurants =
+      await this.customRestaurantQueryRepository.getAllResturant();
+
     const user = await this.customRestaurantQueryRepository.checkExistUser(
       userIdx
     );
-    return await this.customRestaurantQueryRepository.getrestaurantlist(
-      userIdx
+
+    const nearbyRestaurantIdxs: number[] = [];
+    for (const restaurant of restaurants) {
+      const distance = calculateDistance(
+        user.latitude,
+        user.longitude,
+        restaurant.latitude,
+        restaurant.longitude
+      );
+      if (distance < 3000) {
+        nearbyRestaurantIdxs.push(restaurant.restaurantIdx);
+      }
+    }
+
+    return await this.customRestaurantQueryRepository.getNearByResturants(
+      nearbyRestaurantIdxs
     );
   }
 }

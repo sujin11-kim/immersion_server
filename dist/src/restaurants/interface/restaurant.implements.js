@@ -14,6 +14,7 @@ const common_1 = require("@nestjs/common");
 const restaurant_command_repository_1 = require("../repository/restaurant-command.repository");
 const restaurant_query_repository_1 = require("../repository/restaurant-query.repository");
 const error_reponse_1 = require("../../aop/exception/error-reponse");
+const calculateDistance_1 = require("../utill/calculateDistance");
 let RestaurantIml = class RestaurantIml {
     constructor(customRestaurantCommandRepository, customRestaurantQueryRepository, errorResponse) {
         this.customRestaurantCommandRepository = customRestaurantCommandRepository;
@@ -35,8 +36,16 @@ let RestaurantIml = class RestaurantIml {
         return await this.customRestaurantCommandRepository.saveUser(user, locationdto);
     }
     async getrestaurantlist(userIdx) {
+        const restaurants = await this.customRestaurantQueryRepository.getAllResturant();
         const user = await this.customRestaurantQueryRepository.checkExistUser(userIdx);
-        return await this.customRestaurantQueryRepository.getrestaurantlist(userIdx);
+        const nearbyRestaurantIdxs = [];
+        for (const restaurant of restaurants) {
+            const distance = (0, calculateDistance_1.calculateDistance)(user.latitude, user.longitude, restaurant.latitude, restaurant.longitude);
+            if (distance < 3000) {
+                nearbyRestaurantIdxs.push(restaurant.restaurantIdx);
+            }
+        }
+        return await this.customRestaurantQueryRepository.getNearByResturants(nearbyRestaurantIdxs);
     }
 };
 RestaurantIml = __decorate([

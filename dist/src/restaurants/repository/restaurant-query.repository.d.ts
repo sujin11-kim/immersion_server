@@ -5,6 +5,7 @@ export declare class CustomRestaurantQueryRepository {
     private readonly userRepository;
     private readonly restaurantRepository;
     constructor(userRepository: Repository<User>, restaurantRepository: Repository<Restaurant>);
+    getAllResturant(): Promise<Restaurant[]>;
     checkExistUser(userIdx: number): Promise<User>;
-    getrestaurantlist(userIdx: number): Promise<Restaurant[]>;
+    getNearByResturants(nearbyRestaurantIdxs: number[]): Promise<Restaurant[]>;
 }

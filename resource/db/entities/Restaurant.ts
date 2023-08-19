@@ -1,9 +1,11 @@
+import { Meun } from "./Meun";
 import {
   Column,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { User } from "./User";
@@ -48,6 +50,9 @@ export class Restaurant {
   })
   longitude: number | null;
 
+  @Column("varchar", { name: "restaurantIntro", nullable: true, length: 300 })
+  restaurantIntro: string | null;
+
   @Column("tinyint", { name: "isPostedToday", nullable: true, width: 1 })
   isPostedToday: boolean | null;
 
@@ -57,4 +62,7 @@ export class Restaurant {
   })
   @JoinColumn([{ name: "userIdx", referencedColumnName: "userIdx" }])
   userIdx2: User;
+
+  @OneToMany(() => Meun, (meun) => meun.restaurantIdx2)
+  meuns: Meun[];
 }

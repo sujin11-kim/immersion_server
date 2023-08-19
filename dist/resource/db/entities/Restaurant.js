@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Restaurant = void 0;
+const Meun_1 = require("./Meun");
 const typeorm_1 = require("typeorm");
 const User_1 = require("./User");
 let Restaurant = class Restaurant {
@@ -61,6 +62,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Restaurant.prototype, "longitude", void 0);
 __decorate([
+    (0, typeorm_1.Column)("varchar", { name: "restaurantIntro", nullable: true, length: 300 }),
+    __metadata("design:type", String)
+], Restaurant.prototype, "restaurantIntro", void 0);
+__decorate([
     (0, typeorm_1.Column)("tinyint", { name: "isPostedToday", nullable: true, width: 1 }),
     __metadata("design:type", Boolean)
 ], Restaurant.prototype, "isPostedToday", void 0);
@@ -72,6 +77,10 @@ __decorate([
     (0, typeorm_1.JoinColumn)([{ name: "userIdx", referencedColumnName: "userIdx" }]),
     __metadata("design:type", User_1.User)
 ], Restaurant.prototype, "userIdx2", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Meun_1.Meun, (meun) => meun.restaurantIdx2),
+    __metadata("design:type", Array)
+], Restaurant.prototype, "meuns", void 0);
 Restaurant = __decorate([
     (0, typeorm_1.Index)("FK_User_TO_Restaurant_1", ["userIdx"], {}),
     (0, typeorm_1.Entity)("Restaurant", { schema: "immersion_DB" })
