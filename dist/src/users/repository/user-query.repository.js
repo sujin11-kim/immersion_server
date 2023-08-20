@@ -23,12 +23,14 @@ let CustomUserQueryRepository = class CustomUserQueryRepository {
         this.userRepository = userRepository;
         this.errorResponse = errorResponse;
     }
-    async getByUserIdx(userIdx) {
-        const user = await this.userRepository.findOne({ where: { userIdx } });
+    async getByUserIdx(userIdx, queryRunner = undefined) {
+        const repository = queryRunner ? queryRunner.manager.getRepository(User_1.User) : this.userRepository;
+        const user = await repository.findOne({ where: { userIdx } });
         return user;
     }
-    async getByEmail(email) {
-        const user = await this.userRepository.findOne({ where: { email } });
+    async getByEmail(email, queryRunner = undefined) {
+        const repository = queryRunner ? queryRunner.manager.getRepository(User_1.User) : this.userRepository;
+        const user = await repository.findOne({ where: { email } });
         return user;
     }
     async findAllFcm() {

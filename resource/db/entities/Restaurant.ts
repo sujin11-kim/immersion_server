@@ -1,4 +1,4 @@
-import { Meun } from "./Meun";
+import { Menu } from "./Menu";
 import {
   Column,
   Entity,
@@ -63,6 +63,6 @@ export class Restaurant {
   @JoinColumn([{ name: "userIdx", referencedColumnName: "userIdx" }])
   userIdx2: User;
 
-  @OneToMany(() => Meun, (meun) => meun.restaurantIdx2)
-  meuns: Meun[];
+  @OneToMany(() => Menu, (menu) => menu.restaurantIdx2)
+  menus: Menu[];
 }

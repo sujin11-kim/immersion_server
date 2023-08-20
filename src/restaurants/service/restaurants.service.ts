@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { LocationDto } from "./dto/location.dto";
-import { RestaurantIml } from "./interface/restaurant.implements";
+import { LocationDto } from "../dto/location.dto";
+import { RestaurantIml } from "../interface/restaurant.implements";
 
 @Injectable()
 export class RestaurantsService {
@@ -16,5 +16,10 @@ export class RestaurantsService {
 
   async getrestaurantlist(userIdx: number) {
     return await this.restaurantImpl.getrestaurantlist(userIdx);
+  }
+
+  // 5-4 식당 및 메뉴 검색
+  async findMenu(searchWord: string) {
+    return await this.restaurantImpl.findMenu(searchWord);
   }
 }

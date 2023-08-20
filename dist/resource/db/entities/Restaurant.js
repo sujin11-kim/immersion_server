@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Restaurant = void 0;
-const Meun_1 = require("./Meun");
+const Menu_1 = require("./Menu");
 const typeorm_1 = require("typeorm");
 const User_1 = require("./User");
 let Restaurant = class Restaurant {
@@ -78,9 +78,9 @@ __decorate([
     __metadata("design:type", User_1.User)
 ], Restaurant.prototype, "userIdx2", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Meun_1.Meun, (meun) => meun.restaurantIdx2),
+    (0, typeorm_1.OneToMany)(() => Menu_1.Menu, (menu) => menu.restaurantIdx2),
     __metadata("design:type", Array)
-], Restaurant.prototype, "meuns", void 0);
+], Restaurant.prototype, "menus", void 0);
 Restaurant = __decorate([
     (0, typeorm_1.Index)("FK_User_TO_Restaurant_1", ["userIdx"], {}),
     (0, typeorm_1.Entity)("Restaurant", { schema: "immersion_DB" })

@@ -11,4 +11,7 @@ export interface RestaurantInterface {
 
   // 5-3 3km 이내 음식점 정보 조회
   getrestaurantlist(userIdx: number): Promise<Restaurant[]>;
+
+  // 5-4 식당 및 메뉴 검색
+  findMenu(restaurant: string): Promise<any>;
 }

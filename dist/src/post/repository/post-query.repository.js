@@ -21,21 +21,22 @@ const User_1 = require("../../../resource/db/entities/User");
 const Image_1 = require("../../../resource/db/entities/Image");
 const Comment_1 = require("../../../resource/db/entities/Comment");
 const LikePost_1 = require("../../../resource/db/entities/LikePost");
-const custom_exception_1 = require("../../aop/exception/custom-exception");
+const error_reponse_1 = require("../../aop/exception/error-reponse");
 let CustomPostQueryRepository = class CustomPostQueryRepository {
-    constructor(postRepository, userRepository, imageRepository, commentRepository, likePostRepository) {
+    constructor(postRepository, userRepository, imageRepository, commentRepository, likePostRepository, errorResponse) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.imageRepository = imageRepository;
         this.commentRepository = commentRepository;
         this.likePostRepository = likePostRepository;
+        this.errorResponse = errorResponse;
     }
     async findPostsById(userIdx) {
         const posts = await this.postRepository.find({
             where: { userIdx },
         });
         if (posts.length === 0) {
-            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.USER_POSTS_NOT_FOUND);
+            this.errorResponse.userPostNotFound();
         }
         return posts;
     }
@@ -44,14 +45,14 @@ let CustomPostQueryRepository = class CustomPostQueryRepository {
             where: { category },
         });
         if (posts.length === 0) {
-            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.CATEGORY_POSTS_NOT_FOUND);
+            this.errorResponse.categoryPostsNotFound();
         }
         return posts;
     }
     async checkTotalPostCountExceeded(page, pageSize) {
         const totalPosts = await this.postRepository.count();
         if (page + pageSize - 1 > 0) {
-            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.MAX_POSTS_EXCEEDED);
+            this.errorResponse.maxPostsExceeded();
         }
     }
     async findPosts(offset, pageSize) {
@@ -86,7 +87,7 @@ let CustomPostQueryRepository = class CustomPostQueryRepository {
             where: { postIdx },
         });
         if (!post) {
-            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.POST_NOT_FOUND);
+            this.errorResponse.postNotFound();
         }
         return post;
     }
@@ -95,7 +96,7 @@ let CustomPostQueryRepository = class CustomPostQueryRepository {
             where: { postIdx: post.postIdx, userIdx: userIdx },
         });
         if (likeCount === 0) {
-            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.LIKE_NOT_FOUND);
+            this.errorResponse.likeNotFound();
         }
     }
 };
@@ -110,7 +111,8 @@ CustomPostQueryRepository = __decorate([
         typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
-        typeorm_2.Repository])
+        typeorm_2.Repository,
+        error_reponse_1.ErrorResponse])
 ], CustomPostQueryRepository);
 exports.CustomPostQueryRepository = CustomPostQueryRepository;
 //# sourceMappingURL=post-query.repository.js.map

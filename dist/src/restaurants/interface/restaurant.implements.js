@@ -47,6 +47,13 @@ let RestaurantIml = class RestaurantIml {
         }
         return await this.customRestaurantQueryRepository.getNearByResturants(nearbyRestaurantIdxs);
     }
+    async findMenu(searchWord) {
+        let menuList = await this.customRestaurantQueryRepository.findMenuByRestaurant(searchWord);
+        if (menuList.length === 0) {
+            this.errorResponse.notFoundSearch();
+        }
+        return { menuList };
+    }
 };
 RestaurantIml = __decorate([
     (0, common_1.Injectable)(),

@@ -1,7 +1,8 @@
 import { forwardRef, Module } from "@nestjs/common";
-import { TypeOrmModule,
+import {
+  TypeOrmModule,
   getDataSourceToken,
-  getRepositoryToken
+  getRepositoryToken,
 } from "@nestjs/typeorm";
 import { User } from "../../resource/db/entities/User";
 import { UsersService } from "./service/users.service";
@@ -28,13 +29,11 @@ import { DataSource } from "typeorm";
     },
     UsersService,
     UserImpl,
-    // CustomUserCommandRepository,
+    CustomUserCommandRepository,
     CustomUserQueryRepository,
-    ErrorResponse
+    ErrorResponse,
   ],
   exports: [UsersService],
   controllers: [UsersController],
 })
 export class UsersModule {}
-
-

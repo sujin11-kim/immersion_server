@@ -6,6 +6,6 @@ export declare class JwtStrategy extends JwtStrategy_base {
     private readonly customUserQueryRepository;
     private readonly errorResponse;
     constructor(customUserQueryRepository: CustomUserQueryRepository, errorResponse: ErrorResponse);
-    validate(req: Request): Promise<import("../../../../resource/db/entities/User").User>;
+    validate(payload: any): Promise<import("../../../../resource/db/entities/User").User>;
 }
 export {};

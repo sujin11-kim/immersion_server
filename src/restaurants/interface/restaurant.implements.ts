@@ -7,6 +7,7 @@ import { CustomRestaurantCommandRepository } from "../repository/restaurant-comm
 import { CustomRestaurantQueryRepository } from "../repository/restaurant-query.repository";
 import { ErrorResponse } from "src/aop/exception/error-reponse";
 import { calculateDistance } from "../utill/calculateDistance";
+
 @Injectable()
 export class RestaurantIml implements RestaurantInterface {
   constructor(
@@ -78,5 +79,19 @@ export class RestaurantIml implements RestaurantInterface {
     return await this.customRestaurantQueryRepository.getNearByResturants(
       nearbyRestaurantIdxs
     );
+  }
+
+  // 5-4 식당 및 메뉴 검색
+  async findMenu(searchWord: string): Promise<any> {
+    let menuList =
+      await this.customRestaurantQueryRepository.findMenuByRestaurant(
+        searchWord
+      );
+
+    if (menuList.length === 0) {
+      this.errorResponse.notFoundSearch();
+    }
+
+    return { menuList };
   }
 }

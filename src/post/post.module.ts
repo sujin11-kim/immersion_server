@@ -11,6 +11,7 @@ import { LikePost } from "../../resource/db/entities/LikePost";
 import { PostImpl } from "./interface/post.implement";
 import { CustomPostCommandRepository } from "./repository/post-command.repository";
 import { CustomPostQueryRepository } from "./repository/post-query.repository";
+import { ErrorResponse } from "src/aop/exception/error-reponse";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, Image, User, Comment, LikePost])],
@@ -21,6 +22,7 @@ import { CustomPostQueryRepository } from "./repository/post-query.repository";
     PostImpl,
     CustomPostCommandRepository,
     CustomPostQueryRepository,
+    ErrorResponse,
   ],
 })
 export class PostModule {}

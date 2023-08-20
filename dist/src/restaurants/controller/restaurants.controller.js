@@ -16,7 +16,7 @@ exports.RestaurantsController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const common_2 = require("@nestjs/common");
-const restaurants_service_1 = require("../restaurants.service");
+const restaurants_service_1 = require("../service/restaurants.service");
 const swagger_2 = require("@nestjs/swagger");
 const common_3 = require("@nestjs/common");
 const location_dto_1 = require("../dto/location.dto");
@@ -34,6 +34,9 @@ let RestaurantsController = class RestaurantsController {
     }
     getrestaurantlist(userIdx) {
         return this.restaurantsService.getrestaurantlist(userIdx);
+    }
+    findMenuByRestaurant(searchWord) {
+        return this.restaurantsService.findMenu(searchWord);
     }
 };
 __decorate([
@@ -60,6 +63,14 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], RestaurantsController.prototype, "getrestaurantlist", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: "식당 및 메뉴 검색" }),
+    (0, common_1.Get)("/search/:searchWord"),
+    __param(0, (0, common_1.Param)("searchWord")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], RestaurantsController.prototype, "findMenuByRestaurant", null);
 RestaurantsController = __decorate([
     (0, swagger_2.ApiTags)("Restaurants"),
     (0, common_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),

@@ -1,4 +1,4 @@
-import { Meun } from "./Meun";
+import { Menu } from "./Menu";
 import { User } from "./User";
 export declare class Restaurant {
     restaurantIdx: number;
@@ -13,5 +13,5 @@ export declare class Restaurant {
     restaurantIntro: string | null;
     isPostedToday: boolean | null;
     userIdx2: User;
-    meuns: Meun[];
+    menus: Menu[];
 }

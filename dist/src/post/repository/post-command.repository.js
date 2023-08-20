@@ -17,15 +17,13 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const Post_1 = require("../../../resource/db/entities/Post");
 const typeorm_2 = require("typeorm");
-const User_1 = require("../../../resource/db/entities/User");
 const Image_1 = require("../../../resource/db/entities/Image");
 const LikePost_1 = require("../../../resource/db/entities/LikePost");
-const custom_exception_1 = require("../../aop/exception/custom-exception");
+const error_reponse_1 = require("../../aop/exception/error-reponse");
 let CustomPostCommandRepository = class CustomPostCommandRepository {
-    constructor(postRepository, userRepository, imageRepository) {
+    constructor(postRepository, errorResponse) {
         this.postRepository = postRepository;
-        this.userRepository = userRepository;
-        this.imageRepository = imageRepository;
+        this.errorResponse = errorResponse;
     }
     async savePost(postInfo, user) {
         const queryRunner = this.postRepository.manager.connection.createQueryRunner();
@@ -40,7 +38,7 @@ let CustomPostCommandRepository = class CustomPostCommandRepository {
             const maxContentLength = 1;
             const contentWithoutSpace = post.content.replace(/\s/g, "");
             if (contentWithoutSpace.length > maxContentLength) {
-                throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.EXCEED_CONTENT_LENGTH);
+                this.errorResponse.exceedContentLength();
             }
             const savedPost = await queryRunner.manager
                 .getRepository(Post_1.Post)
@@ -110,11 +108,8 @@ let CustomPostCommandRepository = class CustomPostCommandRepository {
 CustomPostCommandRepository = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(Post_1.Post)),
-    __param(1, (0, typeorm_1.InjectRepository)(User_1.User)),
-    __param(2, (0, typeorm_1.InjectRepository)(Image_1.Image)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository,
-        typeorm_2.Repository])
+        error_reponse_1.ErrorResponse])
 ], CustomPostCommandRepository);
 exports.CustomPostCommandRepository = CustomPostCommandRepository;
 //# sourceMappingURL=post-command.repository.js.map

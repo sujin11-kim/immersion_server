@@ -1,7 +1,7 @@
 import { Get, Param, UseFilters, UseInterceptors } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
 import { Post, Patch } from "@nestjs/common";
-import { RestaurantsService } from "../restaurants.service";
+import { RestaurantsService } from "../service/restaurants.service";
 import { ApiTags } from "@nestjs/swagger";
 import { Controller, Body } from "@nestjs/common";
 import { LocationDto } from "../dto/location.dto";
@@ -31,5 +31,12 @@ export class RestaurantsController {
   @Get("list/:userIdx")
   getrestaurantlist(@Param("userIdx") userIdx: number) {
     return this.restaurantsService.getrestaurantlist(userIdx);
+  }
+
+  // 5-4 식당 및 메뉴 검색
+  @ApiOperation({ summary: "식당 및 메뉴 검색" })
+  @Get("/search/:searchWord")
+  findMenuByRestaurant(@Param("searchWord") searchWord: string) {
+    return this.restaurantsService.findMenu(searchWord);
   }
 }

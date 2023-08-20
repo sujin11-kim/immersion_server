@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestaurantsService = void 0;
 const common_1 = require("@nestjs/common");
-const restaurant_implements_1 = require("./interface/restaurant.implements");
+const restaurant_implements_1 = require("../interface/restaurant.implements");
 let RestaurantsService = class RestaurantsService {
     constructor(restaurantImpl) {
         this.restaurantImpl = restaurantImpl;
@@ -24,6 +24,9 @@ let RestaurantsService = class RestaurantsService {
     }
     async getrestaurantlist(userIdx) {
         return await this.restaurantImpl.getrestaurantlist(userIdx);
+    }
+    async findMenu(searchWord) {
+        return await this.restaurantImpl.findMenu(searchWord);
     }
 };
 RestaurantsService = __decorate([

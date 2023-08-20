@@ -22,7 +22,7 @@ import { Restaurant } from "../resource/db/entities/Restaurant";
 import { RestaurantsModule } from "./restaurants/restaurants.module";
 import { ReviewModule } from "./review/review.module";
 import { LikeComment } from "../resource/db/entities/LikeComment";
-import { Meun } from "resource/db/entities/Meun";
+import { Menu } from "resource/db/entities/Menu";
 
 @Module({
   imports: [
@@ -54,7 +54,7 @@ import { Meun } from "resource/db/entities/Meun";
         Image,
         Restaurant,
         LikeComment,
-        Meun,
+        Menu,
       ],
       autoLoadEntities: true,
       keepConnectionAlive: true,
