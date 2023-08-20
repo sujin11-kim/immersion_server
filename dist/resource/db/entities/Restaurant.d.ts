@@ -1,5 +1,6 @@
 import { Menu } from "./Menu";
 import { User } from "./User";
+import { RestaurantImage } from "./RestaurantImage";
 export declare class Restaurant {
     restaurantIdx: number;
     userIdx: number;
@@ -14,4 +15,5 @@ export declare class Restaurant {
     isPostedToday: boolean | null;
     userIdx2: User;
     menus: Menu[];
+    Images: RestaurantImage[];
 }

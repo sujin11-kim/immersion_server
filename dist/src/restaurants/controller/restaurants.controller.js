@@ -22,6 +22,7 @@ const common_3 = require("@nestjs/common");
 const location_dto_1 = require("../dto/location.dto");
 const http_exception_filter_1 = require("../../aop/exception/http-exception.filter");
 const success_interceptor_1 = require("../../aop/interceptors/success.interceptor");
+const create_restaurant_dto_1 = require("../dto/create-restaurant.dto");
 let RestaurantsController = class RestaurantsController {
     constructor(restaurantsService) {
         this.restaurantsService = restaurantsService;
@@ -37,6 +38,9 @@ let RestaurantsController = class RestaurantsController {
     }
     findMenuByRestaurant(searchWord) {
         return this.restaurantsService.findMenu(searchWord);
+    }
+    create(createRestaurantDto) {
+        return this.restaurantsService.CreateRestaurant(createRestaurantDto);
     }
 };
 __decorate([
@@ -71,6 +75,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], RestaurantsController.prototype, "findMenuByRestaurant", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: "식당 정보 등록" }),
+    (0, common_2.Post)("/create"),
+    __param(0, (0, common_3.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_restaurant_dto_1.CreateRestaurantDto]),
+    __metadata("design:returntype", void 0)
+], RestaurantsController.prototype, "create", null);
 RestaurantsController = __decorate([
     (0, swagger_2.ApiTags)("Restaurants"),
     (0, common_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),

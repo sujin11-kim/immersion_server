@@ -18,11 +18,14 @@ const restaurant_command_repository_1 = require("./repository/restaurant-command
 const restaurant_query_repository_1 = require("./repository/restaurant-query.repository");
 const error_reponse_1 = require("../aop/exception/error-reponse");
 const Menu_1 = require("../../resource/db/entities/Menu");
+const RestaurantImage_1 = require("../../resource/db/entities/RestaurantImage");
 let RestaurantsModule = class RestaurantsModule {
 };
 RestaurantsModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([User_1.User, Restaurant_1.Restaurant, Menu_1.Menu])],
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([User_1.User, Restaurant_1.Restaurant, Menu_1.Menu, RestaurantImage_1.RestaurantImage]),
+        ],
         controllers: [restaurants_controller_1.RestaurantsController],
         providers: [
             restaurants_service_1.RestaurantsService,

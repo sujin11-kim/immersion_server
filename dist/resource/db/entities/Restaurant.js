@@ -13,6 +13,7 @@ exports.Restaurant = void 0;
 const Menu_1 = require("./Menu");
 const typeorm_1 = require("typeorm");
 const User_1 = require("./User");
+const RestaurantImage_1 = require("./RestaurantImage");
 let Restaurant = class Restaurant {
 };
 __decorate([
@@ -28,11 +29,11 @@ __decorate([
     __metadata("design:type", String)
 ], Restaurant.prototype, "restaurantName", void 0);
 __decorate([
-    (0, typeorm_1.Column)("time", { name: "openTime", nullable: true }),
+    (0, typeorm_1.Column)("time", { name: "openTime" }),
     __metadata("design:type", String)
 ], Restaurant.prototype, "openTime", void 0);
 __decorate([
-    (0, typeorm_1.Column)("time", { name: "closeTime", nullable: true }),
+    (0, typeorm_1.Column)("time", { name: "closeTime" }),
     __metadata("design:type", String)
 ], Restaurant.prototype, "closeTime", void 0);
 __decorate([
@@ -81,6 +82,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Menu_1.Menu, (menu) => menu.restaurantIdx2),
     __metadata("design:type", Array)
 ], Restaurant.prototype, "menus", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => RestaurantImage_1.RestaurantImage, (restaurantImage) => restaurantImage.restaurantIdx2),
+    __metadata("design:type", Array)
+], Restaurant.prototype, "Images", void 0);
 Restaurant = __decorate([
     (0, typeorm_1.Index)("FK_User_TO_Restaurant_1", ["userIdx"], {}),
     (0, typeorm_1.Entity)("Restaurant", { schema: "immersion_DB" })

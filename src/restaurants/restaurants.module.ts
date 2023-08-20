@@ -9,9 +9,12 @@ import { CustomRestaurantCommandRepository } from "./repository/restaurant-comma
 import { CustomRestaurantQueryRepository } from "./repository/restaurant-query.repository";
 import { ErrorResponse } from "src/aop/exception/error-reponse";
 import { Menu } from "resource/db/entities/Menu";
+import { RestaurantImage } from "resource/db/entities/RestaurantImage";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Restaurant, Menu])],
+  imports: [
+    TypeOrmModule.forFeature([User, Restaurant, Menu, RestaurantImage]),
+  ],
   controllers: [RestaurantsController],
   providers: [
     RestaurantsService,

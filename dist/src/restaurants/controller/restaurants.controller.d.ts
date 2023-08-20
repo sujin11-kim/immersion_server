@@ -1,5 +1,6 @@
 import { RestaurantsService } from "../service/restaurants.service";
 import { LocationDto } from "../dto/location.dto";
+import { CreateRestaurantDto } from "../dto/create-restaurant.dto";
 export declare class RestaurantsController {
     private restaurantsService;
     constructor(restaurantsService: RestaurantsService);
@@ -7,4 +8,5 @@ export declare class RestaurantsController {
     updateUserLocation(locationdto: LocationDto): Promise<import("../../../resource/db/entities/User").User>;
     getrestaurantlist(userIdx: number): Promise<import("../../../resource/db/entities/Restaurant").Restaurant[]>;
     findMenuByRestaurant(searchWord: string): Promise<any>;
+    create(createRestaurantDto: CreateRestaurantDto): Promise<CreateRestaurantDto>;
 }

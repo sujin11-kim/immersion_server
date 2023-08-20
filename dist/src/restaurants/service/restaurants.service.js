@@ -28,6 +28,9 @@ let RestaurantsService = class RestaurantsService {
     async findMenu(searchWord) {
         return await this.restaurantImpl.findMenu(searchWord);
     }
+    async CreateRestaurant(createRestaurantDto) {
+        return await this.restaurantImpl.CreateRestaurant(createRestaurantDto);
+    }
 };
 RestaurantsService = __decorate([
     (0, common_1.Injectable)(),

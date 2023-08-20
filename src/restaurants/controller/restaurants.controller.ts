@@ -7,6 +7,7 @@ import { Controller, Body } from "@nestjs/common";
 import { LocationDto } from "../dto/location.dto";
 import { HttpExceptionFilter } from "src/aop/exception/http-exception.filter";
 import { SuccessInterceptor } from "src/aop/interceptors/success.interceptor";
+import { CreateRestaurantDto } from "../dto/create-restaurant.dto";
 
 @ApiTags("Restaurants")
 @UseInterceptors(SuccessInterceptor)
@@ -38,5 +39,12 @@ export class RestaurantsController {
   @Get("/search/:searchWord")
   findMenuByRestaurant(@Param("searchWord") searchWord: string) {
     return this.restaurantsService.findMenu(searchWord);
+  }
+
+  // 5-5 식당 정보 등록
+  @ApiOperation({ summary: "식당 정보 등록" })
+  @Post("/create")
+  create(@Body() createRestaurantDto: CreateRestaurantDto) {
+    return this.restaurantsService.CreateRestaurant(createRestaurantDto);
   }
 }

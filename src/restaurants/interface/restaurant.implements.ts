@@ -7,6 +7,7 @@ import { CustomRestaurantCommandRepository } from "../repository/restaurant-comm
 import { CustomRestaurantQueryRepository } from "../repository/restaurant-query.repository";
 import { ErrorResponse } from "src/aop/exception/error-reponse";
 import { calculateDistance } from "../utill/calculateDistance";
+import { CreateRestaurantDto } from "../dto/create-restaurant.dto";
 
 @Injectable()
 export class RestaurantIml implements RestaurantInterface {
@@ -93,5 +94,22 @@ export class RestaurantIml implements RestaurantInterface {
     }
 
     return { menuList };
+  }
+
+  // 5-5 식당 정보 등록
+  async CreateRestaurant(restaurantInfo: CreateRestaurantDto) {
+    // 공백 제거 후 글자수 제한
+    const maxContentLength = 100;
+    const contentWithoutSpace = restaurantInfo.restaurantIntro.replace(
+      /\s/g,
+      ""
+    );
+    if (contentWithoutSpace.length > maxContentLength) {
+      this.errorResponse.exceedContentLength();
+    }
+
+    return await this.customRestaurantCommandRepository.CreateRestaurant(
+      restaurantInfo
+    );
   }
 }
