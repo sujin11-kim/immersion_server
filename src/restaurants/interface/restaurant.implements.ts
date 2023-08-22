@@ -97,9 +97,9 @@ export class RestaurantIml implements RestaurantInterface {
   }
 
   // 5-5 식당 정보 등록
-  async CreateRestaurant(restaurantInfo: CreateRestaurantDto) {
+  async CreateRestaurant(restaurantInfo: CreateRestaurantDto, userIdx: number) {
     // 공백 제거 후 글자수 제한
-    const maxContentLength = 100;
+    const maxContentLength = 1;
     const contentWithoutSpace = restaurantInfo.restaurantIntro.replace(
       /\s/g,
       ""
@@ -109,7 +109,8 @@ export class RestaurantIml implements RestaurantInterface {
     }
 
     return await this.customRestaurantCommandRepository.CreateRestaurant(
-      restaurantInfo
+      restaurantInfo,
+      userIdx
     );
   }
 }

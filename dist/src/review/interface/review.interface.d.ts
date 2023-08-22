@@ -5,7 +5,7 @@ import { Review } from "resource/db/entities/Review";
 export interface ReviewInterface {
     getAllReview(): Promise<Review[]>;
     getoneReview(reviewIdx: number): Promise<Review>;
-    createReview(user: UserLoginDto, createReviewDto: CreateReviewDto): Promise<Review>;
-    updateReview(reviewIdx: number, updateReviewDto: UpdateReviewDto): Promise<Review>;
+    createReview(user: UserLoginDto, createReviewDto: CreateReviewDto): Promise<any>;
+    updateReview(reviewIdx: number, updateReviewDto: UpdateReviewDto): Promise<any>;
     deleteReview(reviewIdx: number): Promise<Review>;
 }

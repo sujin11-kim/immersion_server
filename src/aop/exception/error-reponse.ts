@@ -107,20 +107,14 @@ export class ErrorResponse {
   public exceedContentLength() {
     throw new BadRequestException({
       statusCode: 2010,
-      message: `content가 제한 글자수 1자를 초과했습니다.`,
+      message: `content가 제한 글자수 100자를 초과했습니다.`,
       result: {
-        userIdx: null,
-        category: "",
-        title: "",
-        content: "",
-        likeNum: null,
-        viewNum: null,
-        postIdx: null,
-        createAt: "",
-        updatedAt: "",
-        nickName: "",
-        imagePath: [],
-        commentList: [],
+        restaurantName: "",
+        openTime: "",
+        closeTime: "",
+        telNum: "",
+        restaurantIntro: "",
+        image: [],
       },
     });
   }
@@ -277,7 +271,65 @@ export class ErrorResponse {
     throw new BadRequestException({
       statusCode: 2018,
       message: "검색 결과가 존재하지 않습니다.",
-      result: { restaurantName: "", menus: [] },
+      result: { menuList: [] },
+    });
+  }
+
+  public notFoundReview() {
+    throw new BadRequestException({
+      statusCode: 2019,
+      message: "리뷰가 존재하지 않습니다.",
+      result: {
+        reviewIdx: null,
+        content: "",
+        commentIdx: null,
+        createdAt: "",
+        updatedAt: "",
+      },
+    });
+  }
+
+  public notRestaurantOwner() {
+    throw new BadRequestException({
+      statusCode: 2020,
+      message: "사장님으로 등록된 유저가 아닙니다.",
+      result: {
+        reviewIdx: null,
+        content: "",
+        commentIdx: null,
+        createdAt: "",
+        updatedAt: "",
+      },
+    });
+  }
+
+  public onlyOwnerCanAccess(result: any) {
+    throw new BadRequestException({
+      statusCode: 2021,
+      message: "해당 가게 사장님만 리뷰 댓글에 접근할 수 있습니다.",
+      result,
+    });
+  }
+
+  public alreadyExistingCommentError() {
+    throw new BadRequestException({
+      statusCode: 2022,
+      message: "해당 리뷰에 이미 사장님 댓글이 존재합니다.",
+      result: {
+        reviewIdx: null,
+        content: "",
+        commentIdx: null,
+        createdAt: "",
+        updatedAt: "",
+      },
+    });
+  }
+
+  public notFoundReviewComment(result: any) {
+    throw new BadRequestException({
+      statusCode: 2023,
+      message: "해당 댓글이 존재하지 않습니다.",
+      result,
     });
   }
 }

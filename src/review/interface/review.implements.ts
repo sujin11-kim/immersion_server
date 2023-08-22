@@ -8,13 +8,12 @@ import { CustomReviewQueryRepository } from "../repository/review-query.reposito
 import { UserLoginDto } from "src/users/dto/user-login.dto";
 import { ErrorResponse } from "src/aop/exception/error-reponse";
 
-
 @Injectable()
 export class ReviewtIml implements ReviewInterface {
   constructor(
     private readonly customReviewCommandRepository: CustomReviewCommandRepository,
     private readonly customReviewQueryRepository: CustomReviewQueryRepository,
-    private errorResponse : ErrorResponse
+    private errorResponse: ErrorResponse
   ) {}
 
   //6-1 모든 리뷰 조회
@@ -24,9 +23,10 @@ export class ReviewtIml implements ReviewInterface {
 
   //6-2특정리뷰 조회
   async getoneReview(reviewIdx: number): Promise<Review> {
-    
-    const review=await this.customReviewQueryRepository.reviewonefind(reviewIdx);
-    
+    const review = await this.customReviewQueryRepository.reviewonefind(
+      reviewIdx
+    );
+
     if (!review) {
       throw this.errorResponse.notExistReview(reviewIdx);
     }
@@ -38,35 +38,34 @@ export class ReviewtIml implements ReviewInterface {
   async createReview(
     user: UserLoginDto,
     createReviewDto: CreateReviewDto
-  ): Promise<Review> {
+  ): Promise<any> {
+    const post = await this.customReviewQueryRepository.postonefind(
+      createReviewDto.postIdx
+    );
 
-    
-    const post=await this.customReviewQueryRepository.postonefind(createReviewDto.postIdx);
-    
     if (!post) {
       throw this.errorResponse.notExistPost(createReviewDto.postIdx);
     }
-    
 
-
-
-    
-    return this.customReviewCommandRepository.createReview(user, createReviewDto);
+    return this.customReviewCommandRepository.createReview(
+      user,
+      createReviewDto
+    );
   }
 
   //6-4 특정리뷰 수정
   async updateReview(
     reviewIdx: number,
     updateReviewDto: UpdateReviewDto
-  ): Promise<Review> {
+  ): Promise<any> {
+    const review = await this.customReviewQueryRepository.reviewonefind(
+      reviewIdx
+    );
 
-
-     const review=await this.customReviewQueryRepository.reviewonefind(reviewIdx);
-    
     if (!review) {
       throw this.errorResponse.notExistReview(reviewIdx);
     }
-    
+
     return this.customReviewCommandRepository.updateReview(
       reviewIdx,
       updateReviewDto
@@ -75,9 +74,10 @@ export class ReviewtIml implements ReviewInterface {
 
   // 6-5특정 리뷰 삭제
   async deleteReview(reviewIdx: number): Promise<Review> {
+    const review = await this.customReviewQueryRepository.reviewonefind(
+      reviewIdx
+    );
 
-    const review=await this.customReviewQueryRepository.reviewonefind(reviewIdx);
-    
     if (!review) {
       throw this.errorResponse.notExistReview(reviewIdx);
     }

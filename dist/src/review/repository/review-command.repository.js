@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const Review_1 = require("../../../resource/db/entities/Review");
+const ReviewImage_1 = require("../../../resource/db/entities/ReviewImage");
 let CustomReviewCommandRepository = class CustomReviewCommandRepository {
     constructor(reviewRepository) {
         this.reviewRepository = reviewRepository;
@@ -33,8 +34,15 @@ let CustomReviewCommandRepository = class CustomReviewCommandRepository {
                 (review.content = createReviewDto.content),
                 (review.score = createReviewDto.score);
             await queryRunner.manager.getRepository(Review_1.Review).save(review);
+            const imagePromises = createReviewDto.image.map(async (imagePath) => {
+                const image = queryRunner.manager.getRepository(ReviewImage_1.ReviewImage).create();
+                image.reviewIdx = review.reviewIdx;
+                image.imagePath = imagePath;
+                await queryRunner.manager.getRepository(ReviewImage_1.ReviewImage).save(image);
+            });
+            await Promise.all(imagePromises);
             await queryRunner.commitTransaction();
-            return review;
+            return Object.assign(Object.assign({}, review), { imagePath: createReviewDto.image });
         }
         catch (err) {
             await queryRunner.rollbackTransaction();
@@ -56,8 +64,20 @@ let CustomReviewCommandRepository = class CustomReviewCommandRepository {
             review.content = content;
             review.score = score;
             await queryRunner.manager.getRepository(Review_1.Review).save(review);
+            if (updateReviewDto.image) {
+                await queryRunner.manager
+                    .getRepository(ReviewImage_1.ReviewImage)
+                    .delete({ reviewIdx });
+                const imagePromises = updateReviewDto.image.map(async (imagePath) => {
+                    const image = queryRunner.manager.getRepository(ReviewImage_1.ReviewImage).create();
+                    image.reviewIdx = reviewIdx;
+                    image.imagePath = imagePath;
+                    await queryRunner.manager.getRepository(ReviewImage_1.ReviewImage).save(image);
+                });
+                await Promise.all(imagePromises);
+            }
             await queryRunner.commitTransaction();
-            return review;
+            return Object.assign(Object.assign({}, review), { imagePath: updateReviewDto.image });
         }
         catch (err) {
             await queryRunner.rollbackTransaction();
@@ -75,7 +95,11 @@ let CustomReviewCommandRepository = class CustomReviewCommandRepository {
             const review = await queryRunner.manager
                 .getRepository(Review_1.Review)
                 .findOne({ where: { reviewIdx } });
+            await queryRunner.manager
+                .getRepository(ReviewImage_1.ReviewImage)
+                .delete({ reviewIdx });
             await queryRunner.manager.getRepository(Review_1.Review).delete(reviewIdx);
+            await queryRunner.commitTransaction();
             return review;
         }
         catch (err) {

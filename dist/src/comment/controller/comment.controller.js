@@ -60,7 +60,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], CommentController.prototype, "findAllComment", null);
 __decorate([
-    (0, swagger_1.ApiOperation)({ summary: "게시물 좋아요" }),
+    (0, swagger_1.ApiOperation)({ summary: "댓글 좋아요" }),
     (0, common_1.Post)("/likeComment"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -68,7 +68,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], CommentController.prototype, "commentLike", null);
 __decorate([
-    (0, swagger_1.ApiOperation)({ summary: "게시물 좋아요 취소" }),
+    (0, swagger_1.ApiOperation)({ summary: "댓글 좋아요 취소" }),
     (0, common_1.Post)("/likeCancelComment"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),

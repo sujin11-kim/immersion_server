@@ -15,5 +15,5 @@ export declare class RestaurantIml implements RestaurantInterface {
     updateUserLocation(locationdto: LocationDto): Promise<User>;
     getrestaurantlist(userIdx: number): Promise<Restaurant[]>;
     findMenu(searchWord: string): Promise<any>;
-    CreateRestaurant(restaurantInfo: CreateRestaurantDto): Promise<CreateRestaurantDto>;
+    CreateRestaurant(restaurantInfo: CreateRestaurantDto, userIdx: number): Promise<CreateRestaurantDto>;
 }

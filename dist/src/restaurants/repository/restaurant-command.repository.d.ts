@@ -11,5 +11,5 @@ export declare class CustomRestaurantCommandRepository {
     private readonly restaurantImageRepository;
     constructor(userRepository: Repository<User>, errorResponse: ErrorResponse, restaurantRepository: Repository<Restaurant>, restaurantImageRepository: Repository<RestaurantImage>);
     saveUser(user: any, locationdto: any): Promise<any>;
-    CreateRestaurant(restaurantInfo: CreateRestaurantDto): Promise<CreateRestaurantDto>;
+    CreateRestaurant(restaurantInfo: CreateRestaurantDto, userIdx: number): Promise<CreateRestaurantDto>;
 }

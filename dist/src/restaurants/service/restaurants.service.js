@@ -28,8 +28,8 @@ let RestaurantsService = class RestaurantsService {
     async findMenu(searchWord) {
         return await this.restaurantImpl.findMenu(searchWord);
     }
-    async CreateRestaurant(createRestaurantDto) {
-        return await this.restaurantImpl.CreateRestaurant(createRestaurantDto);
+    async CreateRestaurant(createRestaurantDto, userIdx) {
+        return await this.restaurantImpl.CreateRestaurant(createRestaurantDto, userIdx);
     }
 };
 RestaurantsService = __decorate([

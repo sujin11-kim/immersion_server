@@ -54,13 +54,13 @@ let RestaurantIml = class RestaurantIml {
         }
         return { menuList };
     }
-    async CreateRestaurant(restaurantInfo) {
-        const maxContentLength = 100;
+    async CreateRestaurant(restaurantInfo, userIdx) {
+        const maxContentLength = 1;
         const contentWithoutSpace = restaurantInfo.restaurantIntro.replace(/\s/g, "");
         if (contentWithoutSpace.length > maxContentLength) {
             this.errorResponse.exceedContentLength();
         }
-        return await this.customRestaurantCommandRepository.CreateRestaurant(restaurantInfo);
+        return await this.customRestaurantCommandRepository.CreateRestaurant(restaurantInfo, userIdx);
     }
 };
 RestaurantIml = __decorate([

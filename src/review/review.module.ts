@@ -10,16 +10,20 @@ import { CustomReviewCommandRepository } from "./repository/review-command.repos
 import { CustomReviewQueryRepository } from "./repository/review-query.repository";
 import { ReviewtIml } from "./interface/review.implements";
 import { ErrorResponse } from "src/aop/exception/error-reponse";
+import { ReviewImage } from "resource/db/entities/ReviewImage";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Review, User, Post]), AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([Review, User, Post, ReviewImage]),
+    AuthModule,
+  ],
   controllers: [ReviewController],
   providers: [
     ReviewService,
     ReviewtIml,
     CustomReviewCommandRepository,
     CustomReviewQueryRepository,
-    ErrorResponse
+    ErrorResponse,
   ],
 })
 export class ReviewModule {}

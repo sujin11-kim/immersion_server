@@ -23,6 +23,11 @@ import { RestaurantsModule } from "./restaurants/restaurants.module";
 import { ReviewModule } from "./review/review.module";
 import { LikeComment } from "../resource/db/entities/LikeComment";
 import { Menu } from "resource/db/entities/Menu";
+import { Review } from "../resource/db/entities/Review";
+import { ReviewComment } from "../resource/db/entities/ReviewComment";
+import { ReviewImage } from "resource/db/entities/ReviewImage";
+import { RestaurantImage } from "resource/db/entities/RestaurantImage";
+import { ReviewCommentModule } from "./reviewComment/review.comment.module";
 
 @Module({
   imports: [
@@ -55,6 +60,10 @@ import { Menu } from "resource/db/entities/Menu";
         Restaurant,
         LikeComment,
         Menu,
+        Review,
+        ReviewComment,
+        ReviewImage,
+        RestaurantImage,
       ],
       autoLoadEntities: true,
       keepConnectionAlive: true,
@@ -69,6 +78,7 @@ import { Menu } from "resource/db/entities/Menu";
     CommentModule,
     RestaurantsModule,
     ReviewModule,
+    ReviewCommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, AwsService],

@@ -23,4 +23,9 @@ export declare class ErrorResponse {
     notFoundPost(): void;
     notFoundComment(): void;
     notFoundSearch(): void;
+    notFoundReview(): void;
+    notRestaurantOwner(): void;
+    onlyOwnerCanAccess(result: any): void;
+    alreadyExistingCommentError(): void;
+    notFoundReviewComment(result: any): void;
 }
