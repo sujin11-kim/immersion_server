@@ -1,4 +1,4 @@
-import { Meun } from "./Meun";
+import { Menu } from "./Menu";
 import {
   Column,
   Entity,
@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { User } from "./User";
+import { RestaurantImage } from "./RestaurantImage";
 
 @Index("FK_User_TO_Restaurant_1", ["userIdx"], {})
 @Entity("Restaurant", { schema: "immersion_DB" })
@@ -22,10 +23,10 @@ export class Restaurant {
   @Column("varchar", { name: "restaurantName", nullable: true, length: 20 })
   restaurantName: string | null;
 
-  @Column("time", { name: "openTime", nullable: true })
+  @Column("time", { name: "openTime" })
   openTime: string | null;
 
-  @Column("time", { name: "closeTime", nullable: true })
+  @Column("time", { name: "closeTime" })
   closeTime: string | null;
 
   @Column("char", { name: "telNum", nullable: true, length: 11 })
@@ -63,6 +64,12 @@ export class Restaurant {
   @JoinColumn([{ name: "userIdx", referencedColumnName: "userIdx" }])
   userIdx2: User;
 
-  @OneToMany(() => Meun, (meun) => meun.restaurantIdx2)
-  meuns: Meun[];
+  @OneToMany(() => Menu, (menu) => menu.restaurantIdx2)
+  menus: Menu[];
+
+  @OneToMany(
+    () => RestaurantImage,
+    (restaurantImage) => restaurantImage.restaurantIdx2
+  )
+  Images: RestaurantImage[];
 }

@@ -6,9 +6,8 @@ import { User } from "resource/db/entities/User";
 import { Image } from "resource/db/entities/Image";
 import { Comment } from "resource/db/entities/Comment";
 import { readonlyPostDto } from "../dto/readonly-post.dto";
-import { LikeComment } from "resource/db/entities/LikeComment";
 import { LikePost } from "resource/db/entities/LikePost";
-import { CustomExceptions } from "src/aop/exception/custom-exception";
+import { ErrorResponse } from "src/aop/exception/error-reponse";
 
 @Injectable()
 export class CustomPostQueryRepository {
@@ -22,7 +21,8 @@ export class CustomPostQueryRepository {
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
     @InjectRepository(LikePost)
-    private readonly likePostRepository: Repository<LikePost>
+    private readonly likePostRepository: Repository<LikePost>,
+    private errorResponse: ErrorResponse
   ) {}
 
   // userIdx로 post 조회
@@ -32,7 +32,7 @@ export class CustomPostQueryRepository {
     });
 
     if (posts.length === 0) {
-      throw new BadRequestException(CustomExceptions.USER_POSTS_NOT_FOUND);
+      this.errorResponse.userPostNotFound();
     }
 
     return posts;
@@ -45,7 +45,7 @@ export class CustomPostQueryRepository {
     });
 
     if (posts.length === 0) {
-      throw new BadRequestException(CustomExceptions.CATEGORY_POSTS_NOT_FOUND);
+      this.errorResponse.categoryPostsNotFound();
     }
     return posts;
   }
@@ -54,7 +54,7 @@ export class CustomPostQueryRepository {
   async checkTotalPostCountExceeded(page: number, pageSize: number) {
     const totalPosts = await this.postRepository.count();
     if (page + pageSize - 1 > 0) {
-      throw new BadRequestException(CustomExceptions.MAX_POSTS_EXCEEDED);
+      this.errorResponse.maxPostsExceeded();
     }
   }
 
@@ -104,7 +104,7 @@ export class CustomPostQueryRepository {
       where: { postIdx },
     });
     if (!post) {
-      throw new BadRequestException(CustomExceptions.POST_NOT_FOUND);
+      this.errorResponse.postNotFound();
     }
     return post;
   }
@@ -115,7 +115,7 @@ export class CustomPostQueryRepository {
     });
 
     if (likeCount === 0) {
-      throw new BadRequestException(CustomExceptions.LIKE_NOT_FOUND);
+      this.errorResponse.likeNotFound();
     }
   }
 }

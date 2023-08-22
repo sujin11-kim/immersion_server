@@ -17,20 +17,65 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const User_1 = require("../../../resource/db/entities/User");
 const typeorm_2 = require("typeorm");
+const error_reponse_1 = require("../../aop/exception/error-reponse");
+const Restaurant_1 = require("../../../resource/db/entities/Restaurant");
+const RestaurantImage_1 = require("../../../resource/db/entities/RestaurantImage");
 let CustomRestaurantCommandRepository = class CustomRestaurantCommandRepository {
-    constructor(userRepository) {
+    constructor(userRepository, errorResponse, restaurantRepository, restaurantImageRepository) {
         this.userRepository = userRepository;
+        this.errorResponse = errorResponse;
+        this.restaurantRepository = restaurantRepository;
+        this.restaurantImageRepository = restaurantImageRepository;
     }
     async saveUser(user, locationdto) {
         user.latitude = locationdto.latitude;
         user.longitude = locationdto.longitude;
         return await this.userRepository.save(user);
     }
+    async CreateRestaurant(restaurantInfo) {
+        const queryRunner = this.restaurantRepository.manager.connection.createQueryRunner();
+        await queryRunner.connect();
+        try {
+            await queryRunner.startTransaction();
+            const restaurant = queryRunner.manager.getRepository(Restaurant_1.Restaurant).create();
+            restaurant.userIdx = restaurantInfo.userIdx;
+            restaurant.restaurantName = restaurantInfo.restaurantName;
+            restaurant.openTime = restaurantInfo.openTime;
+            restaurant.closeTime = restaurantInfo.closeTime;
+            restaurant.telNum = restaurantInfo.telNum;
+            restaurant.restaurantIntro = restaurantInfo.restaurantIntro;
+            await queryRunner.manager.getRepository(Restaurant_1.Restaurant).save(restaurant);
+            const restaurantFromDb = await this.restaurantRepository.findOne({
+                where: { restaurantName: restaurantInfo.restaurantName },
+            });
+            const imagePromises = restaurantInfo.image.map(async (imagePath) => {
+                const image = this.restaurantImageRepository.create();
+                image.restaurantIdx = restaurantFromDb.restaurantIdx;
+                image.imagePath = imagePath;
+                await this.restaurantImageRepository.save(image);
+            });
+            await Promise.all(imagePromises);
+            await queryRunner.commitTransaction();
+            return Object.assign({}, restaurantInfo);
+        }
+        catch (err) {
+            await queryRunner.rollbackTransaction();
+            throw err;
+        }
+        finally {
+            await queryRunner.release();
+        }
+    }
 };
 CustomRestaurantCommandRepository = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(2, (0, typeorm_1.InjectRepository)(Restaurant_1.Restaurant)),
+    __param(3, (0, typeorm_1.InjectRepository)(RestaurantImage_1.RestaurantImage)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        error_reponse_1.ErrorResponse,
+        typeorm_2.Repository,
+        typeorm_2.Repository])
 ], CustomRestaurantCommandRepository);
 exports.CustomRestaurantCommandRepository = CustomRestaurantCommandRepository;
 //# sourceMappingURL=restaurant-command.repository.js.map

@@ -22,16 +22,17 @@ export class UserImpl implements UserInterface {
   // 1-1 회원가입
   async createUser(userInfo: CreateUserDto): Promise<{ userIdx: string }> {
     const hashedPassword = await bcrypt.hash(userInfo.password, 12);
-    const existUser = await this.customUserQueryRepository.getByEmail(userInfo.email);
-    if(!existUser){
-      const newUser = await this.customUserCommandRepository.saveUser({
+    const existUser = await this.customUserQueryRepository.getByEmail(
+      userInfo.email
+    );
+    if (!existUser) {
+      const newUser = await this.customUserCommandRepository.signUp({
         ...userInfo,
-        password: hashedPassword
+        password: hashedPassword,
       });
-      return { userIdx: newUser.userIdx.toString() }
-    }
-    else{
-      this.errorResponse.duplicateByEmail()
+      return { userIdx: newUser.userIdx.toString() };
+    } else {
+      this.errorResponse.duplicateByEmail();
     }
   }
 

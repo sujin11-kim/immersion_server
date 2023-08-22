@@ -47,6 +47,21 @@ let RestaurantIml = class RestaurantIml {
         }
         return await this.customRestaurantQueryRepository.getNearByResturants(nearbyRestaurantIdxs);
     }
+    async findMenu(searchWord) {
+        let menuList = await this.customRestaurantQueryRepository.findMenuByRestaurant(searchWord);
+        if (menuList.length === 0) {
+            this.errorResponse.notFoundSearch();
+        }
+        return { menuList };
+    }
+    async CreateRestaurant(restaurantInfo) {
+        const maxContentLength = 100;
+        const contentWithoutSpace = restaurantInfo.restaurantIntro.replace(/\s/g, "");
+        if (contentWithoutSpace.length > maxContentLength) {
+            this.errorResponse.exceedContentLength();
+        }
+        return await this.customRestaurantCommandRepository.CreateRestaurant(restaurantInfo);
+    }
 };
 RestaurantIml = __decorate([
     (0, common_1.Injectable)(),

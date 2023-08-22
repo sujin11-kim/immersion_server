@@ -1,9 +1,7 @@
-import { User } from "../../../resource/db/entities/User";
-import { Repository } from "typeorm";
+import { Repository, QueryRunner } from 'typeorm';
+import { User } from '../../../resource/db/entities/User';
 export declare class CustomUserCommandRepository {
     private readonly userRepository;
     constructor(userRepository: Repository<User>);
-    saveUser<T extends Record<string, any>>(userInfo: T): Promise<{
-        userIdx: number;
-    }>;
+    signUp<T extends Record<string, any>>(userInfo: T, queryRunner?: QueryRunner | undefined): Promise<User>;
 }

@@ -32,7 +32,6 @@ let ErrorResponse = class ErrorResponse {
             result: { userIdx: "" },
         });
     }
-    ;
     duplicateByEmail() {
         throw new common_1.BadRequestException({
             statusCode: 2001,
@@ -40,7 +39,6 @@ let ErrorResponse = class ErrorResponse {
             result: { userIdx: "" },
         });
     }
-    ;
     duplicateByNickname() {
         throw new common_1.BadRequestException({
             statusCode: 2002,
@@ -48,7 +46,6 @@ let ErrorResponse = class ErrorResponse {
             result: { userIdx: "" },
         });
     }
-    ;
     duplicateByPhone() {
         throw new common_1.BadRequestException({
             statusCode: 2003,
@@ -56,7 +53,6 @@ let ErrorResponse = class ErrorResponse {
             result: { userIdx: "" },
         });
     }
-    ;
     notExistFCM() {
         throw new common_1.BadRequestException({
             statusCode: 2004,
@@ -64,7 +60,6 @@ let ErrorResponse = class ErrorResponse {
             result: { fcmTokens: {} },
         });
     }
-    ;
     notExistPassword() {
         throw new common_1.BadRequestException({
             statusCode: 2005,
@@ -72,7 +67,6 @@ let ErrorResponse = class ErrorResponse {
             result: { password: "" },
         });
     }
-    ;
     comparePassword(existPassword) {
         throw new common_1.BadRequestException({
             statusCode: 2006,
@@ -80,7 +74,6 @@ let ErrorResponse = class ErrorResponse {
             result: { existPassword: existPassword },
         });
     }
-    ;
     notExistReview(existReviewId) {
         throw new common_1.BadRequestException({
             statusCode: 2007,
@@ -88,7 +81,6 @@ let ErrorResponse = class ErrorResponse {
             result: { reviewIdx: "" },
         });
     }
-    ;
     notExistPost(existPostId) {
         throw new common_1.BadRequestException({
             statusCode: 2008,
@@ -96,7 +88,6 @@ let ErrorResponse = class ErrorResponse {
             result: { postIdx: "" },
         });
     }
-    ;
     notExistCommnet(existCommentId) {
         throw new common_1.BadRequestException({
             statusCode: 2009,
@@ -104,7 +95,173 @@ let ErrorResponse = class ErrorResponse {
             result: { commentIdx: "" },
         });
     }
-    ;
+    exceedContentLength() {
+        throw new common_1.BadRequestException({
+            statusCode: 2010,
+            message: `content가 제한 글자수 1자를 초과했습니다.`,
+            result: {
+                userIdx: null,
+                category: "",
+                title: "",
+                content: "",
+                likeNum: null,
+                viewNum: null,
+                postIdx: null,
+                createAt: "",
+                updatedAt: "",
+                nickName: "",
+                imagePath: [],
+                commentList: [],
+            },
+        });
+    }
+    userPostNotFound() {
+        throw new common_1.BadRequestException({
+            statusCode: 2011,
+            message: "해당 유저의 게시물이 존재하지 않습니다.",
+            result: [
+                {
+                    userIdx: null,
+                    category: "",
+                    title: "",
+                    content: "",
+                    likeNum: null,
+                    viewNum: null,
+                    postIdx: null,
+                    createAt: "",
+                    updatedAt: "",
+                    nickName: "",
+                    imagePath: [],
+                    commentList: [],
+                },
+            ],
+        });
+    }
+    categoryPostsNotFound() {
+        throw new common_1.BadRequestException({
+            statusCode: 2012,
+            message: "해당 카테고리의 게시물이 존재하지 않습니다.",
+            result: [
+                {
+                    userIdx: null,
+                    category: "",
+                    title: "",
+                    content: "",
+                    likeNum: null,
+                    viewNum: null,
+                    postIdx: null,
+                    createAt: "",
+                    updatedAt: "",
+                    nickName: "",
+                    imagePath: [],
+                    commentList: [],
+                },
+            ],
+        });
+    }
+    maxPostsExceeded() {
+        throw new common_1.BadRequestException({
+            statusCode: 2013,
+            message: "전체 게시물 수를 초과하여 조회할 수 없습니다.",
+            result: [
+                {
+                    userIdx: null,
+                    category: "",
+                    title: "",
+                    content: "",
+                    likeNum: null,
+                    viewNum: null,
+                    postIdx: null,
+                    createAt: "",
+                    updatedAt: "",
+                    nickName: "",
+                    imagePath: [],
+                    commentList: [],
+                },
+            ],
+        });
+    }
+    postNotFound() {
+        throw new common_1.BadRequestException({
+            statusCode: 2014,
+            message: "postIdx에 해당하는 게시물이 없습니다.",
+            result: {
+                userIdx: null,
+                category: "",
+                title: "",
+                content: "",
+                likeNum: null,
+                viewNum: null,
+                postIdx: null,
+                createAt: "",
+                updatedAt: "",
+                nickName: "",
+                imagePath: [],
+                commentList: [],
+            },
+        });
+    }
+    likeNotFound() {
+        throw new common_1.BadRequestException({
+            statusCode: 2015,
+            message: "해당 게시물에 좋아요를 누르지 않은 유저입니다.",
+            result: {
+                userIdx: null,
+                category: "",
+                title: "",
+                content: "",
+                likeNum: null,
+                viewNum: null,
+                postIdx: null,
+                createAt: "",
+                updatedAt: "",
+                nickName: "",
+                imagePath: [],
+                commentList: [],
+            },
+        });
+    }
+    notFoundPost() {
+        throw new common_1.BadRequestException({
+            statusCode: 2016,
+            message: "존재하지 않는 게시물입니다.",
+            result: {
+                commentIdx: null,
+                postIdx: null,
+                userIdx: null,
+                parentCommentIdx: null,
+                depth: null,
+                commentAt: "",
+                commentContent: "",
+                isDeleted: null,
+            },
+        });
+    }
+    notFoundComment() {
+        throw new common_1.BadRequestException({
+            statusCode: 2017,
+            message: "해당 게시물의 댓글이 존재하지 않습니다.",
+            result: [
+                {
+                    commentIdx: null,
+                    postIdx: null,
+                    userIdx: null,
+                    parentCommentIdx: null,
+                    depth: null,
+                    commentAt: "",
+                    commentContent: "",
+                    isDeleted: null,
+                },
+            ],
+        });
+    }
+    notFoundSearch() {
+        throw new common_1.BadRequestException({
+            statusCode: 2018,
+            message: "검색 결과가 존재하지 않습니다.",
+            result: { restaurantName: "", menus: [] },
+        });
+    }
 };
 ErrorResponse = __decorate([
     (0, common_1.Injectable)(),
