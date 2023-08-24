@@ -7,7 +7,7 @@ export declare class ReviewService {
     constructor(reviewImpl: ReviewtIml);
     getAllReview(): Promise<import("../../../resource/db/entities/Review").Review[]>;
     getoneReview(reviewIdx: number): Promise<import("../../../resource/db/entities/Review").Review>;
-    createReview(user: UserLoginDto, createReviewDto: CreateReviewDto): Promise<import("../../../resource/db/entities/Review").Review>;
-    updateReview(reviewIdx: number, updateReviewDto: UpdateReviewDto): Promise<import("../../../resource/db/entities/Review").Review>;
+    createReview(user: UserLoginDto, createReviewDto: CreateReviewDto): Promise<any>;
+    updateReview(reviewIdx: number, updateReviewDto: UpdateReviewDto): Promise<any>;
     deleteReview(reviewIdx: number): Promise<import("../../../resource/db/entities/Review").Review>;
 }

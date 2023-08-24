@@ -3,16 +3,12 @@ import { Restaurant } from "../../../resource/db/entities/Restaurant";
 import { IsNotEmpty, IsString } from "class-validator";
 
 export class CreateRestaurantDto extends PickType(Restaurant, [
-  "userIdx",
   "restaurantName",
   "openTime",
   "closeTime",
   "telNum",
   "restaurantIntro",
 ]) {
-  @IsNotEmpty()
-  userIdx: number;
-
   @IsNotEmpty()
   @IsString()
   restaurantName: string;

@@ -25,7 +25,13 @@ export class RestaurantsService {
   }
 
   // 5-5 식당 정보 등록
-  async CreateRestaurant(createRestaurantDto: CreateRestaurantDto) {
-    return await this.restaurantImpl.CreateRestaurant(createRestaurantDto);
+  async CreateRestaurant(
+    createRestaurantDto: CreateRestaurantDto,
+    userIdx: number
+  ) {
+    return await this.restaurantImpl.CreateRestaurant(
+      createRestaurantDto,
+      userIdx
+    );
   }
 }

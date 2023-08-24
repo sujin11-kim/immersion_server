@@ -2,9 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { ReviewImage } from "./ReviewImage";
+import { ReviewComment } from "./ReviewComment";
 
 @Entity("Review", { schema: "immersion_DB" })
 export class Review {
@@ -31,4 +35,10 @@ export class Review {
 
   @Column("double", { name: "score", nullable: true })
   score: number | null;
+
+  @OneToMany(() => ReviewImage, (reviewImage) => reviewImage.reviewIdx2)
+  Images: ReviewImage[];
+
+  @OneToOne(() => ReviewComment, (reviewComment) => reviewComment.reviewIdx2) // 수정
+  comment: ReviewComment;
 }

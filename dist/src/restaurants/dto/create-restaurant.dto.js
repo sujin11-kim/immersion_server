@@ -14,7 +14,6 @@ const swagger_1 = require("@nestjs/swagger");
 const Restaurant_1 = require("../../../resource/db/entities/Restaurant");
 const class_validator_1 = require("class-validator");
 class CreateRestaurantDto extends (0, swagger_1.PickType)(Restaurant_1.Restaurant, [
-    "userIdx",
     "restaurantName",
     "openTime",
     "closeTime",
@@ -22,10 +21,6 @@ class CreateRestaurantDto extends (0, swagger_1.PickType)(Restaurant_1.Restauran
     "restaurantIntro",
 ]) {
 }
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", Number)
-], CreateRestaurantDto.prototype, "userIdx", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),

@@ -23,6 +23,9 @@ const location_dto_1 = require("../dto/location.dto");
 const http_exception_filter_1 = require("../../aop/exception/http-exception.filter");
 const success_interceptor_1 = require("../../aop/interceptors/success.interceptor");
 const create_restaurant_dto_1 = require("../dto/create-restaurant.dto");
+const jwt_guard_1 = require("../../auth/utils/jwt/jwt.guard");
+const user_decorator_1 = require("../../aop/decorators/user.decorator");
+const user_login_dto_1 = require("../../users/dto/user-login.dto");
 let RestaurantsController = class RestaurantsController {
     constructor(restaurantsService) {
         this.restaurantsService = restaurantsService;
@@ -39,8 +42,8 @@ let RestaurantsController = class RestaurantsController {
     findMenuByRestaurant(searchWord) {
         return this.restaurantsService.findMenu(searchWord);
     }
-    create(createRestaurantDto) {
-        return this.restaurantsService.CreateRestaurant(createRestaurantDto);
+    create(createRestaurantDto, user) {
+        return this.restaurantsService.CreateRestaurant(createRestaurantDto, user.userIdx);
     }
 };
 __decorate([
@@ -77,10 +80,13 @@ __decorate([
 ], RestaurantsController.prototype, "findMenuByRestaurant", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "식당 정보 등록" }),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_2.Post)("/create"),
     __param(0, (0, common_3.Body)()),
+    __param(1, (0, user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_restaurant_dto_1.CreateRestaurantDto]),
+    __metadata("design:paramtypes", [create_restaurant_dto_1.CreateRestaurantDto,
+        user_login_dto_1.UserLoginDto]),
     __metadata("design:returntype", void 0)
 ], RestaurantsController.prototype, "create", null);
 RestaurantsController = __decorate([

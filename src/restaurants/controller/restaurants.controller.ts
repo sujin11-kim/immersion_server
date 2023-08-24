@@ -1,4 +1,10 @@
-import { Get, Param, UseFilters, UseInterceptors } from "@nestjs/common";
+import {
+  Get,
+  Param,
+  UseFilters,
+  UseGuards,
+  UseInterceptors,
+} from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
 import { Post, Patch } from "@nestjs/common";
 import { RestaurantsService } from "../service/restaurants.service";
@@ -8,6 +14,9 @@ import { LocationDto } from "../dto/location.dto";
 import { HttpExceptionFilter } from "src/aop/exception/http-exception.filter";
 import { SuccessInterceptor } from "src/aop/interceptors/success.interceptor";
 import { CreateRestaurantDto } from "../dto/create-restaurant.dto";
+import { JwtAuthGuard } from "src/auth/utils/jwt/jwt.guard";
+import { CurrentUser } from "src/aop/decorators/user.decorator";
+import { UserLoginDto } from "src/users/dto/user-login.dto";
 
 @ApiTags("Restaurants")
 @UseInterceptors(SuccessInterceptor)
@@ -43,8 +52,15 @@ export class RestaurantsController {
 
   // 5-5 식당 정보 등록
   @ApiOperation({ summary: "식당 정보 등록" })
+  @UseGuards(JwtAuthGuard)
   @Post("/create")
-  create(@Body() createRestaurantDto: CreateRestaurantDto) {
-    return this.restaurantsService.CreateRestaurant(createRestaurantDto);
+  create(
+    @Body() createRestaurantDto: CreateRestaurantDto,
+    @CurrentUser() user: UserLoginDto
+  ) {
+    return this.restaurantsService.CreateRestaurant(
+      createRestaurantDto,
+      user.userIdx
+    );
   }
 }

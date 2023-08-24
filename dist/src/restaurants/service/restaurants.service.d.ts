@@ -8,5 +8,5 @@ export declare class RestaurantsService {
     updateUserLocation(locationdto: LocationDto): Promise<import("../../../resource/db/entities/User").User>;
     getrestaurantlist(userIdx: number): Promise<import("../../../resource/db/entities/Restaurant").Restaurant[]>;
     findMenu(searchWord: string): Promise<any>;
-    CreateRestaurant(createRestaurantDto: CreateRestaurantDto): Promise<CreateRestaurantDto>;
+    CreateRestaurant(createRestaurantDto: CreateRestaurantDto, userIdx: number): Promise<CreateRestaurantDto>;
 }

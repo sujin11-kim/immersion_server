@@ -32,27 +32,28 @@ let CustomRestaurantCommandRepository = class CustomRestaurantCommandRepository 
         user.longitude = locationdto.longitude;
         return await this.userRepository.save(user);
     }
-    async CreateRestaurant(restaurantInfo) {
+    async CreateRestaurant(restaurantInfo, userIdx) {
         const queryRunner = this.restaurantRepository.manager.connection.createQueryRunner();
         await queryRunner.connect();
         try {
             await queryRunner.startTransaction();
             const restaurant = queryRunner.manager.getRepository(Restaurant_1.Restaurant).create();
-            restaurant.userIdx = restaurantInfo.userIdx;
+            restaurant.userIdx = userIdx;
             restaurant.restaurantName = restaurantInfo.restaurantName;
             restaurant.openTime = restaurantInfo.openTime;
             restaurant.closeTime = restaurantInfo.closeTime;
             restaurant.telNum = restaurantInfo.telNum;
             restaurant.restaurantIntro = restaurantInfo.restaurantIntro;
-            await queryRunner.manager.getRepository(Restaurant_1.Restaurant).save(restaurant);
-            const restaurantFromDb = await this.restaurantRepository.findOne({
-                where: { restaurantName: restaurantInfo.restaurantName },
-            });
+            const newRestaurant = await queryRunner.manager
+                .getRepository(Restaurant_1.Restaurant)
+                .save(restaurant);
             const imagePromises = restaurantInfo.image.map(async (imagePath) => {
-                const image = this.restaurantImageRepository.create();
-                image.restaurantIdx = restaurantFromDb.restaurantIdx;
+                const image = queryRunner.manager
+                    .getRepository(RestaurantImage_1.RestaurantImage)
+                    .create();
+                image.restaurantIdx = newRestaurant.restaurantIdx;
                 image.imagePath = imagePath;
-                await this.restaurantImageRepository.save(image);
+                await queryRunner.manager.getRepository(RestaurantImage_1.RestaurantImage).save(image);
             });
             await Promise.all(imagePromises);
             await queryRunner.commitTransaction();

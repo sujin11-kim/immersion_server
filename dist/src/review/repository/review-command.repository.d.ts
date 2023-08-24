@@ -6,7 +6,7 @@ import { UpdateReviewDto } from "../dto/update-review.dto";
 export declare class CustomReviewCommandRepository {
     private readonly reviewRepository;
     constructor(reviewRepository: Repository<Review>);
-    createReview(user: UserLoginDto, createReviewDto: CreateReviewDto): Promise<Review>;
-    updateReview(reviewIdx: number, updateReviewDto: UpdateReviewDto): Promise<Review>;
+    createReview(user: UserLoginDto, createReviewDto: CreateReviewDto): Promise<any>;
+    updateReview(reviewIdx: number, updateReviewDto: UpdateReviewDto): Promise<any>;
     delete(reviewIdx: number): Promise<Review>;
 }

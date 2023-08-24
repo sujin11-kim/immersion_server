@@ -18,6 +18,7 @@ export interface RestaurantInterface {
 
   // 5-5 식당 정보 등록
   CreateRestaurant(
-    createRestaurantDto: CreateRestaurantDto
+    createRestaurantDto: CreateRestaurantDto,
+    userIdx: number
   ): Promise<CreateRestaurantDto>;
 }

@@ -7,5 +7,5 @@ export interface RestaurantInterface {
     updateUserLocation(locationdto: LocationDto): Promise<User>;
     getrestaurantlist(userIdx: number): Promise<Restaurant[]>;
     findMenu(restaurant: string): Promise<any>;
-    CreateRestaurant(createRestaurantDto: CreateRestaurantDto): Promise<CreateRestaurantDto>;
+    CreateRestaurant(createRestaurantDto: CreateRestaurantDto, userIdx: number): Promise<CreateRestaurantDto>;
 }

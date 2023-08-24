@@ -28,7 +28,8 @@ export class CustomRestaurantCommandRepository {
 
   // 게시물 정보 저장
   async CreateRestaurant(
-    restaurantInfo: CreateRestaurantDto
+    restaurantInfo: CreateRestaurantDto,
+    userIdx: number
   ): Promise<CreateRestaurantDto> {
     const queryRunner =
       this.restaurantRepository.manager.connection.createQueryRunner();
@@ -38,24 +39,24 @@ export class CustomRestaurantCommandRepository {
       await queryRunner.startTransaction();
 
       const restaurant = queryRunner.manager.getRepository(Restaurant).create();
-      restaurant.userIdx = restaurantInfo.userIdx;
+      restaurant.userIdx = userIdx;
       restaurant.restaurantName = restaurantInfo.restaurantName;
       restaurant.openTime = restaurantInfo.openTime;
       restaurant.closeTime = restaurantInfo.closeTime;
       restaurant.telNum = restaurantInfo.telNum;
       restaurant.restaurantIntro = restaurantInfo.restaurantIntro;
 
-      await queryRunner.manager.getRepository(Restaurant).save(restaurant);
-
-      const restaurantFromDb = await this.restaurantRepository.findOne({
-        where: { restaurantName: restaurantInfo.restaurantName },
-      });
+      const newRestaurant = await queryRunner.manager
+        .getRepository(Restaurant)
+        .save(restaurant);
 
       const imagePromises = restaurantInfo.image.map(async (imagePath) => {
-        const image = this.restaurantImageRepository.create();
-        image.restaurantIdx = restaurantFromDb.restaurantIdx;
+        const image = queryRunner.manager
+          .getRepository(RestaurantImage)
+          .create();
+        image.restaurantIdx = newRestaurant.restaurantIdx;
         image.imagePath = imagePath;
-        await this.restaurantImageRepository.save(image);
+        await queryRunner.manager.getRepository(RestaurantImage).save(image);
       });
 
       await Promise.all(imagePromises);
