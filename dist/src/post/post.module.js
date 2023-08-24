@@ -20,6 +20,7 @@ const LikePost_1 = require("../../resource/db/entities/LikePost");
 const post_implement_1 = require("./interface/post.implement");
 const post_command_repository_1 = require("./repository/post-command.repository");
 const post_query_repository_1 = require("./repository/post-query.repository");
+const error_reponse_1 = require("../aop/exception/error-reponse");
 let PostModule = class PostModule {
 };
 PostModule = __decorate([
@@ -32,6 +33,7 @@ PostModule = __decorate([
             post_implement_1.PostImpl,
             post_command_repository_1.CustomPostCommandRepository,
             post_query_repository_1.CustomPostQueryRepository,
+            error_reponse_1.ErrorResponse,
         ],
     })
 ], PostModule);

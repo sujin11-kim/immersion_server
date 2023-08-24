@@ -32,7 +32,7 @@ let UserImpl = class UserImpl {
         const hashedPassword = await bcrypt.hash(userInfo.password, 12);
         const existUser = await this.customUserQueryRepository.getByEmail(userInfo.email);
         if (!existUser) {
-            const newUser = await this.customUserCommandRepository.saveUser(Object.assign(Object.assign({}, userInfo), { password: hashedPassword }));
+            const newUser = await this.customUserCommandRepository.signUp(Object.assign(Object.assign({}, userInfo), { password: hashedPassword }));
             return { userIdx: newUser.userIdx.toString() };
         }
         else {

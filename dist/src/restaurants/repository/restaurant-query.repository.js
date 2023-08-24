@@ -18,26 +18,22 @@ const typeorm_1 = require("@nestjs/typeorm");
 const User_1 = require("../../../resource/db/entities/User");
 const Restaurant_1 = require("../../../resource/db/entities/Restaurant");
 const typeorm_2 = require("typeorm");
-const calculateDistance_1 = require("../utill/calculateDistance");
+const Menu_1 = require("../../../resource/db/entities/Menu");
 let CustomRestaurantQueryRepository = class CustomRestaurantQueryRepository {
-    constructor(userRepository, restaurantRepository) {
+    constructor(userRepository, restaurantRepository, menuRepository) {
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
+        this.menuRepository = menuRepository;
+    }
+    async getAllResturant() {
+        const restaurants = await this.restaurantRepository.find();
+        return restaurants;
     }
     async checkExistUser(userIdx) {
         const user = await this.userRepository.findOne({ where: { userIdx } });
         return user;
     }
-    async getrestaurantlist(userIdx) {
-        const restaurants = await this.restaurantRepository.find();
-        const user = await this.userRepository.findOne({ where: { userIdx } });
-        const nearbyRestaurantIdxs = [];
-        for (const restaurant of restaurants) {
-            const distance = (0, calculateDistance_1.calculateDistance)(user.latitude, user.longitude, restaurant.latitude, restaurant.longitude);
-            if (distance < 3000) {
-                nearbyRestaurantIdxs.push(restaurant.restaurantIdx);
-            }
-        }
+    async getNearByResturants(nearbyRestaurantIdxs) {
         const nearbyrestaurant = await this.restaurantRepository.find({
             where: {
                 restaurantIdx: (0, typeorm_2.In)(nearbyRestaurantIdxs),
@@ -45,12 +41,33 @@ let CustomRestaurantQueryRepository = class CustomRestaurantQueryRepository {
         });
         return nearbyrestaurant;
     }
+    async findMenuByRestaurant(searchWord) {
+        const searchResult = await this.restaurantRepository
+            .createQueryBuilder("restaurant")
+            .select([
+            "restaurant.restaurantName AS restaurantName",
+            "menu.menuName AS menuName",
+            "menu.menuContent AS menuContent",
+            "menu.price AS price",
+            "menu.viewNum AS viewNum",
+            "menu.menuImage AS menuImage",
+            "menu.saleClosingTime AS saleClosingTime",
+        ])
+            .leftJoin("restaurant.menus", "menu")
+            .where("restaurant.restaurantName LIKE :searchWord OR menu.menuName LIKE :searchWord", {
+            searchWord: `%${searchWord}%`,
+        })
+            .getRawMany();
+        return searchResult;
+    }
 };
 CustomRestaurantQueryRepository = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
     __param(1, (0, typeorm_1.InjectRepository)(Restaurant_1.Restaurant)),
+    __param(2, (0, typeorm_1.InjectRepository)(Menu_1.Menu)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         typeorm_2.Repository])
 ], CustomRestaurantQueryRepository);
 exports.CustomRestaurantQueryRepository = CustomRestaurantQueryRepository;

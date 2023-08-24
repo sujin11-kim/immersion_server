@@ -10,8 +10,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Restaurant = void 0;
+const Menu_1 = require("./Menu");
 const typeorm_1 = require("typeorm");
 const User_1 = require("./User");
+const RestaurantImage_1 = require("./RestaurantImage");
 let Restaurant = class Restaurant {
 };
 __decorate([
@@ -27,11 +29,11 @@ __decorate([
     __metadata("design:type", String)
 ], Restaurant.prototype, "restaurantName", void 0);
 __decorate([
-    (0, typeorm_1.Column)("time", { name: "openTime", nullable: true }),
+    (0, typeorm_1.Column)("time", { name: "openTime" }),
     __metadata("design:type", String)
 ], Restaurant.prototype, "openTime", void 0);
 __decorate([
-    (0, typeorm_1.Column)("time", { name: "closeTime", nullable: true }),
+    (0, typeorm_1.Column)("time", { name: "closeTime" }),
     __metadata("design:type", String)
 ], Restaurant.prototype, "closeTime", void 0);
 __decorate([
@@ -61,6 +63,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Restaurant.prototype, "longitude", void 0);
 __decorate([
+    (0, typeorm_1.Column)("varchar", { name: "restaurantIntro", nullable: true, length: 300 }),
+    __metadata("design:type", String)
+], Restaurant.prototype, "restaurantIntro", void 0);
+__decorate([
     (0, typeorm_1.Column)("tinyint", { name: "isPostedToday", nullable: true, width: 1 }),
     __metadata("design:type", Boolean)
 ], Restaurant.prototype, "isPostedToday", void 0);
@@ -72,6 +78,14 @@ __decorate([
     (0, typeorm_1.JoinColumn)([{ name: "userIdx", referencedColumnName: "userIdx" }]),
     __metadata("design:type", User_1.User)
 ], Restaurant.prototype, "userIdx2", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Menu_1.Menu, (menu) => menu.restaurantIdx2),
+    __metadata("design:type", Array)
+], Restaurant.prototype, "menus", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => RestaurantImage_1.RestaurantImage, (restaurantImage) => restaurantImage.restaurantIdx2),
+    __metadata("design:type", Array)
+], Restaurant.prototype, "Images", void 0);
 Restaurant = __decorate([
     (0, typeorm_1.Index)("FK_User_TO_Restaurant_1", ["userIdx"], {}),
     (0, typeorm_1.Entity)("Restaurant", { schema: "immersion_DB" })

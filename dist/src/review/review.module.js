@@ -19,18 +19,22 @@ const review_command_repository_1 = require("./repository/review-command.reposit
 const review_query_repository_1 = require("./repository/review-query.repository");
 const review_implements_1 = require("./interface/review.implements");
 const error_reponse_1 = require("../aop/exception/error-reponse");
+const ReviewImage_1 = require("../../resource/db/entities/ReviewImage");
 let ReviewModule = class ReviewModule {
 };
 ReviewModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([Review_1.Review, User_1.User, Post_1.Post]), auth_module_1.AuthModule],
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([Review_1.Review, User_1.User, Post_1.Post, ReviewImage_1.ReviewImage]),
+            auth_module_1.AuthModule,
+        ],
         controllers: [review_controller_1.ReviewController],
         providers: [
             review_service_1.ReviewService,
             review_implements_1.ReviewtIml,
             review_command_repository_1.CustomReviewCommandRepository,
             review_query_repository_1.CustomReviewQueryRepository,
-            error_reponse_1.ErrorResponse
+            error_reponse_1.ErrorResponse,
         ],
     })
 ], ReviewModule);

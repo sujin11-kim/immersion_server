@@ -10,10 +10,16 @@ export interface ReviewInterface {
   getoneReview(reviewIdx: number): Promise<Review>;
 
   //6-3리뷰 작성
-  createReview(user: UserLoginDto, createReviewDto: CreateReviewDto): Promise<Review>;
+  createReview(
+    user: UserLoginDto,
+    createReviewDto: CreateReviewDto
+  ): Promise<any>;
 
   //6-4 특정리뷰 수정
-  updateReview(reviewIdx: number, updateReviewDto: UpdateReviewDto): Promise<Review>;
+  updateReview(
+    reviewIdx: number,
+    updateReviewDto: UpdateReviewDto
+  ): Promise<any>;
 
   // 6-5특정 리뷰 삭제
   deleteReview(reviewIdx: number): Promise<Review>;

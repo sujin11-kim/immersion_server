@@ -41,7 +41,7 @@ export class CommentController {
     return this.commentService.findAllComment(postIdx);
   }
 
-  @ApiOperation({ summary: "게시물 좋아요" })
+  @ApiOperation({ summary: "댓글 좋아요" })
   //@UseGuards(JwtAuthGuard)
   @Post("/likeComment")
   commentLike(@Body() Idx: LikeCommentDto) {
@@ -49,7 +49,7 @@ export class CommentController {
     return this.commentService.commentLike(userIdx, postIdx, commentIdx);
   }
 
-  @ApiOperation({ summary: "게시물 좋아요 취소" })
+  @ApiOperation({ summary: "댓글 좋아요 취소" })
   //@UseGuards(JwtAuthGuard)
   @Post("/likeCancelComment")
   commentLikeCancel(@Body() Idx: LikeCommentDto) {

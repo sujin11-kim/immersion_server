@@ -32,7 +32,6 @@ let ErrorResponse = class ErrorResponse {
             result: { userIdx: "" },
         });
     }
-    ;
     duplicateByEmail() {
         throw new common_1.BadRequestException({
             statusCode: 2001,
@@ -40,7 +39,6 @@ let ErrorResponse = class ErrorResponse {
             result: { userIdx: "" },
         });
     }
-    ;
     duplicateByNickname() {
         throw new common_1.BadRequestException({
             statusCode: 2002,
@@ -48,7 +46,6 @@ let ErrorResponse = class ErrorResponse {
             result: { userIdx: "" },
         });
     }
-    ;
     duplicateByPhone() {
         throw new common_1.BadRequestException({
             statusCode: 2003,
@@ -56,7 +53,6 @@ let ErrorResponse = class ErrorResponse {
             result: { userIdx: "" },
         });
     }
-    ;
     notExistFCM() {
         throw new common_1.BadRequestException({
             statusCode: 2004,
@@ -64,7 +60,6 @@ let ErrorResponse = class ErrorResponse {
             result: { fcmTokens: {} },
         });
     }
-    ;
     notExistPassword() {
         throw new common_1.BadRequestException({
             statusCode: 2005,
@@ -72,7 +67,6 @@ let ErrorResponse = class ErrorResponse {
             result: { password: "" },
         });
     }
-    ;
     comparePassword(existPassword) {
         throw new common_1.BadRequestException({
             statusCode: 2006,
@@ -80,7 +74,6 @@ let ErrorResponse = class ErrorResponse {
             result: { existPassword: existPassword },
         });
     }
-    ;
     notExistReview(existReviewId) {
         throw new common_1.BadRequestException({
             statusCode: 2007,
@@ -88,7 +81,6 @@ let ErrorResponse = class ErrorResponse {
             result: { reviewIdx: "" },
         });
     }
-    ;
     notExistPost(existPostId) {
         throw new common_1.BadRequestException({
             statusCode: 2008,
@@ -96,7 +88,6 @@ let ErrorResponse = class ErrorResponse {
             result: { postIdx: "" },
         });
     }
-    ;
     notExistCommnet(existCommentId) {
         throw new common_1.BadRequestException({
             statusCode: 2009,
@@ -104,7 +95,220 @@ let ErrorResponse = class ErrorResponse {
             result: { commentIdx: "" },
         });
     }
-    ;
+    exceedContentLength() {
+        throw new common_1.BadRequestException({
+            statusCode: 2010,
+            message: `content가 제한 글자수 100자를 초과했습니다.`,
+            result: {
+                restaurantName: "",
+                openTime: "",
+                closeTime: "",
+                telNum: "",
+                restaurantIntro: "",
+                image: [],
+            },
+        });
+    }
+    userPostNotFound() {
+        throw new common_1.BadRequestException({
+            statusCode: 2011,
+            message: "해당 유저의 게시물이 존재하지 않습니다.",
+            result: [
+                {
+                    userIdx: null,
+                    category: "",
+                    title: "",
+                    content: "",
+                    likeNum: null,
+                    viewNum: null,
+                    postIdx: null,
+                    createAt: "",
+                    updatedAt: "",
+                    nickName: "",
+                    imagePath: [],
+                    commentList: [],
+                },
+            ],
+        });
+    }
+    categoryPostsNotFound() {
+        throw new common_1.BadRequestException({
+            statusCode: 2012,
+            message: "해당 카테고리의 게시물이 존재하지 않습니다.",
+            result: [
+                {
+                    userIdx: null,
+                    category: "",
+                    title: "",
+                    content: "",
+                    likeNum: null,
+                    viewNum: null,
+                    postIdx: null,
+                    createAt: "",
+                    updatedAt: "",
+                    nickName: "",
+                    imagePath: [],
+                    commentList: [],
+                },
+            ],
+        });
+    }
+    maxPostsExceeded() {
+        throw new common_1.BadRequestException({
+            statusCode: 2013,
+            message: "전체 게시물 수를 초과하여 조회할 수 없습니다.",
+            result: [
+                {
+                    userIdx: null,
+                    category: "",
+                    title: "",
+                    content: "",
+                    likeNum: null,
+                    viewNum: null,
+                    postIdx: null,
+                    createAt: "",
+                    updatedAt: "",
+                    nickName: "",
+                    imagePath: [],
+                    commentList: [],
+                },
+            ],
+        });
+    }
+    postNotFound() {
+        throw new common_1.BadRequestException({
+            statusCode: 2014,
+            message: "postIdx에 해당하는 게시물이 없습니다.",
+            result: {
+                userIdx: null,
+                category: "",
+                title: "",
+                content: "",
+                likeNum: null,
+                viewNum: null,
+                postIdx: null,
+                createAt: "",
+                updatedAt: "",
+                nickName: "",
+                imagePath: [],
+                commentList: [],
+            },
+        });
+    }
+    likeNotFound() {
+        throw new common_1.BadRequestException({
+            statusCode: 2015,
+            message: "해당 게시물에 좋아요를 누르지 않은 유저입니다.",
+            result: {
+                userIdx: null,
+                category: "",
+                title: "",
+                content: "",
+                likeNum: null,
+                viewNum: null,
+                postIdx: null,
+                createAt: "",
+                updatedAt: "",
+                nickName: "",
+                imagePath: [],
+                commentList: [],
+            },
+        });
+    }
+    notFoundPost() {
+        throw new common_1.BadRequestException({
+            statusCode: 2016,
+            message: "존재하지 않는 게시물입니다.",
+            result: {
+                commentIdx: null,
+                postIdx: null,
+                userIdx: null,
+                parentCommentIdx: null,
+                depth: null,
+                commentAt: "",
+                commentContent: "",
+                isDeleted: null,
+            },
+        });
+    }
+    notFoundComment() {
+        throw new common_1.BadRequestException({
+            statusCode: 2017,
+            message: "해당 게시물의 댓글이 존재하지 않습니다.",
+            result: [
+                {
+                    commentIdx: null,
+                    postIdx: null,
+                    userIdx: null,
+                    parentCommentIdx: null,
+                    depth: null,
+                    commentAt: "",
+                    commentContent: "",
+                    isDeleted: null,
+                },
+            ],
+        });
+    }
+    notFoundSearch() {
+        throw new common_1.BadRequestException({
+            statusCode: 2018,
+            message: "검색 결과가 존재하지 않습니다.",
+            result: { menuList: [] },
+        });
+    }
+    notFoundReview() {
+        throw new common_1.BadRequestException({
+            statusCode: 2019,
+            message: "리뷰가 존재하지 않습니다.",
+            result: {
+                reviewIdx: null,
+                content: "",
+                commentIdx: null,
+                createdAt: "",
+                updatedAt: "",
+            },
+        });
+    }
+    notRestaurantOwner() {
+        throw new common_1.BadRequestException({
+            statusCode: 2020,
+            message: "사장님으로 등록된 유저가 아닙니다.",
+            result: {
+                reviewIdx: null,
+                content: "",
+                commentIdx: null,
+                createdAt: "",
+                updatedAt: "",
+            },
+        });
+    }
+    onlyOwnerCanAccess(result) {
+        throw new common_1.BadRequestException({
+            statusCode: 2021,
+            message: "해당 가게 사장님만 리뷰 댓글에 접근할 수 있습니다.",
+            result,
+        });
+    }
+    alreadyExistingCommentError() {
+        throw new common_1.BadRequestException({
+            statusCode: 2022,
+            message: "해당 리뷰에 이미 사장님 댓글이 존재합니다.",
+            result: {
+                reviewIdx: null,
+                content: "",
+                commentIdx: null,
+                createdAt: "",
+                updatedAt: "",
+            },
+        });
+    }
+    notFoundReviewComment(result) {
+        throw new common_1.BadRequestException({
+            statusCode: 2023,
+            message: "해당 댓글이 존재하지 않습니다.",
+            result,
+        });
+    }
 };
 ErrorResponse = __decorate([
     (0, common_1.Injectable)(),

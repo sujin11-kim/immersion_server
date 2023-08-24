@@ -13,7 +13,7 @@ export declare class ReviewtIml implements ReviewInterface {
     constructor(customReviewCommandRepository: CustomReviewCommandRepository, customReviewQueryRepository: CustomReviewQueryRepository, errorResponse: ErrorResponse);
     getAllReview(): Promise<Review[]>;
     getoneReview(reviewIdx: number): Promise<Review>;
-    createReview(user: UserLoginDto, createReviewDto: CreateReviewDto): Promise<Review>;
-    updateReview(reviewIdx: number, updateReviewDto: UpdateReviewDto): Promise<Review>;
+    createReview(user: UserLoginDto, createReviewDto: CreateReviewDto): Promise<any>;
+    updateReview(reviewIdx: number, updateReviewDto: UpdateReviewDto): Promise<any>;
     deleteReview(reviewIdx: number): Promise<Review>;
 }

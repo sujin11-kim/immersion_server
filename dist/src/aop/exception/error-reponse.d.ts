@@ -14,4 +14,18 @@ export declare class ErrorResponse {
     notExistReview(existReviewId: any): void;
     notExistPost(existPostId: any): void;
     notExistCommnet(existCommentId: any): void;
+    exceedContentLength(): void;
+    userPostNotFound(): void;
+    categoryPostsNotFound(): void;
+    maxPostsExceeded(): void;
+    postNotFound(): void;
+    likeNotFound(): void;
+    notFoundPost(): void;
+    notFoundComment(): void;
+    notFoundSearch(): void;
+    notFoundReview(): void;
+    notRestaurantOwner(): void;
+    onlyOwnerCanAccess(result: any): void;
+    alreadyExistingCommentError(): void;
+    notFoundReviewComment(result: any): void;
 }
