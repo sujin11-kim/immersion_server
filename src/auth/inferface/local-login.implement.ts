@@ -25,8 +25,8 @@ export class LocalLoginStrategy {
     const user = await this.customUserQueryRepository.getByEmail(this.email_);
     
     if(!user) this.errorResponse.notExistUser();
-    
-    if(! await bcrypt.compare(this.password_, user.password))
+
+    if(await bcrypt.compare(this.password_, user.password))
     {
       this.userIdx_ = user.userIdx;
       const payload = { userIdx: this.userIdx_ };
