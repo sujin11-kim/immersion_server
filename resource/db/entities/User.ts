@@ -30,6 +30,9 @@ export class User {
   @Column("varchar", { name: "fcmtoken", nullable: true, length: 255 })
   fcmtoken: string | null;
 
+  @Column("varchar", { name: "refreshToken", nullable: true, length: 1000 })
+  refreshToken: string | null;
+
   @CreateDateColumn()
   enrollDate: Date | null;
 

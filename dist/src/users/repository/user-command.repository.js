@@ -22,15 +22,21 @@ let CustomUserCommandRepository = class CustomUserCommandRepository {
         this.userRepository = userRepository;
     }
     async signUp(userInfo, queryRunner = undefined) {
-        const { email, nickName, phone, password, fcmToken } = userInfo;
+        const { email, nickName, phone, password, fcmtoken } = userInfo;
         const user = new User_1.User();
         user.email = email;
         user.nickName = nickName;
         user.phone = phone;
         user.password = password;
-        user.fcmtoken = fcmToken;
+        user.fcmtoken = fcmtoken;
         const repository = queryRunner ? queryRunner.manager.getRepository(User_1.User) : this.userRepository;
         const newUser = await repository.save(user);
+        return newUser;
+    }
+    async storeRefreshToken(userInfo, refreshToken, queryRunner = undefined) {
+        userInfo.refreshToken = refreshToken;
+        const repository = queryRunner ? queryRunner.manager.getRepository(User_1.User) : this.userRepository;
+        const newUser = await repository.save(userInfo);
         return newUser;
     }
 };

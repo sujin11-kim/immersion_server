@@ -9,18 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JwtStrategy = void 0;
-const passport_jwt_1 = require("passport-jwt");
+exports.ATStrategy = void 0;
+const passport_local_1 = require("passport-local");
 const passport_1 = require("@nestjs/passport");
 const common_1 = require("@nestjs/common");
 const user_query_repository_1 = require("../../../users/repository/user-query.repository");
 const error_reponse_1 = require("../../../aop/exception/error-reponse");
-let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy, 'jwt') {
+const passport_jwt_1 = require("passport-jwt");
+let ATStrategy = class ATStrategy extends (0, passport_1.PassportStrategy)(passport_local_1.Strategy, 'jwt') {
     constructor(customUserQueryRepository, errorResponse) {
         super({
             jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: process.env.JWT_SECRET,
-            ignoreExpiration: true,
+            secretOrKey: process.env.JWT_ACCESS_SECRET,
+            ignoreExpiration: false,
         });
         this.customUserQueryRepository = customUserQueryRepository;
         this.errorResponse = errorResponse;
@@ -33,10 +34,10 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         return user;
     }
 };
-JwtStrategy = __decorate([
+ATStrategy = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [user_query_repository_1.CustomUserQueryRepository,
         error_reponse_1.ErrorResponse])
-], JwtStrategy);
-exports.JwtStrategy = JwtStrategy;
-//# sourceMappingURL=jwt.strategy.js.map
+], ATStrategy);
+exports.ATStrategy = ATStrategy;
+//# sourceMappingURL=access-token.strategy.js.map

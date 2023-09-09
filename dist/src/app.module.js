@@ -18,6 +18,7 @@ const app_service_1 = require("./app.service");
 const users_module_1 = require("./users/users.module");
 const User_1 = require("../resource/db/entities/User");
 const auth_module_1 = require("./auth/auth.module");
+const nestjs_redis_1 = require("@liaoliaots/nestjs-redis");
 const moment = require("moment");
 const Message_1 = require("../resource/db/entities/Message");
 const Post_1 = require("../resource/db/entities/Post");
@@ -49,6 +50,14 @@ AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
+            }),
+            nestjs_redis_1.RedisModule.forRoot({
+                readyLog: true,
+                config: {
+                    host: process.env.REDIS_HOST,
+                    port: 6379,
+                    password: 'bitnami'
+                }
             }),
             typeorm_1.TypeOrmModule.forFeature([User_1.User]),
             typeorm_1.TypeOrmModule.forRoot({

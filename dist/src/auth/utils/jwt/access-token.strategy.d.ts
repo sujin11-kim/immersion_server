@@ -1,8 +1,8 @@
-import { Strategy } from "passport-jwt";
+import { Strategy } from "passport-local";
 import { CustomUserQueryRepository } from 'src/users/repository/user-query.repository';
 import { ErrorResponse } from "src/aop/exception/error-reponse";
-declare const JwtStrategy_base: new (...args: any[]) => Strategy;
-export declare class JwtStrategy extends JwtStrategy_base {
+declare const ATStrategy_base: new (...args: any[]) => Strategy;
+export declare class ATStrategy extends ATStrategy_base {
     private readonly customUserQueryRepository;
     private readonly errorResponse;
     constructor(customUserQueryRepository: CustomUserQueryRepository, errorResponse: ErrorResponse);
