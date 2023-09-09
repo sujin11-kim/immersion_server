@@ -10,6 +10,7 @@ export declare class UsersController {
         userIdx: string;
     }>;
     login(data: UserLoginDto): Promise<any>;
+    getAccessTokenByRefreshToken(): void;
     findAllFCM(): Promise<Record<"fcmTokens", object>>;
     findFCM(userIdx: number): Promise<Record<"fcmToken", string>>;
     getCurrentUser(user: any): any;

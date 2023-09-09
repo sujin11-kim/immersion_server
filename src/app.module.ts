@@ -6,6 +6,7 @@ import { AppService } from "./app.service";
 import { UsersModule } from "./users/users.module";
 import { User } from "../resource/db/entities/User";
 import { AuthModule } from "./auth/auth.module";
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 
 import * as moment from "moment";
 import { Message } from "../resource/db/entities/Message";
@@ -39,6 +40,14 @@ import { ReviewCommentModule } from "./reviewComment/review.comment.module";
       //   DB_PASSWORD: Joi.string().required(),
       //   DB_DATABASE: Joi.string().required(),
       // })
+    }),
+    RedisModule.forRoot({
+      readyLog: true,
+      config: {
+        host: process.env.REDIS_HOST,  
+        port: 6379,
+        password: 'bitnami'
+      }
     }),
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forRoot({

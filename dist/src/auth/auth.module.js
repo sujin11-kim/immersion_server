@@ -22,24 +22,27 @@ const login_case_implement_1 = require("./inferface/login-case.implement");
 const user_query_repository_1 = require("../users/repository/user-query.repository");
 const user_command_repository_1 = require("../users/repository/user-command.repository");
 const error_reponse_1 = require("../aop/exception/error-reponse");
-const jwt_strategy_1 = require("./utils/jwt/jwt.strategy");
+const access_token_strategy_1 = require("./utils/jwt/access-token.strategy");
+const refresh_token_strategy_1 = require("./utils/jwt/refresh-token.strategy");
+const cache_manager_1 = require("@nestjs/cache-manager");
 let AuthModule = AuthModule_1 = class AuthModule {
 };
 AuthModule = AuthModule_1 = __decorate([
     (0, common_1.Module)({
         imports: [
+            cache_manager_1.CacheModule.register(),
             typeorm_1.TypeOrmModule.forFeature([User_1.User]),
             passport_1.PassportModule.register({ defaultStrategy: "jwt", session: false }),
             jwt_1.JwtModule.register({
-                secret: "secretKey",
-                signOptions: { expiresIn: "3m" },
+                secret: "secretKey"
             }),
             (0, common_1.forwardRef)(() => users_module_1.UsersModule),
         ],
         providers: [
             auth_service_1.AuthService,
             login_case_implement_1.LoginImpl,
-            jwt_strategy_1.JwtStrategy,
+            access_token_strategy_1.ATStrategy,
+            refresh_token_strategy_1.RTStrategy,
             local_login_implement_1.LocalLoginStrategy,
             kakao_login_implement_1.KakaoLoginStrategy,
             apple_login_implement_1.AppleLoginStrategy,

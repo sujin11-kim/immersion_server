@@ -13,15 +13,17 @@ import { LoginImpl } from "./inferface/login-case.implement";
 import { CustomUserQueryRepository } from "src/users/repository/user-query.repository";
 import { CustomUserCommandRepository } from "src/users/repository/user-command.repository";
 import { ErrorResponse } from "src/aop/exception/error-reponse";
-import { JwtStrategy } from "./utils/jwt/jwt.strategy";
+import { ATStrategy } from "./utils/jwt/access-token.strategy";
+import { RTStrategy } from "./utils/jwt/refresh-token.strategy";
+import { CacheModule } from "@nestjs/cache-manager";
 
 @Module({
   imports: [
+    CacheModule.register(),
     TypeOrmModule.forFeature([User]),
     PassportModule.register({ defaultStrategy: "jwt", session: false }),
     JwtModule.register({
-      secret: "secretKey",
-      signOptions: { expiresIn: "3m" },
+      secret: "secretKey"
     }),
 
     forwardRef(() => UsersModule),
@@ -29,7 +31,8 @@ import { JwtStrategy } from "./utils/jwt/jwt.strategy";
   providers: [
     AuthService, 
     LoginImpl,
-    JwtStrategy,
+    ATStrategy,
+    RTStrategy,
     LocalLoginStrategy, 
     KakaoLoginStrategy, 
     AppleLoginStrategy,

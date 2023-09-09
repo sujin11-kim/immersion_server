@@ -7,6 +7,7 @@ export declare class User {
     nickName: string | null;
     phone: string | null;
     fcmtoken: string | null;
+    refreshToken: string | null;
     enrollDate: Date | null;
     password: string | null;
     latitude: number | null;
