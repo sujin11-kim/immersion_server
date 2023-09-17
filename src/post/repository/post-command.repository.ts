@@ -1,24 +1,20 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Post } from "../../../resource/db/entities/Post";
 import { Repository } from "typeorm";
-import { User } from "resource/db/entities/User";
 import { Image } from "resource/db/entities/Image";
 import { CreatePostDto } from "../dto/create-post.dto";
 import { UserLoginDto } from "src/users/dto/user-login.dto";
 import { readonlyPostDto } from "../dto/readonly-post.dto";
 import { LikePost } from "resource/db/entities/LikePost";
-import { CustomExceptions } from "src/aop/exception/custom-exception";
+import { ErrorResponse } from "src/aop/exception/error-reponse";
 
 @Injectable()
 export class CustomPostCommandRepository {
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    @InjectRepository(Image)
-    private readonly imageRepository: Repository<Image>
+    private errorResponse: ErrorResponse
   ) {}
 
   // 게시물 정보 저장
@@ -43,7 +39,7 @@ export class CustomPostCommandRepository {
       const maxContentLength = 1;
       const contentWithoutSpace = post.content.replace(/\s/g, "");
       if (contentWithoutSpace.length > maxContentLength) {
-        throw new BadRequestException(CustomExceptions.EXCEED_CONTENT_LENGTH);
+        this.errorResponse.exceedContentLength();
       }
 
       const savedPost = await queryRunner.manager

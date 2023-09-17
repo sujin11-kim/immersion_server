@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { User } from "../../../resource/db/entities/User";
@@ -7,6 +7,7 @@ import { UserInterface } from "./user.interface";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { CustomUserCommandRepository } from "../repository/user-command.repository";
 import { CustomUserQueryRepository } from "../repository/user-query.repository";
+import { ErrorResponse } from "src/aop/exception/error-reponse";
 
 @Injectable()
 export class UserImpl implements UserInterface {
@@ -14,19 +15,25 @@ export class UserImpl implements UserInterface {
     private readonly customUserCommandRepository: CustomUserCommandRepository,
     private readonly customUserQueryRepository: CustomUserQueryRepository,
     @InjectRepository(User)
-    private userEntityRepository: Repository<User>
+    private userEntityRepository: Repository<User>,
+    private errorResponse: ErrorResponse
   ) {}
 
   // 1-1 회원가입
   async createUser(userInfo: CreateUserDto): Promise<{ userIdx: string }> {
     const hashedPassword = await bcrypt.hash(userInfo.password, 12);
-    await this.customUserQueryRepository.checkDuplicate(userInfo);
-    const newUser = await this.customUserCommandRepository.saveUser({
-      ...userInfo,
-      password: hashedPassword,
-    });
-
-    return { userIdx: newUser.userIdx.toString() };
+    const existUser = await this.customUserQueryRepository.getByEmail(
+      userInfo.email
+    );
+    if (!existUser) {
+      const newUser = await this.customUserCommandRepository.signUp({
+        ...userInfo,
+        password: hashedPassword,
+      });
+      return { userIdx: newUser.userIdx.toString() };
+    } else {
+      this.errorResponse.duplicateByEmail();
+    }
   }
 
   // 1-5 모든 FCM 토큰 조회
@@ -37,7 +44,7 @@ export class UserImpl implements UserInterface {
 
   // 1-6 개인 FCM 토큰 조회
   async getFCMByUserIdx(userIdx: number): Promise<Record<"fcmToken", string>> {
-    await this.customUserQueryRepository.isUserExistsByUserIdx(userIdx);
+    await this.customUserQueryRepository.getByUserIdx(userIdx);
     const fcmToken = await this.customUserQueryRepository.getFCMByUserIdx(
       userIdx
     );

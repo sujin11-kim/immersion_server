@@ -18,6 +18,7 @@ const app_service_1 = require("./app.service");
 const users_module_1 = require("./users/users.module");
 const User_1 = require("../resource/db/entities/User");
 const auth_module_1 = require("./auth/auth.module");
+const nestjs_redis_1 = require("@liaoliaots/nestjs-redis");
 const moment = require("moment");
 const Message_1 = require("../resource/db/entities/Message");
 const Post_1 = require("../resource/db/entities/Post");
@@ -33,6 +34,12 @@ const Restaurant_1 = require("../resource/db/entities/Restaurant");
 const restaurants_module_1 = require("./restaurants/restaurants.module");
 const review_module_1 = require("./review/review.module");
 const LikeComment_1 = require("../resource/db/entities/LikeComment");
+const Menu_1 = require("../resource/db/entities/Menu");
+const Review_1 = require("../resource/db/entities/Review");
+const ReviewComment_1 = require("../resource/db/entities/ReviewComment");
+const ReviewImage_1 = require("../resource/db/entities/ReviewImage");
+const RestaurantImage_1 = require("../resource/db/entities/RestaurantImage");
+const review_comment_module_1 = require("./reviewComment/review.comment.module");
 let AppModule = class AppModule {
     constructor() {
         moment.locale("en");
@@ -43,6 +50,14 @@ AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
+            }),
+            nestjs_redis_1.RedisModule.forRoot({
+                readyLog: true,
+                config: {
+                    host: process.env.REDIS_HOST,
+                    port: 6379,
+                    password: 'bitnami'
+                }
             }),
             typeorm_1.TypeOrmModule.forFeature([User_1.User]),
             typeorm_1.TypeOrmModule.forRoot({
@@ -63,6 +78,11 @@ AppModule = __decorate([
                     Image_1.Image,
                     Restaurant_1.Restaurant,
                     LikeComment_1.LikeComment,
+                    Menu_1.Menu,
+                    Review_1.Review,
+                    ReviewComment_1.ReviewComment,
+                    ReviewImage_1.ReviewImage,
+                    RestaurantImage_1.RestaurantImage,
                 ],
                 autoLoadEntities: true,
                 keepConnectionAlive: true,
@@ -77,6 +97,7 @@ AppModule = __decorate([
             comment_module_1.CommentModule,
             restaurants_module_1.RestaurantsModule,
             review_module_1.ReviewModule,
+            review_comment_module_1.ReviewCommentModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, aws_service_1.AwsService],

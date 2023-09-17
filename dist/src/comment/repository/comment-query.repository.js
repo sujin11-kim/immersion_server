@@ -19,19 +19,20 @@ const Post_1 = require("../../../resource/db/entities/Post");
 const typeorm_2 = require("typeorm");
 const User_1 = require("../../../resource/db/entities/User");
 const Comment_1 = require("../../../resource/db/entities/Comment");
-const custom_exception_1 = require("../../aop/exception/custom-exception");
+const error_reponse_1 = require("../../aop/exception/error-reponse");
 let CustomCommentQueryRepository = class CustomCommentQueryRepository {
-    constructor(postRepository, userRepository, commentRepository) {
+    constructor(postRepository, userRepository, commentRepository, errorResponse) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
+        this.errorResponse = errorResponse;
     }
     async isPostExist(postIdx) {
         const post = await this.postRepository.findOne({
             where: { postIdx: postIdx },
         });
         if (!post) {
-            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.NOT_FOUNT_POST);
+            this.errorResponse.notFoundPost();
         }
     }
     async findNickName(userIdx) {
@@ -58,7 +59,7 @@ let CustomCommentQueryRepository = class CustomCommentQueryRepository {
         ])
             .getMany();
         if (comments.length === 0) {
-            throw new common_1.BadRequestException(custom_exception_1.CustomExceptions.NOT_FOUND_COMMENT);
+            this.errorResponse.notFoundComment();
         }
         const result = comments.map((comment) => ({
             commentIdx: comment.commentIdx,
@@ -73,6 +74,14 @@ let CustomCommentQueryRepository = class CustomCommentQueryRepository {
         }));
         return result;
     }
+    async commentonefind(commentIdx) {
+        const review = await this.commentRepository.findOneBy({ commentIdx });
+        return review;
+    }
+    async postonefind(postIdx) {
+        const post = await this.postRepository.findOneBy({ postIdx });
+        return post;
+    }
 };
 CustomCommentQueryRepository = __decorate([
     (0, common_1.Injectable)(),
@@ -81,7 +90,8 @@ CustomCommentQueryRepository = __decorate([
     __param(2, (0, typeorm_1.InjectRepository)(Comment_1.Comment)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.Repository,
-        typeorm_2.Repository])
+        typeorm_2.Repository,
+        error_reponse_1.ErrorResponse])
 ], CustomCommentQueryRepository);
 exports.CustomCommentQueryRepository = CustomCommentQueryRepository;
 //# sourceMappingURL=comment-query.repository.js.map

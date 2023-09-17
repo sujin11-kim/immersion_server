@@ -1,7 +1,7 @@
 import { CreateUserDto } from "../dto/create-user.dto";
 import { UsersService } from "../service/users.service";
-import { AuthService } from "src/auth/auth.service";
-import { LoginRequestDto } from "src/auth/dto/login.request.dto";
+import { AuthService } from "src/auth/service/auth.service";
+import { UserLoginDto } from "src/users/dto/user-login.dto";
 export declare class UsersController {
     private usersService;
     private readonly authService;
@@ -9,11 +9,9 @@ export declare class UsersController {
     create(dto: CreateUserDto): Promise<{
         userIdx: string;
     }>;
-    login(data: LoginRequestDto): Promise<{
-        token: string;
-    }>;
+    login(data: UserLoginDto): Promise<any>;
+    getAccessTokenByRefreshToken(): void;
     findAllFCM(): Promise<Record<"fcmTokens", object>>;
     findFCM(userIdx: number): Promise<Record<"fcmToken", string>>;
-    kakaoLogin(customHeader: string): Promise<any>;
     getCurrentUser(user: any): any;
 }

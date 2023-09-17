@@ -1,3 +1,5 @@
+import { ReviewImage } from "./ReviewImage";
+import { ReviewComment } from "./ReviewComment";
 export declare class Review {
     reviewIdx: number;
     userIdx: number;
@@ -7,4 +9,6 @@ export declare class Review {
     createdAt: Date;
     updatedAt: Date | null;
     score: number | null;
+    Images: ReviewImage[];
+    comment: ReviewComment;
 }

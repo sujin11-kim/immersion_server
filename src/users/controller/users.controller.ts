@@ -8,21 +8,21 @@ import {
   Param,
   ParseIntPipe,
 } from "@nestjs/common";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { UsersService } from "../service/users.service";
-import { AuthService } from "src/auth/auth.service";
-import { LoginRequestDto } from "src/auth/dto/login.request.dto";
-import { JwtAuthGuard } from "src/auth/jwt/jwt.guard";
+import { AuthService } from "src/auth/service/auth.service";
+import { UserLoginDto } from "src/users/dto/user-login.dto";
+import { JwtAuthGuard } from "src/auth/utils/jwt/jwt.guard";
 import { CurrentUser } from "../../aop/decorators/user.decorator";
 import { UseInterceptors } from "@nestjs/common/decorators/core/use-interceptors.decorator";
 import { SuccessInterceptor } from "../../aop/interceptors/success.interceptor";
 import { UseFilters } from "@nestjs/common/decorators/core/exception-filters.decorator";
 import { HttpExceptionFilter } from "../../aop/exception/http-exception.filter";
-import { UserLoginDto } from "../dto/user-login.dto";
 import { PositiveIntPipe } from "src/aop/pipes/positiveInt.pipe";
+import { JwtRefreshAuthGuard } from "src/auth/utils/jwt/jwt-refresh.gaurd";
 
-@ApiTags("USERS")
+@ApiTags("유저 API")
 @Controller("user")
 export class UsersController {
   constructor(
@@ -42,13 +42,38 @@ export class UsersController {
   @UseInterceptors(SuccessInterceptor)
   @UseFilters(HttpExceptionFilter)
   @Post("login")
-  login(@Body() data: LoginRequestDto) {
-    return this.authService.jwtLogIn(data);
+  login(@Body() data: UserLoginDto) {
+    return this.authService.login(data);
+  }
+
+  @ApiOperation({ 
+    summary: "refresh token으로 access token 재발급", 
+    description: "1.access-token은 이미 만료되서 에러 2.jwt-refresh gaurd(refresh-secret) 검증 3.refresh token DB 검증 4.access-token이 리턴됨." })
+  @ApiBody({
+    description: 'post swagger',
+    type: UserLoginDto,
+  })
+  @UseGuards(JwtRefreshAuthGuard)
+  @Post("refreshToken")
+  getAccessTokenByRefreshToken(){
+    return this.authService.refreshAccessToken();
+  }
+
+  // access token 인증된 상태에서 로그아웃 버튼 누르면 redis에 유효기간 저장.
+  // validate에서 redis 체크.
+  @ApiOperation({ summary: "로그아웃" })
+  @UseInterceptors(SuccessInterceptor)
+  @UseFilters(HttpExceptionFilter)
+  @UseGuards(JwtAuthGuard)
+  @Get("logout")
+  logout() {
+    return this.authService.logout();
   }
 
   @ApiOperation({ summary: "모든 FCM 토큰 조회" })
   @UseInterceptors(SuccessInterceptor)
   @UseFilters(HttpExceptionFilter)
+  @UseGuards(JwtAuthGuard)
   @Get("get/allFcm")
   findAllFCM() {
     return this.usersService.getAllFCM();
@@ -62,18 +87,10 @@ export class UsersController {
     return this.usersService.getFcmByUserIdx(userIdx);
   }
 
-  @ApiOperation({ summary: "카카오로그인" })
-  @UseInterceptors(SuccessInterceptor)
-  @UseFilters(HttpExceptionFilter)
-  @Get("kakaologin")
-  kakaoLogin(@Headers("Authorization") customHeader: string) {
-    return this.authService.kakaoTokenToLocalToken(customHeader);
-  }
-
   @ApiOperation({ summary: "인증확인:현재유저 가져오기" })
   @UseGuards(JwtAuthGuard)
   @Get()
   getCurrentUser(@CurrentUser() user) {
-    return user;
+    return user; 
   }
 }

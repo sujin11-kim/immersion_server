@@ -15,35 +15,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomUserCommandRepository = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const User_1 = require("../../../resource/db/entities/User");
 const typeorm_2 = require("typeorm");
+const User_1 = require("../../../resource/db/entities/User");
 let CustomUserCommandRepository = class CustomUserCommandRepository {
     constructor(userRepository) {
         this.userRepository = userRepository;
     }
-    async saveUser(userInfo) {
-        const queryRunner = this.userRepository.manager.connection.createQueryRunner();
-        await queryRunner.connect();
-        try {
-            await queryRunner.startTransaction();
-            const { email, nickName, phone, password, fcmToken } = userInfo;
-            const user = queryRunner.manager.getRepository(User_1.User).create();
-            (user.email = email),
-                (user.nickName = nickName),
-                (user.phone = phone),
-                (user.password = password),
-                (user.fcmtoken = fcmToken);
-            const newUser = await queryRunner.manager.getRepository(User_1.User).save(user);
-            await queryRunner.commitTransaction();
-            return { userIdx: newUser.userIdx };
-        }
-        catch (error) {
-            await queryRunner.rollbackTransaction();
-            throw error;
-        }
-        finally {
-            await queryRunner.release();
-        }
+    async signUp(userInfo, queryRunner = undefined) {
+        const { email, nickName, phone, password, fcmtoken } = userInfo;
+        const user = new User_1.User();
+        user.email = email;
+        user.nickName = nickName;
+        user.phone = phone;
+        user.password = password;
+        user.fcmtoken = fcmtoken;
+        const repository = queryRunner ? queryRunner.manager.getRepository(User_1.User) : this.userRepository;
+        const newUser = await repository.save(user);
+        return newUser;
+    }
+    async storeRefreshToken(userInfo, refreshToken, queryRunner = undefined) {
+        userInfo.refreshToken = refreshToken;
+        const repository = queryRunner ? queryRunner.manager.getRepository(User_1.User) : this.userRepository;
+        const newUser = await repository.save(userInfo);
+        return newUser;
     }
 };
 CustomUserCommandRepository = __decorate([

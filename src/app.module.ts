@@ -6,6 +6,7 @@ import { AppService } from "./app.service";
 import { UsersModule } from "./users/users.module";
 import { User } from "../resource/db/entities/User";
 import { AuthModule } from "./auth/auth.module";
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 
 import * as moment from "moment";
 import { Message } from "../resource/db/entities/Message";
@@ -22,6 +23,12 @@ import { Restaurant } from "../resource/db/entities/Restaurant";
 import { RestaurantsModule } from "./restaurants/restaurants.module";
 import { ReviewModule } from "./review/review.module";
 import { LikeComment } from "../resource/db/entities/LikeComment";
+import { Menu } from "resource/db/entities/Menu";
+import { Review } from "../resource/db/entities/Review";
+import { ReviewComment } from "../resource/db/entities/ReviewComment";
+import { ReviewImage } from "resource/db/entities/ReviewImage";
+import { RestaurantImage } from "resource/db/entities/RestaurantImage";
+import { ReviewCommentModule } from "./reviewComment/review.comment.module";
 
 @Module({
   imports: [
@@ -33,6 +40,14 @@ import { LikeComment } from "../resource/db/entities/LikeComment";
       //   DB_PASSWORD: Joi.string().required(),
       //   DB_DATABASE: Joi.string().required(),
       // })
+    }),
+    RedisModule.forRoot({
+      readyLog: true,
+      config: {
+        host: process.env.REDIS_HOST,  
+        port: 6379,
+        password: 'bitnami'
+      }
     }),
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forRoot({
@@ -53,6 +68,11 @@ import { LikeComment } from "../resource/db/entities/LikeComment";
         Image,
         Restaurant,
         LikeComment,
+        Menu,
+        Review,
+        ReviewComment,
+        ReviewImage,
+        RestaurantImage,
       ],
       autoLoadEntities: true,
       keepConnectionAlive: true,
@@ -67,6 +87,7 @@ import { LikeComment } from "../resource/db/entities/LikeComment";
     CommentModule,
     RestaurantsModule,
     ReviewModule,
+    ReviewCommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, AwsService],

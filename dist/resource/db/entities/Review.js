@@ -11,6 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Review = void 0;
 const typeorm_1 = require("typeorm");
+const ReviewImage_1 = require("./ReviewImage");
+const ReviewComment_1 = require("./ReviewComment");
 let Review = class Review {
 };
 __decorate([
@@ -45,6 +47,14 @@ __decorate([
     (0, typeorm_1.Column)("double", { name: "score", nullable: true }),
     __metadata("design:type", Number)
 ], Review.prototype, "score", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => ReviewImage_1.ReviewImage, (reviewImage) => reviewImage.reviewIdx2),
+    __metadata("design:type", Array)
+], Review.prototype, "Images", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => ReviewComment_1.ReviewComment, (reviewComment) => reviewComment.reviewIdx2),
+    __metadata("design:type", ReviewComment_1.ReviewComment)
+], Review.prototype, "comment", void 0);
 Review = __decorate([
     (0, typeorm_1.Entity)("Review", { schema: "immersion_DB" })
 ], Review);

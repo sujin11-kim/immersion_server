@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const comment_service_1 = require("../service/comment.service");
 const create_comment_dto_1 = require("../dto/create-comment.dto");
 const swagger_1 = require("@nestjs/swagger");
-const jwt_guard_1 = require("../../auth/jwt/jwt.guard");
+const jwt_guard_1 = require("../../auth/utils/jwt/jwt.guard");
 const success_interceptor_1 = require("../../../src/aop/interceptors/success.interceptor");
 const http_exception_filter_1 = require("../../../src/aop/exception/http-exception.filter");
 const user_decorator_1 = require("../../../src/aop/decorators/user.decorator");
@@ -39,7 +39,7 @@ let CommentController = class CommentController {
     }
     commentLikeCancel(Idx) {
         const { userIdx, postIdx, commentIdx } = Idx;
-        return this.commentService.postLikeCancel(userIdx, postIdx, commentIdx);
+        return this.commentService.commentLikeCancel(userIdx, postIdx, commentIdx);
     }
 };
 __decorate([
@@ -60,7 +60,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], CommentController.prototype, "findAllComment", null);
 __decorate([
-    (0, swagger_1.ApiOperation)({ summary: "게시물 좋아요" }),
+    (0, swagger_1.ApiOperation)({ summary: "댓글 좋아요" }),
     (0, common_1.Post)("/likeComment"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -68,7 +68,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], CommentController.prototype, "commentLike", null);
 __decorate([
-    (0, swagger_1.ApiOperation)({ summary: "게시물 좋아요 취소" }),
+    (0, swagger_1.ApiOperation)({ summary: "댓글 좋아요 취소" }),
     (0, common_1.Post)("/likeCancelComment"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),

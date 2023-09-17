@@ -16,16 +16,27 @@ const auth_module_1 = require("../auth/auth.module");
 const user_implement_1 = require("./interface/user.implement");
 const user_command_repository_1 = require("./repository/user-command.repository");
 const user_query_repository_1 = require("./repository/user-query.repository");
+const error_reponse_1 = require("../aop/exception/error-reponse");
 let UsersModule = class UsersModule {
 };
 UsersModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([User_1.User]), (0, common_1.forwardRef)(() => auth_module_1.AuthModule)],
         providers: [
+            {
+                provide: (0, typeorm_1.getRepositoryToken)(User_1.User),
+                inject: [(0, typeorm_1.getDataSourceToken)()],
+                useFactory(dataSource) {
+                    return dataSource
+                        .getRepository(User_1.User)
+                        .extend(user_command_repository_1.CustomUserCommandRepository);
+                },
+            },
             users_service_1.UsersService,
             user_implement_1.UserImpl,
             user_command_repository_1.CustomUserCommandRepository,
             user_query_repository_1.CustomUserQueryRepository,
+            error_reponse_1.ErrorResponse,
         ],
         exports: [users_service_1.UsersService],
         controllers: [users_controller_1.UsersController],

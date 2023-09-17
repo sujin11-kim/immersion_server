@@ -13,31 +13,46 @@ exports.ReviewtIml = void 0;
 const common_1 = require("@nestjs/common");
 const review_command_repository_1 = require("../repository/review-command.repository");
 const review_query_repository_1 = require("../repository/review-query.repository");
+const error_reponse_1 = require("../../aop/exception/error-reponse");
 let ReviewtIml = class ReviewtIml {
-    constructor(customReviewCommandRepository, customReviewQueryRepository) {
+    constructor(customReviewCommandRepository, customReviewQueryRepository, errorResponse) {
         this.customReviewCommandRepository = customReviewCommandRepository;
         this.customReviewQueryRepository = customReviewQueryRepository;
+        this.errorResponse = errorResponse;
     }
     async getAllReview() {
         return await this.customReviewQueryRepository.reviewfind();
     }
     async getoneReview(reviewIdx) {
-        return this.customReviewQueryRepository.reviewonefind(reviewIdx);
+        const review = await this.customReviewQueryRepository.reviewonefind(reviewIdx);
+        if (!review) {
+            throw this.errorResponse.notExistReview(reviewIdx);
+        }
+        return review;
     }
-    async create(user, createReviewDto) {
-        return this.customReviewCommandRepository.create(user, createReviewDto);
+    async createReview(user, createReviewDto) {
+        return this.customReviewCommandRepository.createReview(user, createReviewDto);
     }
-    async update(reviewIdx, updateReviewDto) {
-        return this.customReviewCommandRepository.update(reviewIdx, updateReviewDto);
+    async updateReview(reviewIdx, updateReviewDto) {
+        const review = await this.customReviewQueryRepository.reviewonefind(reviewIdx);
+        if (!review) {
+            throw this.errorResponse.notExistReview(reviewIdx);
+        }
+        return this.customReviewCommandRepository.updateReview(reviewIdx, updateReviewDto);
     }
-    async delete(reviewIdx) {
+    async deleteReview(reviewIdx) {
+        const review = await this.customReviewQueryRepository.reviewonefind(reviewIdx);
+        if (!review) {
+            throw this.errorResponse.notExistReview(reviewIdx);
+        }
         return this.customReviewCommandRepository.delete(reviewIdx);
     }
 };
 ReviewtIml = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [review_command_repository_1.CustomReviewCommandRepository,
-        review_query_repository_1.CustomReviewQueryRepository])
+        review_query_repository_1.CustomReviewQueryRepository,
+        error_reponse_1.ErrorResponse])
 ], ReviewtIml);
 exports.ReviewtIml = ReviewtIml;
 //# sourceMappingURL=review.implements.js.map

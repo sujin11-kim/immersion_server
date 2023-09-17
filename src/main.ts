@@ -6,12 +6,18 @@ import { ValidationPipe } from "@nestjs/common";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import * as expressBasicAuth from "express-basic-auth";
 import { HttpExceptionFilter } from "./aop/exception/http-exception.filter";
+import * as cookieParser from 'cookie-parser';
+import { CustomLogger } from "resource/logger/custom-logger";
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: new CustomLogger()
+  });
+  app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
-
+  
+  // Swagger
   app.use(
     ["/api-docs", "/api-docs-json"],
     expressBasicAuth({
@@ -21,7 +27,6 @@ async function bootstrap() {
       },
     })
   );
-
   const config = new DocumentBuilder()
     .setTitle("IMMERSION")
     .setDescription("The immersion API description")
@@ -33,10 +38,5 @@ async function bootstrap() {
   const port = process.env.PORT || 3000;
   await app.listen(port);
   console.log(`listening on port ${port}`);
-
-  // if(module.hot){
-  //   module.hot.accept();
-  //   module.hot.dispose() => app.close();
-  // }
 }
 bootstrap();

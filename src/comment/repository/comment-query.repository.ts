@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { User } from "resource/db/entities/User";
 import { Comment } from "resource/db/entities/Comment";
 import { readonlyCommentDto } from "../dto/readonly-comment.dto";
-import { CustomExceptions } from "src/aop/exception/custom-exception";
+import { ErrorResponse } from "src/aop/exception/error-reponse";
 
 @Injectable()
 export class CustomCommentQueryRepository {
@@ -15,7 +15,8 @@ export class CustomCommentQueryRepository {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Comment)
-    private readonly commentRepository: Repository<Comment>
+    private readonly commentRepository: Repository<Comment>,
+    private errorResponse: ErrorResponse
   ) {}
 
   // 게시물 확인
@@ -24,7 +25,7 @@ export class CustomCommentQueryRepository {
       where: { postIdx: postIdx },
     });
     if (!post) {
-      throw new BadRequestException(CustomExceptions.NOT_FOUNT_POST);
+      this.errorResponse.notFoundPost();
     }
   }
 
@@ -56,7 +57,7 @@ export class CustomCommentQueryRepository {
       .getMany();
 
     if (comments.length === 0) {
-      throw new BadRequestException(CustomExceptions.NOT_FOUND_COMMENT);
+      this.errorResponse.notFoundComment();
     }
 
     const result: readonlyCommentDto[] = comments.map((comment) => ({
@@ -72,5 +73,17 @@ export class CustomCommentQueryRepository {
     }));
 
     return result;
+  }
+
+  //댓글 찾기
+  async commentonefind(commentIdx: number) {
+    const review = await this.commentRepository.findOneBy({ commentIdx });
+    return review;
+  }
+
+  //게시물 찾기
+  async postonefind(postIdx: number) {
+    const post = await this.postRepository.findOneBy({ postIdx });
+    return post;
   }
 }

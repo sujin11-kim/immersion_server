@@ -13,10 +13,12 @@ exports.CommentImpl = void 0;
 const common_1 = require("@nestjs/common");
 const comment_command_repository_1 = require("../repository/comment-command.repository");
 const comment_query_repository_1 = require("../repository/comment-query.repository");
+const error_reponse_1 = require("../../aop/exception/error-reponse");
 let CommentImpl = class CommentImpl {
-    constructor(customCommentCommandRrepository, customCommentQueryRrepository) {
+    constructor(customCommentCommandRrepository, customCommentQueryRrepository, errorResponse) {
         this.customCommentCommandRrepository = customCommentCommandRrepository;
         this.customCommentQueryRrepository = customCommentQueryRrepository;
+        this.errorResponse = errorResponse;
     }
     async createComment(userIdx, createCommentDto) {
         await this.customCommentQueryRrepository.isPostExist(createCommentDto.postIdx);
@@ -28,11 +30,36 @@ let CommentImpl = class CommentImpl {
         await this.customCommentQueryRrepository.isPostExist(postIdx);
         return await this.customCommentQueryRrepository.findCommentByPostIdx(postIdx);
     }
+    async commentLike(userIdx, postIdx, commentIdx) {
+        const comment = await this.customCommentQueryRrepository.commentonefind(commentIdx);
+        const post = await this.customCommentQueryRrepository.postonefind(postIdx);
+        if (!comment) {
+            throw this.errorResponse.notExistCommnet(commentIdx);
+        }
+        if (!post) {
+            throw this.errorResponse.notExistPost(postIdx);
+        }
+        const editcomment = await this.customCommentCommandRrepository.increaseLikeNUm(userIdx, postIdx, commentIdx);
+        return editcomment;
+    }
+    async commentLikeCancel(userIdx, postIdx, commentIdx) {
+        const comment = await this.customCommentQueryRrepository.commentonefind(commentIdx);
+        const post = await this.customCommentQueryRrepository.postonefind(postIdx);
+        if (!comment) {
+            throw this.errorResponse.notExistCommnet(commentIdx);
+        }
+        if (!post) {
+            throw this.errorResponse.notExistPost(postIdx);
+        }
+        const editcomment = await this.customCommentCommandRrepository.decreaseLikeNUm(userIdx, postIdx, commentIdx);
+        return editcomment;
+    }
 };
 CommentImpl = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [comment_command_repository_1.CustomCommentCommandRepository,
-        comment_query_repository_1.CustomCommentQueryRepository])
+        comment_query_repository_1.CustomCommentQueryRepository,
+        error_reponse_1.ErrorResponse])
 ], CommentImpl);
 exports.CommentImpl = CommentImpl;
 //# sourceMappingURL=comment.implement.js.map

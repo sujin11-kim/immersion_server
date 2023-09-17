@@ -13,28 +13,61 @@ exports.RestaurantIml = void 0;
 const common_1 = require("@nestjs/common");
 const restaurant_command_repository_1 = require("../repository/restaurant-command.repository");
 const restaurant_query_repository_1 = require("../repository/restaurant-query.repository");
+const error_reponse_1 = require("../../aop/exception/error-reponse");
+const calculateDistance_1 = require("../utill/calculateDistance");
 let RestaurantIml = class RestaurantIml {
-    constructor(customRestaurantCommandRepository, customRestaurantQueryRepository) {
+    constructor(customRestaurantCommandRepository, customRestaurantQueryRepository, errorResponse) {
         this.customRestaurantCommandRepository = customRestaurantCommandRepository;
         this.customRestaurantQueryRepository = customRestaurantQueryRepository;
+        this.errorResponse = errorResponse;
     }
     async createUserLocation(locationdto) {
         const user = await this.customRestaurantQueryRepository.checkExistUser(locationdto.userIdx);
+        if (!user) {
+            throw this.errorResponse.notExistUser();
+        }
         return await this.customRestaurantCommandRepository.saveUser(user, locationdto);
     }
     async updateUserLocation(locationdto) {
         const user = await this.customRestaurantQueryRepository.checkExistUser(locationdto.userIdx);
+        if (!user) {
+            throw this.errorResponse.notExistUser();
+        }
         return await this.customRestaurantCommandRepository.saveUser(user, locationdto);
     }
     async getrestaurantlist(userIdx) {
+        const restaurants = await this.customRestaurantQueryRepository.getAllResturant();
         const user = await this.customRestaurantQueryRepository.checkExistUser(userIdx);
-        return await this.customRestaurantQueryRepository.getrestaurantlist(userIdx);
+        const nearbyRestaurantIdxs = [];
+        for (const restaurant of restaurants) {
+            const distance = (0, calculateDistance_1.calculateDistance)(user.latitude, user.longitude, restaurant.latitude, restaurant.longitude);
+            if (distance < 3000) {
+                nearbyRestaurantIdxs.push(restaurant.restaurantIdx);
+            }
+        }
+        return await this.customRestaurantQueryRepository.getNearByResturants(nearbyRestaurantIdxs);
+    }
+    async findMenu(searchWord) {
+        let menuList = await this.customRestaurantQueryRepository.findMenuByRestaurant(searchWord);
+        if (menuList.length === 0) {
+            this.errorResponse.notFoundSearch();
+        }
+        return { menuList };
+    }
+    async CreateRestaurant(restaurantInfo, userIdx) {
+        const maxContentLength = 1;
+        const contentWithoutSpace = restaurantInfo.restaurantIntro.replace(/\s/g, "");
+        if (contentWithoutSpace.length > maxContentLength) {
+            this.errorResponse.exceedContentLength();
+        }
+        return await this.customRestaurantCommandRepository.CreateRestaurant(restaurantInfo, userIdx);
     }
 };
 RestaurantIml = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [restaurant_command_repository_1.CustomRestaurantCommandRepository,
-        restaurant_query_repository_1.CustomRestaurantQueryRepository])
+        restaurant_query_repository_1.CustomRestaurantQueryRepository,
+        error_reponse_1.ErrorResponse])
 ], RestaurantIml);
 exports.RestaurantIml = RestaurantIml;
 //# sourceMappingURL=restaurant.implements.js.map
